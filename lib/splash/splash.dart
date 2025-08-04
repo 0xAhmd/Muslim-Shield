@@ -54,10 +54,12 @@ class SplashScreen extends StatelessWidget {
                         child: GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () {
-                            Navigator.of(context).push(
+                            Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                 builder: (context) => HomeScreen(),
                               ),
+                              (Route<dynamic> route) =>
+                                  false, // This removes all previous routes
                             );
                           },
                           child: Container(
