@@ -1,4 +1,5 @@
 import 'package:azkar/constants.dart';
+import 'package:azkar/home/data/service/last_read.dart';
 import 'package:azkar/home/tabs/hizb_tab.dart';
 import 'package:azkar/home/tabs/juz_tab.dart';
 import 'package:azkar/home/tabs/page_tab.dart';
@@ -155,8 +156,39 @@ class Greetings extends StatelessWidget {
   }
 }
 
-class LastRead extends StatelessWidget {
+class LastRead extends StatefulWidget {
   const LastRead({super.key});
+
+  @override
+  State<LastRead> createState() => _LastReadState();
+}
+
+class _LastReadState extends State<LastRead> {
+  LastReadData? lastReadData;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLastRead();
+  }
+
+  Future<void> _loadLastRead() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final data = await LastReadService.getLastRead();
+      setState(() {
+        lastReadData = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +201,6 @@ class LastRead extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               stops: [0, .6, 1],
-
               colors: [Color(0xFFDF98EA), Color(0XFFB070FD), Color(0xFF9055FF)],
             ),
             borderRadius: BorderRadius.circular(10),
@@ -179,6 +210,47 @@ class LastRead extends StatelessWidget {
           bottom: 0,
           right: 0,
           child: SvgPicture.asset('assets/svgs/quran.svg'),
+        ),
+
+        // Refresh Button
+        Positioned(
+          top: 70,
+          left: 140,
+          child: GestureDetector(
+            onTap: () {
+              _loadLastRead();
+              // Show brief feedback
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.refresh, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Refreshed',
+                        style: GoogleFonts.poppins(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  duration: const Duration(seconds: 1),
+                  backgroundColor: primary,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Icon(Icons.refresh, color: Colors.white, size: 16),
+            ),
+          ),
         ),
 
         Padding(
@@ -200,19 +272,90 @@ class LastRead extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              Text(
-                'Al-Fatihah',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
+              if (isLoading)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 18,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      height: 14,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ],
+                )
+              else if (lastReadData != null)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      lastReadData!.surahEnglishName,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Text(
+                          'Ayah ${lastReadData!.ayahNumber}',
+                          style: GoogleFonts.poppins(color: Colors.white),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '${lastReadData!.progressPercentage.toStringAsFixed(0)}%',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              else
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Start Reading',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Begin your Quran journey',
+                      style: GoogleFonts.poppins(color: Colors.white),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Ayat No: 1',
-                style: GoogleFonts.poppins(color: Colors.white),
-              ),
             ],
           ),
         ),
