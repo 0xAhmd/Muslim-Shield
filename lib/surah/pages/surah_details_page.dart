@@ -2,6 +2,7 @@ import 'package:azkar/constants.dart';
 import 'package:azkar/home/data/models/surah.dart';
 import 'package:azkar/home/data/repo/surah_repo.dart';
 import 'package:azkar/home/data/service/last_read.dart';
+import 'package:azkar/home/presentation/widgets/reciter_dialog.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -27,18 +28,33 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
   late TabController _tabController;
   SurahDetail? surahDetail;
   SurahDetail? surahWithAudio;
+  List<Reciter> reciters = [];
+  SurahAudioResponse? audioResponse;
+
   bool isLoading = true;
+  bool isLoadingAudio = false;
+  bool isLoadingReciters = false;
   String? error;
+
   SurahMode currentMode = SurahMode.read;
   bool isPlaying = false;
+  bool isPaused = false;
   int currentAyah = 0;
+  Duration currentPosition = Duration.zero;
+  Duration totalDuration = Duration.zero;
+
+  // Default reciter (you can change this ID based on your preferred default)
+  Reciter? selectedReciter;
+  int defaultReciterId = 1; // Mishary Rashid Alafasy
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_onTabChanged);
+    _setupAudioPlayer();
     _loadSurahDetail();
+    _loadReciters();
   }
 
   @override
@@ -48,14 +64,39 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
     super.dispose();
   }
 
+  void _setupAudioPlayer() {
+    _audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
+      setState(() {
+        isPlaying = state == PlayerState.playing;
+        isPaused = state == PlayerState.paused;
+      });
+    });
+
+    _audioPlayer.onPositionChanged.listen((Duration position) {
+      setState(() {
+        currentPosition = position;
+      });
+    });
+
+    _audioPlayer.onDurationChanged.listen((Duration duration) {
+      setState(() {
+        totalDuration = duration;
+      });
+    });
+
+    _audioPlayer.onPlayerComplete.listen((_) {
+      _onAyahComplete();
+    });
+  }
+
   void _onTabChanged() {
     if (_tabController.index == 0) {
       setState(() => currentMode = SurahMode.read);
       _audioPlayer.stop();
     } else {
       setState(() => currentMode = SurahMode.listen);
-      if (surahWithAudio == null) {
-        _loadSurahWithAudio();
+      if (audioResponse == null && selectedReciter != null) {
+        _loadSurahAudio();
       }
     }
   }
@@ -80,37 +121,182 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
     }
   }
 
-  Future<void> _loadSurahWithAudio() async {
+  Future<void> _loadReciters() async {
     try {
-      final audioDetail = await _repository.getSurahWithAudio(
-        widget.surah.number,
-      );
       setState(() {
-        surahWithAudio = audioDetail;
+        isLoadingReciters = true;
+      });
+
+      final fetchedReciters = await _repository.getReciters();
+      setState(() {
+        reciters = fetchedReciters;
+        // Set default reciter
+        selectedReciter = reciters.firstWhere(
+          (r) => r.id == defaultReciterId,
+          // ignore: cast_from_null_always_fails
+          orElse: () => reciters.isNotEmpty ? reciters.first : null as Reciter,
+        );
+        isLoadingReciters = false;
       });
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to load audio: $e')));
+      setState(() {
+        isLoadingReciters = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load reciters: $e')));
+        print(e.toString());
+      }
+    }
+  }
+
+  Future<void> _loadSurahAudio() async {
+    if (selectedReciter == null) return;
+
+    try {
+      setState(() {
+        isLoadingAudio = true;
+      });
+
+      final response = await _repository.getSurahAudio(
+        selectedReciter!.id,
+        widget.surah.number,
+      );
+
+      setState(() {
+        audioResponse = response;
+        isLoadingAudio = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingAudio = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load audio: $e')));
+      }
     }
   }
 
   Future<void> _playPause() async {
-    if (surahWithAudio == null) return;
-
-    if (isPlaying) {
-      await _audioPlayer.pause();
-    } else {
-      // For demonstration - you'd need actual audio URLs from the API
-      // The Al-Quran API doesn't provide direct audio URLs in this format
-      // You might need to use a different API or construct URLs
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Audio playback would be implemented here'),
-        ),
-      );
+    if (audioResponse == null || selectedReciter == null) {
+      await _loadSurahAudio();
+      return;
     }
-    setState(() => isPlaying = !isPlaying);
+
+    try {
+      if (isPlaying) {
+        await _audioPlayer.pause();
+      } else if (isPaused) {
+        await _audioPlayer.resume();
+      } else {
+        // Play current ayah
+        if (currentAyah < audioResponse!.data.verses.length) {
+          final audioAyah = audioResponse!.data.verses[currentAyah];
+          await _audioPlayer.play(UrlSource(audioAyah.url));
+
+          // Save progress when starting to play
+          await LastReadService.saveLastReadFromSurah(
+            surah: widget.surah,
+            ayahNumber: currentAyah + 1,
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Audio playback error: $e')));
+      }
+    }
+  }
+
+  Future<void> _playAyah(int ayahIndex) async {
+    if (audioResponse == null ||
+        ayahIndex >= audioResponse!.data.verses.length) {
+      return;
+    }
+
+    try {
+      setState(() {
+        currentAyah = ayahIndex;
+      });
+
+      final audioAyah = audioResponse!.data.verses[ayahIndex];
+      await _audioPlayer.play(UrlSource(audioAyah.url));
+
+      // Save progress
+      await LastReadService.saveLastReadFromSurah(
+        surah: widget.surah,
+        ayahNumber: ayahIndex + 1,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to play ayah: $e')));
+      }
+    }
+  }
+
+  void _onAyahComplete() {
+    // Auto-play next ayah if available
+    if (currentAyah < (audioResponse?.data.verses.length ?? 0) - 1) {
+      setState(() {
+        currentAyah++;
+      });
+      _playAyah(currentAyah);
+    } else {
+      // End of surah
+      setState(() {
+        isPlaying = false;
+        isPaused = false;
+        currentPosition = Duration.zero;
+      });
+    }
+  }
+
+  Future<void> _previousAyah() async {
+    if (currentAyah > 0) {
+      await _playAyah(currentAyah - 1);
+    }
+  }
+
+  Future<void> _nextAyah() async {
+    if (audioResponse != null &&
+        currentAyah < audioResponse!.data.verses.length - 1) {
+      await _playAyah(currentAyah + 1);
+    }
+  }
+
+  void _showReciterDialog() {
+    if (reciters.isEmpty) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => ReciterSelectionDialog(
+        reciters: reciters,
+        selectedReciterId: selectedReciter?.id ?? defaultReciterId,
+        onReciterSelected: (Reciter reciter) {
+          setState(() {
+            selectedReciter = reciter;
+            audioResponse = null; // Clear current audio
+          });
+          // Load new audio with selected reciter
+          if (_tabController.index == 1) {
+            _loadSurahAudio();
+          }
+        },
+      ),
+    );
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -131,8 +317,16 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           ),
         ),
         centerTitle: true,
+        actions: [
+          // Reciter selection button (only show in listen mode)
+          if (_tabController.index == 1 && reciters.isNotEmpty)
+            IconButton(
+              onPressed: _showReciterDialog,
+              icon: Icon(Icons.person, color: primary),
+              tooltip: 'Select Reciter',
+            ),
+        ],
       ),
-      // Replace the existing body in your Scaffold with this:
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -262,7 +456,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
       children: [_buildReadMode(), _buildListenMode()],
     );
   }
-  // Add this method to the _SurahDetailScreenState class
 
   Future<void> _showSaveProgressDialog() async {
     int selectedAyah = 1;
@@ -492,6 +685,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                       textAlign: TextAlign.right,
                       textDirection: TextDirection.rtl,
                     ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               );
@@ -505,6 +699,56 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
   Widget _buildListenMode() {
     return Column(
       children: [
+        // Reciter Selection
+        if (selectedReciter != null)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: gray,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.person, color: primary),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        selectedReciter!.name,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        selectedReciter!.style,
+                        style: GoogleFonts.poppins(
+                          color: textColor,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: _showReciterDialog,
+                  child: Text(
+                    'Change',
+                    style: GoogleFonts.poppins(
+                      color: primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        // Audio Player
         Container(
           margin: const EdgeInsets.all(24),
           padding: const EdgeInsets.all(20),
@@ -514,75 +758,194 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           ),
           child: Column(
             children: [
-              Text(
-                'Audio Player',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+              if (isLoadingAudio)
+                Column(
+                  children: [
+                    CircularProgressIndicator(color: primary),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Loading audio...',
+                      style: GoogleFonts.poppins(color: textColor),
+                    ),
+                  ],
+                )
+              else ...[
+                Text(
+                  'Now Playing',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    onPressed: () async {
-                      if (currentAyah > 0) {
-                        setState(() => currentAyah--);
-                        // Save progress when navigating ayahs
-                        if (surahDetail != null) {
-                          await LastReadService.saveLastReadFromSurah(
-                            surah: widget.surah,
-                            ayahNumber: currentAyah + 1,
+                const SizedBox(height: 8),
+                Text(
+                  'Ayah ${currentAyah + 1} of ${widget.surah.numberOfAyahs}',
+                  style: GoogleFonts.poppins(color: textColor),
+                ),
+                const SizedBox(height: 20),
+
+                // Progress slider
+                if (totalDuration.inSeconds > 0)
+                  Column(
+                    children: [
+                      Slider(
+                        value: currentPosition.inSeconds.toDouble(),
+                        max: totalDuration.inSeconds.toDouble(),
+                        activeColor: primary,
+                        inactiveColor: textColor.withOpacity(0.3),
+                        onChanged: (value) async {
+                          await _audioPlayer.seek(
+                            Duration(seconds: value.toInt()),
                           );
-                        }
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.skip_previous,
-                      color: Colors.white,
-                      size: 32,
-                    ),
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _formatDuration(currentPosition),
+                            style: GoogleFonts.poppins(
+                              color: textColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            _formatDuration(totalDuration),
+                            style: GoogleFonts.poppins(
+                              color: textColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    onPressed: _playPause,
-                    icon: Icon(
-                      isPlaying
-                          ? Icons.pause_circle_filled
-                          : Icons.play_circle_filled,
-                      color: primary,
-                      size: 64,
+
+                const SizedBox(height: 20),
+
+                // Control buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      onPressed: currentAyah > 0 ? _previousAyah : null,
+                      icon: Icon(
+                        Icons.skip_previous,
+                        color: currentAyah > 0
+                            ? Colors.white
+                            : textColor.withOpacity(0.5),
+                        size: 32,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      if (surahDetail != null &&
-                          currentAyah < surahDetail!.ayahs.length - 1) {
-                        setState(() => currentAyah++);
-                        // Save progress when navigating ayahs
-                        await LastReadService.saveLastReadFromSurah(
-                          surah: widget.surah,
-                          ayahNumber: currentAyah + 1,
-                        );
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.skip_next,
-                      color: Colors.white,
-                      size: 32,
+                    IconButton(
+                      onPressed: selectedReciter != null ? _playPause : null,
+                      icon: Icon(
+                        isPlaying
+                            ? Icons.pause_circle_filled
+                            : Icons.play_circle_filled,
+                        color: selectedReciter != null
+                            ? primary
+                            : textColor.withOpacity(0.5),
+                        size: 64,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Ayah ${currentAyah + 1} of ${widget.surah.numberOfAyahs}',
-                style: GoogleFonts.poppins(color: textColor),
-              ),
+                    IconButton(
+                      onPressed:
+                          (audioResponse != null &&
+                              currentAyah <
+                                  audioResponse!.data.verses.length - 1)
+                          ? _nextAyah
+                          : null,
+                      icon: Icon(
+                        Icons.skip_next,
+                        color:
+                            (audioResponse != null &&
+                                currentAyah <
+                                    audioResponse!.data.verses.length - 1)
+                            ? Colors.white
+                            : textColor.withOpacity(0.5),
+                        size: 32,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
+
+        // Ayahs List with play buttons
+        if (surahDetail != null && !isLoadingAudio)
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              itemCount: surahDetail!.ayahs.length,
+              itemBuilder: (context, index) {
+                final ayah = surahDetail!.ayahs[index];
+                final isCurrentAyah = index == currentAyah && isPlaying;
+
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isCurrentAyah ? primary.withOpacity(0.1) : gray,
+                    borderRadius: BorderRadius.circular(10),
+                    border: isCurrentAyah
+                        ? Border.all(color: primary, width: 2)
+                        : null,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isCurrentAyah
+                                  ? primary
+                                  : primary.withOpacity(.2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              '${ayah.numberInSurah}',
+                              style: GoogleFonts.poppins(
+                                color: isCurrentAyah ? Colors.white : primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () => _playAyah(index),
+                            icon: Icon(
+                              isCurrentAyah ? Icons.pause : Icons.play_arrow,
+                              color: primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        ayah.text,
+                        style: GoogleFonts.amiri(
+                          color: Colors.white,
+                          fontSize: 22,
+                          height: 1.9,
+                        ),
+                        textAlign: TextAlign.right,
+                        textDirection: TextDirection.rtl,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
       ],
     );
   }

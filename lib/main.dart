@@ -1,12 +1,16 @@
 import 'package:azkar/constants.dart';
+import 'package:azkar/home/presentation/pages/audio_state.dart';
 import 'package:azkar/splash/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-  runApp(const MyApp());
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await AudioService().initialize();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
