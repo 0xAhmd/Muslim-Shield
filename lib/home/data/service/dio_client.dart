@@ -1,7 +1,7 @@
+import 'package:azkar/home/data/service/api_service.dart';
+import 'package:azkar/home/data/service/audio_api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'api_service.dart';
-import 'audio_api_service.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
@@ -29,12 +29,12 @@ class DioClient {
       headers: {'Content-Type': 'application/json'},
     );
 
-    // Add interceptors for logging (optional)
+    // Add detailed interceptors for debugging
     _dio.interceptors.add(
       LogInterceptor(
         requestBody: true,
         responseBody: true,
-        logPrint: (o) => debugPrint(o.toString()),
+        logPrint: (o) => debugPrint('[MAIN API] $o'),
       ),
     );
 
@@ -42,7 +42,34 @@ class DioClient {
       LogInterceptor(
         requestBody: true,
         responseBody: true,
-        logPrint: (o) => debugPrint(o.toString()),
+        logPrint: (o) => debugPrint('[AUDIO API] $o'),
+      ),
+    );
+
+    // Add response interceptor to debug the actual response structure
+    _audioDio.interceptors.add(
+      InterceptorsWrapper(
+        onResponse: (response, handler) {
+          debugPrint('[AUDIO API RESPONSE] Status: ${response.statusCode}');
+          debugPrint(
+            '[AUDIO API RESPONSE] Data type: ${response.data.runtimeType}',
+          );
+          if (response.data is List) {
+            debugPrint(
+              '[AUDIO API RESPONSE] List length: ${(response.data as List).length}',
+            );
+          } else if (response.data is Map) {
+            debugPrint(
+              '[AUDIO API RESPONSE] Map keys: ${(response.data as Map).keys}',
+            );
+          }
+          handler.next(response);
+        },
+        onError: (error, handler) {
+          debugPrint('[AUDIO API ERROR] ${error.message}');
+          debugPrint('[AUDIO API ERROR] Response: ${error.response?.data}');
+          handler.next(error);
+        },
       ),
     );
 

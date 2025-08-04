@@ -127,18 +127,25 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         isLoadingReciters = true;
       });
 
+      print('Starting to load reciters...');
       final fetchedReciters = await _repository.getReciters();
+      print('Loaded ${fetchedReciters.length} reciters successfully');
+
       setState(() {
         reciters = fetchedReciters;
-        // Set default reciter
-        selectedReciter = reciters.firstWhere(
-          (r) => r.id == defaultReciterId,
-          // ignore: cast_from_null_always_fails
-          orElse: () => reciters.isNotEmpty ? reciters.first : null as Reciter,
-        );
+        // Set default reciter with better null safety
+        if (reciters.isNotEmpty) {
+          selectedReciter = reciters.firstWhere(
+            (r) => r.id == defaultReciterId,
+            orElse: () => reciters.first,
+          );
+          print('Selected reciter: ${selectedReciter?.name}');
+        }
         isLoadingReciters = false;
       });
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('Error loading reciters: $e');
+      print('Stack trace: $stackTrace');
       setState(() {
         isLoadingReciters = false;
       });
@@ -146,7 +153,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Failed to load reciters: $e')));
-        print(e.toString());
       }
     }
   }

@@ -129,8 +129,23 @@ class Reciter {
     required this.fileFormats,
   });
 
-  factory Reciter.fromJson(Map<String, dynamic> json) =>
-      _$ReciterFromJson(json);
+  factory Reciter.fromJson(Map<String, dynamic> json) {
+    try {
+      // Add debugging to see what's in the JSON
+      print('Parsing reciter JSON: $json');
+      print('JSON keys: ${json.keys}');
+      print('ID type: ${json['id'].runtimeType}');
+      print('Name type: ${json['name'].runtimeType}');
+
+      return _$ReciterFromJson(json);
+    } catch (e, stackTrace) {
+      print('Error parsing Reciter JSON: $e');
+      print('JSON was: $json');
+      print('Stack trace: $stackTrace');
+      rethrow;
+    }
+  }
+
   Map<String, dynamic> toJson() => _$ReciterToJson(this);
 }
 
