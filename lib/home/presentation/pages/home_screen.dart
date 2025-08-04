@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       },
       tabs: [
         tabItem(title: "Surah"),
-        tabItem(title: "Juz'"),
+        tabItem(title: "Juzz'"),
         tabItem(title: "Page"),
         tabItem(title: "Hizb"),
       ],
