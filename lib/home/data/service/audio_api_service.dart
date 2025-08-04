@@ -1,3 +1,4 @@
+// lib/home/data/service/audio_api_service.dart
 import 'package:azkar/home/data/models/surah.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -8,7 +9,6 @@ part 'audio_api_service.g.dart';
 abstract class AudioApiService {
   factory AudioApiService(Dio dio, {String baseUrl}) = _AudioApiService;
 
-  // Change return type to Map since that's what the API returns
   @GET('/reciters.json')
   Future<Map<String, String>> getRecitersRaw();
 

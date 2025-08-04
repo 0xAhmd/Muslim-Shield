@@ -120,6 +120,46 @@ Map<String, dynamic> _$ReciterToJson(Reciter instance) => <String, dynamic>{
   'fileFormats': instance.fileFormats,
 };
 
+AudioInfo _$AudioInfoFromJson(Map<String, dynamic> json) => AudioInfo(
+  reciter: json['reciter'] as String,
+  url: json['url'] as String,
+  originalUrl: json['originalUrl'] as String?,
+);
+
+Map<String, dynamic> _$AudioInfoToJson(AudioInfo instance) => <String, dynamic>{
+  'reciter': instance.reciter,
+  'url': instance.url,
+  'originalUrl': instance.originalUrl,
+};
+
+QuranAudioResponse _$QuranAudioResponseFromJson(Map<String, dynamic> json) =>
+    QuranAudioResponse(
+      surahName: json['surahName'] as String,
+      surahNameArabic: json['surahNameArabic'] as String,
+      surahNameArabicLong: json['surahNameArabicLong'] as String,
+      surahNameTranslation: json['surahNameTranslation'] as String,
+      revelationPlace: json['revelationPlace'] as String,
+      totalAyah: (json['totalAyah'] as num).toInt(),
+      surahNo: (json['surahNo'] as num).toInt(),
+      ayahNo: (json['ayahNo'] as num).toInt(),
+      audio: (json['audio'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(k, AudioInfo.fromJson(e as Map<String, dynamic>)),
+      ),
+    );
+
+Map<String, dynamic> _$QuranAudioResponseToJson(QuranAudioResponse instance) =>
+    <String, dynamic>{
+      'surahName': instance.surahName,
+      'surahNameArabic': instance.surahNameArabic,
+      'surahNameArabicLong': instance.surahNameArabicLong,
+      'surahNameTranslation': instance.surahNameTranslation,
+      'revelationPlace': instance.revelationPlace,
+      'totalAyah': instance.totalAyah,
+      'surahNo': instance.surahNo,
+      'ayahNo': instance.ayahNo,
+      'audio': instance.audio,
+    };
+
 AudioAyah _$AudioAyahFromJson(Map<String, dynamic> json) => AudioAyah(
   verse: (json['verse'] as num).toInt(),
   url: json['url'] as String,

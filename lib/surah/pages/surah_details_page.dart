@@ -66,26 +66,38 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
   void _setupAudioPlayer() {
     _audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
-      setState(() {
-        isPlaying = state == PlayerState.playing;
-        isPaused = state == PlayerState.paused;
-      });
+      if (mounted) {
+        // Check if widget is still mounted
+        setState(() {
+          isPlaying = state == PlayerState.playing;
+          isPaused = state == PlayerState.paused;
+        });
+      }
     });
 
     _audioPlayer.onPositionChanged.listen((Duration position) {
-      setState(() {
-        currentPosition = position;
-      });
+      if (mounted) {
+        // Check if widget is still mounted
+        setState(() {
+          currentPosition = position;
+        });
+      }
     });
 
     _audioPlayer.onDurationChanged.listen((Duration duration) {
-      setState(() {
-        totalDuration = duration;
-      });
+      if (mounted) {
+        // Check if widget is still mounted
+        setState(() {
+          totalDuration = duration;
+        });
+      }
     });
 
     _audioPlayer.onPlayerComplete.listen((_) {
-      _onAyahComplete();
+      if (mounted) {
+        // Check if widget is still mounted
+        _onAyahComplete();
+      }
     });
   }
 
@@ -705,6 +717,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
   Widget _buildListenMode() {
     return Column(
       children: [
+        const SizedBox(height: 10),
         // Reciter Selection
         if (selectedReciter != null)
           Container(
@@ -730,22 +743,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                           fontSize: 16,
                         ),
                       ),
-                      Text(
-                        selectedReciter!.style ??
-                            'Tajweed', // Handle null style
-                        style: GoogleFonts.poppins(
-                          color: textColor,
-                          fontSize: 12,
-                        ),
-                      ),
-                      // Add reciter ID for debugging
-                      Text(
-                        'ID: ${selectedReciter!.id}',
-                        style: GoogleFonts.poppins(
-                          color: textColor.withOpacity(0.7),
-                          fontSize: 10,
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -763,7 +760,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
             ),
           ),
         Container(
-          margin: const EdgeInsets.all(24),
+          margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: gray,

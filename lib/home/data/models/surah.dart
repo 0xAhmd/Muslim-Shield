@@ -1,3 +1,4 @@
+// lib/home/data/models/surah.dart
 import 'package:json_annotation/json_annotation.dart';
 
 part 'surah.g.dart';
@@ -116,7 +117,6 @@ class SurahDetailResponse {
 class Reciter {
   final int id;
   final String name;
-  // Make these optional since they're not in the API response
   final String? style;
   final String? url;
   final List<String>? fileFormats;
@@ -129,14 +129,13 @@ class Reciter {
     this.fileFormats,
   });
 
-  // Custom factory constructor to handle the API response format
   factory Reciter.fromApiResponse(String id, String name) {
     return Reciter(
       id: int.parse(id),
       name: name,
-      style: 'Tajweed', // Default style
-      url: null, // Will be constructed when needed
-      fileFormats: ['mp3'], // Default format
+      style: 'Tajweed',
+      url: null,
+      fileFormats: ['mp3'],
     );
   }
 
@@ -145,6 +144,50 @@ class Reciter {
   Map<String, dynamic> toJson() => _$ReciterToJson(this);
 }
 
+// Updated models to match the actual API response
+@JsonSerializable()
+class AudioInfo {
+  final String reciter;
+  final String url;
+  final String? originalUrl;
+
+  AudioInfo({required this.reciter, required this.url, this.originalUrl});
+
+  factory AudioInfo.fromJson(Map<String, dynamic> json) =>
+      _$AudioInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$AudioInfoToJson(this);
+}
+
+@JsonSerializable()
+class QuranAudioResponse {
+  final String surahName;
+  final String surahNameArabic;
+  final String surahNameArabicLong;
+  final String surahNameTranslation;
+  final String revelationPlace;
+  final int totalAyah;
+  final int surahNo;
+  final int ayahNo;
+  final Map<String, AudioInfo> audio;
+
+  QuranAudioResponse({
+    required this.surahName,
+    required this.surahNameArabic,
+    required this.surahNameArabicLong,
+    required this.surahNameTranslation,
+    required this.revelationPlace,
+    required this.totalAyah,
+    required this.surahNo,
+    required this.ayahNo,
+    required this.audio,
+  });
+
+  factory QuranAudioResponse.fromJson(Map<String, dynamic> json) =>
+      _$QuranAudioResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$QuranAudioResponseToJson(this);
+}
+
+// Legacy models - keeping for backward compatibility
 @JsonSerializable()
 class AudioAyah {
   final int verse;
@@ -179,4 +222,25 @@ class SurahAudioResponse {
   factory SurahAudioResponse.fromJson(Map<String, dynamic> json) =>
       _$SurahAudioResponseFromJson(json);
   Map<String, dynamic> toJson() => _$SurahAudioResponseToJson(this);
+
+  // Factory method to convert from QuranAudioResponse
+  factory SurahAudioResponse.fromQuranAudioResponse(
+    QuranAudioResponse response,
+    int reciterId,
+  ) {
+    List<AudioAyah> verses = [];
+
+    // Get the specific reciter's audio info
+    AudioInfo? reciterAudio = response.audio[reciterId.toString()];
+
+    if (reciterAudio != null) {
+      // For single ayah response, create one AudioAyah
+      verses.add(AudioAyah(verse: response.ayahNo, url: reciterAudio.url));
+    }
+
+    return SurahAudioResponse(
+      success: true,
+      data: SurahAudioData(chapter: response.surahNo, verses: verses),
+    );
+  }
 }
