@@ -132,6 +132,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         ),
         centerTitle: true,
       ),
+      // Replace the existing body in your Scaffold with this:
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -157,22 +158,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
       ),
       child: Stack(
         children: [
-          // Background Icon with transparency
-          Positioned.fill(
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Opacity(
-                opacity: 0.11, // Adjust transparency (0.1 = 10% opacity)
-                child: SvgPicture.asset(
-                  'assets/svgs/quran.svg',
-                  width: 230, // Adjust size as needed
-                  height: 230,
-                ),
-              ),
-            ),
-          ),
-
-          // Original content
+     
           Column(
             children: [
               Text(
