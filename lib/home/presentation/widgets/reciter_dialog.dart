@@ -1,3 +1,4 @@
+// 1. Updated ReciterSelectionDialog with null safety
 import 'package:azkar/constants.dart';
 import 'package:azkar/home/data/models/surah.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,9 @@ class _ReciterSelectionDialogState extends State<ReciterSelectionDialog> {
         filteredReciters = widget.reciters;
       } else {
         filteredReciters = widget.reciters.where((reciter) {
-          return reciter.name.toLowerCase().contains(searchQuery) ||
-              reciter.style.toLowerCase().contains(searchQuery);
+          final nameMatch = reciter.name.toLowerCase().contains(searchQuery);
+          final styleMatch = reciter.style?.toLowerCase().contains(searchQuery) ?? false;
+          return nameMatch || styleMatch;
         }).toList();
       }
     });
@@ -133,12 +135,30 @@ class _ReciterSelectionDialogState extends State<ReciterSelectionDialog> {
                           Icon(Icons.search_off, size: 48, color: textColor),
                           const SizedBox(height: 12),
                           Text(
-                            'No reciters found',
+                            searchQuery.isEmpty 
+                                ? 'No reciters available'
+                                : 'No reciters found for "$searchQuery"',
                             style: GoogleFonts.poppins(
                               color: textColor,
                               fontSize: 16,
                             ),
+                            textAlign: TextAlign.center,
                           ),
+                          if (searchQuery.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  searchQuery = '';
+                                  filteredReciters = widget.reciters;
+                                });
+                              },
+                              child: Text(
+                                'Clear search',
+                                style: GoogleFonts.poppins(color: primary),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     )
@@ -192,15 +212,42 @@ class _ReciterSelectionDialogState extends State<ReciterSelectionDialog> {
                               ),
                             ),
                             subtitle: Text(
-                              reciter.style,
+                              reciter.style ?? 'Tajweed', // Handle null style
                               style: GoogleFonts.poppins(
                                 color: textColor,
                                 fontSize: 12,
                               ),
                             ),
-                            trailing: isSelected
-                                ? Icon(Icons.check_circle, color: primary)
-                                : null,
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Show ID badge for identification
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected 
+                                        ? primary.withOpacity(0.2)
+                                        : textColor.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    'ID: ${reciter.id}',
+                                    style: GoogleFonts.poppins(
+                                      color: isSelected ? primary : textColor,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                if (isSelected) ...[
+                                  const SizedBox(width: 8),
+                                  Icon(Icons.check_circle, color: primary),
+                                ],
+                              ],
+                            ),
                           ),
                         );
                       },

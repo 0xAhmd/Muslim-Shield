@@ -8,8 +8,9 @@ part 'audio_api_service.g.dart';
 abstract class AudioApiService {
   factory AudioApiService(Dio dio, {String baseUrl}) = _AudioApiService;
 
+  // Change return type to Map since that's what the API returns
   @GET('/reciters.json')
-  Future<List<Reciter>> getReciters();
+  Future<Map<String, String>> getRecitersRaw();
 
   @GET('/{reciterId}/{chapterNumber}.json')
   Future<SurahAudioResponse> getSurahAudio(

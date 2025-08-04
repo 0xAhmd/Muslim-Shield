@@ -116,36 +116,32 @@ class SurahDetailResponse {
 class Reciter {
   final int id;
   final String name;
-  final String style;
-  final String url;
-  @JsonKey(name: 'file_formats')
-  final List<String> fileFormats;
+  // Make these optional since they're not in the API response
+  final String? style;
+  final String? url;
+  final List<String>? fileFormats;
 
   Reciter({
     required this.id,
     required this.name,
-    required this.style,
-    required this.url,
-    required this.fileFormats,
+    this.style,
+    this.url,
+    this.fileFormats,
   });
 
-  factory Reciter.fromJson(Map<String, dynamic> json) {
-    try {
-      // Add debugging to see what's in the JSON
-      print('Parsing reciter JSON: $json');
-      print('JSON keys: ${json.keys}');
-      print('ID type: ${json['id'].runtimeType}');
-      print('Name type: ${json['name'].runtimeType}');
-
-      return _$ReciterFromJson(json);
-    } catch (e, stackTrace) {
-      print('Error parsing Reciter JSON: $e');
-      print('JSON was: $json');
-      print('Stack trace: $stackTrace');
-      rethrow;
-    }
+  // Custom factory constructor to handle the API response format
+  factory Reciter.fromApiResponse(String id, String name) {
+    return Reciter(
+      id: int.parse(id),
+      name: name,
+      style: 'Tajweed', // Default style
+      url: null, // Will be constructed when needed
+      fileFormats: ['mp3'], // Default format
+    );
   }
 
+  factory Reciter.fromJson(Map<String, dynamic> json) =>
+      _$ReciterFromJson(json);
   Map<String, dynamic> toJson() => _$ReciterToJson(this);
 }
 

@@ -731,10 +731,19 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                         ),
                       ),
                       Text(
-                        selectedReciter!.style,
+                        selectedReciter!.style ??
+                            'Tajweed', // Handle null style
                         style: GoogleFonts.poppins(
                           color: textColor,
                           fontSize: 12,
+                        ),
+                      ),
+                      // Add reciter ID for debugging
+                      Text(
+                        'ID: ${selectedReciter!.id}',
+                        style: GoogleFonts.poppins(
+                          color: textColor.withOpacity(0.7),
+                          fontSize: 10,
                         ),
                       ),
                     ],
@@ -753,8 +762,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
               ],
             ),
           ),
-
-        // Audio Player
         Container(
           margin: const EdgeInsets.all(24),
           padding: const EdgeInsets.all(20),

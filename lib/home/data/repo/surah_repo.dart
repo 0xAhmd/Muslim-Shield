@@ -35,19 +35,30 @@ class SurahRepository {
     }
   }
 
-  // Enhanced getReciters method with better error handling
+  // Updated getReciters method to handle the correct API response
   Future<List<Reciter>> getReciters() async {
     try {
-      print('Calling audioApiService.getReciters()...');
-      final reciters = await _audioApiService.getReciters();
-      print('Raw API response type: ${reciters.runtimeType}');
-      print('Number of reciters: ${reciters.length}');
+      print('Calling audioApiService.getRecitersRaw()...');
+      final Map<String, String> reciterMap = await _audioApiService
+          .getRecitersRaw();
+      print('Raw API response: $reciterMap');
 
-      // Add validation
-      for (int i = 0; i < reciters.length && i < 3; i++) {
-        print('Reciter $i: ${reciters[i].name} (ID: ${reciters[i].id})');
-      }
+      final List<Reciter> reciters = [];
 
+      reciterMap.forEach((id, name) {
+        try {
+          final reciter = Reciter.fromApiResponse(id, name);
+          reciters.add(reciter);
+          print('Added reciter: ${reciter.name} (ID: ${reciter.id})');
+        } catch (e) {
+          print('Error parsing reciter ID $id, name $name: $e');
+        }
+      });
+
+      // Sort by ID for consistent ordering
+      reciters.sort((a, b) => a.id.compareTo(b.id));
+
+      print('Successfully loaded ${reciters.length} reciters');
       return reciters;
     } catch (e, stackTrace) {
       print('Error in getReciters: $e');

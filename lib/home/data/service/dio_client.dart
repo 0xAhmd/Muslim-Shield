@@ -24,12 +24,13 @@ class DioClient {
     // Audio API dio instance
     _audioDio = Dio();
     _audioDio.options = BaseOptions(
+      baseUrl: 'https://quranapi.pages.dev/api',
       connectTimeout: Duration(seconds: 30),
       receiveTimeout: Duration(seconds: 30),
       headers: {'Content-Type': 'application/json'},
     );
 
-    // Add detailed interceptors for debugging
+    // Add interceptors for logging
     _dio.interceptors.add(
       LogInterceptor(
         requestBody: true,
@@ -46,37 +47,11 @@ class DioClient {
       ),
     );
 
-    // Add response interceptor to debug the actual response structure
-    _audioDio.interceptors.add(
-      InterceptorsWrapper(
-        onResponse: (response, handler) {
-          debugPrint('[AUDIO API RESPONSE] Status: ${response.statusCode}');
-          debugPrint(
-            '[AUDIO API RESPONSE] Data type: ${response.data.runtimeType}',
-          );
-          if (response.data is List) {
-            debugPrint(
-              '[AUDIO API RESPONSE] List length: ${(response.data as List).length}',
-            );
-          } else if (response.data is Map) {
-            debugPrint(
-              '[AUDIO API RESPONSE] Map keys: ${(response.data as Map).keys}',
-            );
-          }
-          handler.next(response);
-        },
-        onError: (error, handler) {
-          debugPrint('[AUDIO API ERROR] ${error.message}');
-          debugPrint('[AUDIO API ERROR] Response: ${error.response?.data}');
-          handler.next(error);
-        },
-      ),
-    );
-
     _apiService = ApiService(_dio);
     _audioApiService = AudioApiService(_audioDio);
   }
 
   ApiService get apiService => _apiService;
   AudioApiService get audioApiService => _audioApiService;
+  Dio get audioDio => _audioDio; // Add this getter
 }

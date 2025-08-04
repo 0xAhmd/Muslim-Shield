@@ -105,10 +105,10 @@ Map<String, dynamic> _$SurahDetailResponseToJson(
 Reciter _$ReciterFromJson(Map<String, dynamic> json) => Reciter(
   id: (json['id'] as num).toInt(),
   name: json['name'] as String,
-  style: json['style'] as String,
-  url: json['url'] as String,
-  fileFormats: (json['file_formats'] as List<dynamic>)
-      .map((e) => e as String)
+  style: json['style'] as String?,
+  url: json['url'] as String?,
+  fileFormats: (json['fileFormats'] as List<dynamic>?)
+      ?.map((e) => e as String)
       .toList(),
 );
 
@@ -117,7 +117,7 @@ Map<String, dynamic> _$ReciterToJson(Reciter instance) => <String, dynamic>{
   'name': instance.name,
   'style': instance.style,
   'url': instance.url,
-  'file_formats': instance.fileFormats,
+  'fileFormats': instance.fileFormats,
 };
 
 AudioAyah _$AudioAyahFromJson(Map<String, dynamic> json) => AudioAyah(
