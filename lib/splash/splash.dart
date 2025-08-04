@@ -30,7 +30,7 @@ class SplashScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   'Learn Quran and\nRecite once everyday',
-                  style: GoogleFonts.poppins(fontSize: 18, color: text),
+                  style: GoogleFonts.poppins(fontSize: 18, color: textColor),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 48),

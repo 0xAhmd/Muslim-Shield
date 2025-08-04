@@ -158,7 +158,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
       ),
       child: Stack(
         children: [
-     
           Column(
             children: [
               Text(
@@ -217,7 +216,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
         labelColor: Colors.white,
-        unselectedLabelColor: text,
+        unselectedLabelColor: textColor,
         labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         tabs: const [
           Tab(text: 'Read'),
@@ -244,7 +243,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
             const SizedBox(height: 8),
             Text(
               error!,
-              style: GoogleFonts.poppins(color: text, fontSize: 12),
+              style: GoogleFonts.poppins(color: textColor, fontSize: 12),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -293,7 +292,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 children: [
                   Text(
                     'Select the ayah you\'re currently reading:',
-                    style: GoogleFonts.poppins(color: text, fontSize: 14),
+                    style: GoogleFonts.poppins(color: textColor, fontSize: 14),
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -362,7 +361,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
                     'Cancel',
-                    style: GoogleFonts.poppins(color: text),
+                    style: GoogleFonts.poppins(color: textColor),
                   ),
                 ),
                 ElevatedButton(
@@ -579,7 +578,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
               const SizedBox(height: 12),
               Text(
                 'Ayah ${currentAyah + 1} of ${widget.surah.numberOfAyahs}',
-                style: GoogleFonts.poppins(color: text),
+                style: GoogleFonts.poppins(color: textColor),
               ),
             ],
           ),

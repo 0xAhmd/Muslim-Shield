@@ -8,8 +8,51 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  bool isSearching = false;
+  final TextEditingController searchController = TextEditingController();
+  late TabController tabController;
+  final GlobalKey<SurahTabState> surahTabKey = GlobalKey<SurahTabState>();
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    tabController.dispose();
+    super.dispose();
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      isSearching = !isSearching;
+      if (!isSearching) {
+        searchController.clear();
+        // Clear search when closing
+        if (tabController.index == 0) {
+          surahTabKey.currentState?.clearSearch();
+        }
+      }
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    // Only search in Surah tab (index 0)
+    if (tabController.index == 0) {
+      surahTabKey.currentState?.searchSurahs(query);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,33 +60,36 @@ class HomeScreen extends StatelessWidget {
       appBar: _appBar(),
       bottomNavigationBar: _bottomNavigationBar(),
       body: SafeArea(
-        child: DefaultTabController(
-          length: 4,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverToBoxAdapter(child: Greetings()),
-                SliverAppBar(
-                  shape: Border(
-                    bottom: BorderSide(
-                      width: 3,
-                      color: Color(0xFFAAAAAA).withOpacity(.1),
-                    ),
-                  ),
-                  elevation: 0,
-                  backgroundColor: background,
-                  automaticallyImplyLeading: true,
-                  pinned: true,
-                  bottom: PreferredSize(
-                    preferredSize: Size.fromHeight(0),
-                    child: _Tab(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              if (!isSearching) SliverToBoxAdapter(child: Greetings()),
+              SliverAppBar(
+                shape: Border(
+                  bottom: BorderSide(
+                    width: 3,
+                    color: Color(0xFFAAAAAA).withOpacity(.1),
                   ),
                 ),
-              ],
-              body: TabBarView(
-                children: [SurahTab(), JuzTab(), PageTab(), HizbTab()],
+                elevation: 0,
+                backgroundColor: background,
+                automaticallyImplyLeading: true,
+                pinned: true,
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(0),
+                  child: _Tab(),
+                ),
               ),
+            ],
+            body: TabBarView(
+              controller: tabController,
+              children: [
+                SurahTab(key: surahTabKey),
+                JuzTab(),
+                PageTab(),
+                HizbTab(),
+              ],
             ),
           ),
         ),
@@ -53,7 +99,8 @@ class HomeScreen extends StatelessWidget {
 
   TabBar _Tab() {
     return TabBar(
-      unselectedLabelColor: text,
+      controller: tabController,
+      unselectedLabelColor: textColor,
       indicatorWeight: 3,
       labelStyle: GoogleFonts.poppins(
         fontWeight: FontWeight.w600,
@@ -61,6 +108,12 @@ class HomeScreen extends StatelessWidget {
         color: Colors.white,
       ),
       dividerHeight: 0,
+      onTap: (index) {
+        // Clear search when switching tabs
+        if (isSearching && index != 0) {
+          _toggleSearch();
+        }
+      },
       tabs: [
         TabItem(title: "Surah"),
         TabItem(title: "Juz'"),
@@ -91,7 +144,7 @@ class HomeScreen extends StatelessWidget {
     required String label,
   }) => BottomNavigationBarItem(
     // ignore: deprecated_member_use
-    icon: SvgPicture.asset(icon, color: text),
+    icon: SvgPicture.asset(icon, color: textColor),
     activeIcon: SvgPicture.asset(icon, color: primary),
     label: "",
   );
@@ -99,7 +152,11 @@ class HomeScreen extends StatelessWidget {
   AppBar _appBar() => AppBar(
     elevation: 0,
     automaticallyImplyLeading: false,
-    title: Row(
+    title: isSearching ? _buildSearchField() : _buildNormalTitle(),
+  );
+
+  Widget _buildNormalTitle() {
+    return Row(
       children: [
         IconButton(
           onPressed: () {},
@@ -111,17 +168,51 @@ class HomeScreen extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: text,
+            color: textColor,
           ),
         ),
         Spacer(),
         IconButton(
-          onPressed: () {},
-          icon: SvgPicture.asset('assets/svgs/search-icon.svg'),
+          onPressed: () {
+            // Only allow search in Surah tab
+            if (tabController.index == 0) {
+              _toggleSearch();
+            }
+          },
+          icon: SvgPicture.asset(
+            'assets/svgs/search-icon.svg',
+            // ignore: deprecated_member_use
+            color: tabController.index == 0 ? null : textColor.withOpacity(0.5),
+          ),
         ),
       ],
-    ),
-  );
+    );
+  }
+
+  Widget _buildSearchField() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: searchController,
+            autofocus: true,
+            onChanged: _onSearchChanged,
+            style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
+            decoration: InputDecoration(
+              hintText: 'Search Surahs...',
+              hintStyle: GoogleFonts.poppins(color: textColor, fontSize: 16),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16),
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: _toggleSearch,
+          icon: Icon(Icons.close, color: textColor),
+        ),
+      ],
+    );
+  }
 }
 
 class Greetings extends StatelessWidget {
@@ -137,7 +228,7 @@ class Greetings extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w500,
-            color: text,
+            color: textColor,
           ),
         ),
         const SizedBox(height: 4),
