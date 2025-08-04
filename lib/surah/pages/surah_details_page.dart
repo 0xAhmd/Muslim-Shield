@@ -132,11 +132,12 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          _buildHeader(),
-          _buildTabBar(),
-          Expanded(child: _buildContent()),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(children: [_buildHeader(), _buildTabBar()]),
+          ),
+          SliverFillRemaining(child: _buildContent()),
         ],
       ),
     );
@@ -154,41 +155,61 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         ),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
+      child: Stack(
         children: [
-          Text(
-            widget.surah.englishName,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontSize: 26,
+          // Background Icon with transparency
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Opacity(
+                opacity: 0.11, // Adjust transparency (0.1 = 10% opacity)
+                child: SvgPicture.asset(
+                  'assets/svgs/quran.svg',
+                  width: 230, // Adjust size as needed
+                  height: 230,
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            widget.surah.englishNameTranslation,
-            style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
-          ),
-          Divider(
-            color: Colors.white.withOpacity(.35),
-            thickness: 2,
-            height: 32,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+
+          // Original content
+          Column(
             children: [
               Text(
-                '${widget.surah.revelationType.toUpperCase()} • ${widget.surah.numberOfAyahs} VERSES',
+                widget.surah.englishName,
                 style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
+                  fontSize: 26,
                 ),
               ),
+              const SizedBox(height: 4),
+              Text(
+                widget.surah.englishNameTranslation,
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
+              ),
+              Divider(
+                color: Colors.white.withOpacity(.35),
+                thickness: 2,
+                height: 32,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${widget.surah.revelationType.toUpperCase()} • ${widget.surah.numberOfAyahs} VERSES',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              if (widget.surah.number != 1 && widget.surah.number != 9)
+                SvgPicture.asset('assets/svgs/bismillah.svg'),
             ],
           ),
-          const SizedBox(height: 32),
-          if (widget.surah.number != 1 && widget.surah.number != 9)
-            SvgPicture.asset('assets/svgs/bismillah.svg'),
         ],
       ),
     );
@@ -443,7 +464,12 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
               final ayah = surahDetail!.ayahs[index];
               return Container(
                 margin: const EdgeInsets.only(bottom: 24),
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.only(
+                  right: 20,
+                  left: 20,
+                  top: 20,
+                  bottom: 0,
+                ),
                 decoration: BoxDecoration(
                   color: gray,
                   borderRadius: BorderRadius.circular(10),
@@ -475,8 +501,8 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                       ayah.text,
                       style: GoogleFonts.amiri(
                         color: Colors.white,
-                        fontSize: 18,
-                        height: 2,
+                        fontSize: 24,
+                        height: 1.9,
                       ),
                       textAlign: TextAlign.right,
                       textDirection: TextDirection.rtl,
