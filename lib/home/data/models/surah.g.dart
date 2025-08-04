@@ -101,3 +101,51 @@ Map<String, dynamic> _$SurahDetailResponseToJson(
   'status': instance.status,
   'data': instance.data,
 };
+
+Reciter _$ReciterFromJson(Map<String, dynamic> json) => Reciter(
+  id: (json['id'] as num).toInt(),
+  name: json['name'] as String,
+  style: json['style'] as String,
+  url: json['url'] as String,
+  fileFormats: (json['file_formats'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+);
+
+Map<String, dynamic> _$ReciterToJson(Reciter instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'style': instance.style,
+  'url': instance.url,
+  'file_formats': instance.fileFormats,
+};
+
+AudioAyah _$AudioAyahFromJson(Map<String, dynamic> json) => AudioAyah(
+  verse: (json['verse'] as num).toInt(),
+  url: json['url'] as String,
+);
+
+Map<String, dynamic> _$AudioAyahToJson(AudioAyah instance) => <String, dynamic>{
+  'verse': instance.verse,
+  'url': instance.url,
+};
+
+SurahAudioData _$SurahAudioDataFromJson(Map<String, dynamic> json) =>
+    SurahAudioData(
+      chapter: (json['chapter'] as num).toInt(),
+      verses: (json['verses'] as List<dynamic>)
+          .map((e) => AudioAyah.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$SurahAudioDataToJson(SurahAudioData instance) =>
+    <String, dynamic>{'chapter': instance.chapter, 'verses': instance.verses};
+
+SurahAudioResponse _$SurahAudioResponseFromJson(Map<String, dynamic> json) =>
+    SurahAudioResponse(
+      success: json['success'] as bool,
+      data: SurahAudioData.fromJson(json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$SurahAudioResponseToJson(SurahAudioResponse instance) =>
+    <String, dynamic>{'success': instance.success, 'data': instance.data};

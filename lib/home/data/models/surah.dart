@@ -36,7 +36,8 @@ class SurahsResponse {
     required this.data,
   });
 
-  factory SurahsResponse.fromJson(Map<String, dynamic> json) => _$SurahsResponseFromJson(json);
+  factory SurahsResponse.fromJson(Map<String, dynamic> json) =>
+      _$SurahsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$SurahsResponseToJson(this);
 }
 
@@ -88,7 +89,8 @@ class SurahDetail {
     required this.ayahs,
   });
 
-  factory SurahDetail.fromJson(Map<String, dynamic> json) => _$SurahDetailFromJson(json);
+  factory SurahDetail.fromJson(Map<String, dynamic> json) =>
+      _$SurahDetailFromJson(json);
   Map<String, dynamic> toJson() => _$SurahDetailToJson(this);
 }
 
@@ -104,6 +106,66 @@ class SurahDetailResponse {
     required this.data,
   });
 
-  factory SurahDetailResponse.fromJson(Map<String, dynamic> json) => _$SurahDetailResponseFromJson(json);
+  factory SurahDetailResponse.fromJson(Map<String, dynamic> json) =>
+      _$SurahDetailResponseFromJson(json);
   Map<String, dynamic> toJson() => _$SurahDetailResponseToJson(this);
+}
+
+// New models for audio support
+@JsonSerializable()
+class Reciter {
+  final int id;
+  final String name;
+  final String style;
+  final String url;
+  @JsonKey(name: 'file_formats')
+  final List<String> fileFormats;
+
+  Reciter({
+    required this.id,
+    required this.name,
+    required this.style,
+    required this.url,
+    required this.fileFormats,
+  });
+
+  factory Reciter.fromJson(Map<String, dynamic> json) =>
+      _$ReciterFromJson(json);
+  Map<String, dynamic> toJson() => _$ReciterToJson(this);
+}
+
+@JsonSerializable()
+class AudioAyah {
+  final int verse;
+  final String url;
+
+  AudioAyah({required this.verse, required this.url});
+
+  factory AudioAyah.fromJson(Map<String, dynamic> json) =>
+      _$AudioAyahFromJson(json);
+  Map<String, dynamic> toJson() => _$AudioAyahToJson(this);
+}
+
+@JsonSerializable()
+class SurahAudioData {
+  final int chapter;
+  final List<AudioAyah> verses;
+
+  SurahAudioData({required this.chapter, required this.verses});
+
+  factory SurahAudioData.fromJson(Map<String, dynamic> json) =>
+      _$SurahAudioDataFromJson(json);
+  Map<String, dynamic> toJson() => _$SurahAudioDataToJson(this);
+}
+
+@JsonSerializable()
+class SurahAudioResponse {
+  final bool success;
+  final SurahAudioData data;
+
+  SurahAudioResponse({required this.success, required this.data});
+
+  factory SurahAudioResponse.fromJson(Map<String, dynamic> json) =>
+      _$SurahAudioResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$SurahAudioResponseToJson(this);
 }

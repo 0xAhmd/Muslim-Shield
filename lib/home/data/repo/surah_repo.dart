@@ -4,6 +4,7 @@ import '../models/surah.dart';
 
 class SurahRepository {
   final _apiService = DioClient().apiService;
+  final _audioApiService = DioClient().audioApiService;
 
   Future<List<Surah>> getSurahs() async {
     try {
@@ -29,6 +30,31 @@ class SurahRepository {
       return response.data;
     } catch (e) {
       throw Exception('Failed to fetch surah with audio: $e');
+    }
+  }
+
+  // New methods for audio support
+  Future<List<Reciter>> getReciters() async {
+    try {
+      final reciters = await _audioApiService.getReciters();
+      return reciters;
+    } catch (e) {
+      throw Exception('Failed to fetch reciters: $e');
+    }
+  }
+
+  Future<SurahAudioResponse> getSurahAudio(
+    int reciterId,
+    int chapterNumber,
+  ) async {
+    try {
+      final response = await _audioApiService.getSurahAudio(
+        reciterId,
+        chapterNumber,
+      );
+      return response;
+    } catch (e) {
+      throw Exception('Failed to fetch surah audio: $e');
     }
   }
 }

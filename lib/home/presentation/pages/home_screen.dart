@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 pinned: true,
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(0),
-                  child: _Tab(),
+                  child: tab(),
                 ),
               ),
             ],
@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  TabBar _Tab() {
+  TabBar tab() {
     return TabBar(
       controller: tabController,
       unselectedLabelColor: textColor,
@@ -115,15 +115,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         }
       },
       tabs: [
-        TabItem(title: "Surah"),
-        TabItem(title: "Juz'"),
-        TabItem(title: "Page"),
-        TabItem(title: "Hizb"),
+        tabItem(title: "Surah"),
+        tabItem(title: "Juz'"),
+        tabItem(title: "Page"),
+        tabItem(title: "Hizb"),
       ],
     );
   }
 
-  Tab TabItem({required String title}) => Tab(text: title);
+  Tab tabItem({required String title}) => Tab(text: title);
 
   BottomNavigationBar _bottomNavigationBar() => BottomNavigationBar(
     type: BottomNavigationBarType.fixed,

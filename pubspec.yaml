@@ -31,6 +31,7 @@ dependencies:
   audioplayers: ^6.5.0
   build_runner: ^2.6.0
   cupertino_icons: ^1.0.8
+  dio: ^5.8.0+1
   flutter:
     sdk: flutter
   flutter_svg: ^2.2.0
