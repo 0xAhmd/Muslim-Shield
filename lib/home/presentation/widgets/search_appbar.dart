@@ -27,11 +27,11 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       automaticallyImplyLeading: false,
-      title: isSearching ? searchField() : _NormalTitle(),
+      title: isSearching ? searchField() : normalTitle(),
     );
   }
 
-  Widget _NormalTitle() {
+  Widget normalTitle() {
     return Row(
       children: [
         const SizedBox(width: 8),

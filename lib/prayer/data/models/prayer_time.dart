@@ -1,5 +1,5 @@
 // lib/prayer/data/models/prayer_times_model.dart
-import 'package:azkar/prayer/presentation/data/models/prayer_data.dart';
+import 'package:azkar/prayer/data/models/prayer_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'prayer_time.g.dart';

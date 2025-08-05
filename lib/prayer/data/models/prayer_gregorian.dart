@@ -1,5 +1,5 @@
 
-import 'package:azkar/prayer/presentation/data/models/gregorian_month.dart';
+import 'package:azkar/prayer/data/models/gregorian_month.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_gregorian.g.dart';
 @JsonSerializable()

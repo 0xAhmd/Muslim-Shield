@@ -1,4 +1,4 @@
-import 'package:azkar/prayer/presentation/data/models/prayer_location.dart';
+import 'package:azkar/prayer/data/models/prayer_location.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_method.g.dart';
 @JsonSerializable()
