@@ -10,7 +10,7 @@
 <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
 
     <application
-        android:label="azkar"
+        android:label="Muslim Shield"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"> <!-- Optional: only needed if you're using http:// -->
