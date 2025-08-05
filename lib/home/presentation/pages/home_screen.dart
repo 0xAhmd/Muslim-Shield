@@ -1,4 +1,3 @@
-// lib/home/presentation/pages/home_screen.dart
 import 'package:azkar/constants.dart';
 
 import 'package:azkar/hizb/presentation/widgets/hizb_tab.dart';
@@ -7,7 +6,6 @@ import 'package:azkar/home/presentation/widgets/custom_tab_bar.dart';
 import 'package:azkar/home/presentation/widgets/greeting_section.dart';
 import 'package:azkar/home/presentation/widgets/search_appbar.dart';
 import 'package:azkar/juzz/presentation/widgets/juz_tab.dart';
-import 'package:azkar/page/presentation/widgets/page_tab.dart';
 import 'package:azkar/surah/widgets/surah_tab.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -134,7 +132,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               children: [
                 SurahTab(key: surahTabKey),
                 JuzTab(key: juzTabKey),
-                PageTab(),
                 HizbTab(),
               ],
             ),

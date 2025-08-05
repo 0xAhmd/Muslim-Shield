@@ -25,7 +25,6 @@ class CustomTabBar extends StatelessWidget {
       tabs: const [
         Tab(text: "Surah"),
         Tab(text: "Juzz'"),
-        Tab(text: "Page"),
         Tab(text: "Hizb"),
       ],
     );
