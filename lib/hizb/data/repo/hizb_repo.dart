@@ -1,4 +1,5 @@
 import 'package:azkar/hizb/data/models/hizb.dart';
+import 'package:azkar/hizb/data/models/hizb_ayah.dart';
 import 'package:azkar/hizb/data/models/hizb_summary.dart';
 import 'package:azkar/hizb/data/service/hizb_service.dart';
 
@@ -41,11 +42,12 @@ class HizbRepository {
   }
 
   // Get specific Hizb with caching
+  // Since there's no direct Hizb endpoint, we'll use Juz and split it
   Future<Hizb> getHizb(
     int hizbNumber, {
     String edition = 'quran-uthmani',
   }) async {
-    // Validate Hizb number
+    // Validate Hizb number (1-60, since 30 Juz × 2 Hizb per Juz = 60 Hizb)
     if (hizbNumber < 1 || hizbNumber > 60) {
       throw ArgumentError('Hizb number must be between 1 and 60');
     }
@@ -60,18 +62,41 @@ class HizbRepository {
     try {
       debugPrint('Fetching Hizb $hizbNumber from API...');
 
-      final response = await _hizbService.getHizb(hizbNumber, edition);
+      // Calculate which Juz this Hizb belongs to
+      final juzNumber = ((hizbNumber - 1) ~/ 2) + 1;
+      final isFirstHalf = hizbNumber % 2 == 1;
+
+      debugPrint(
+        'Hizb $hizbNumber is ${isFirstHalf ? "first" : "second"} half of Juz $juzNumber',
+      );
+
+      final response = await _hizbService.getJuz(juzNumber, edition);
 
       if (response.code != 200) {
         throw Exception('API returned error code: ${response.code}');
       }
 
-      final hizb = response.data;
+      final juzData = response.data;
+
+      // Split the Juz data into two halves to get the specific Hizb
+      final halfPoint = juzData.ayahs.length ~/ 2;
+      final List<HizbAyah> hizbAyahs;
+
+      if (isFirstHalf) {
+        hizbAyahs = juzData.ayahs.sublist(0, halfPoint);
+      } else {
+        hizbAyahs = juzData.ayahs.sublist(halfPoint);
+      }
+
+      // Create Hizb object
+      final hizb = Hizb(number: hizbNumber, ayahs: hizbAyahs);
 
       // Cache the result
       _hizbCache[cacheKey] = hizb;
 
-      debugPrint('Successfully fetched and cached Hizb $hizbNumber');
+      debugPrint(
+        'Successfully fetched and cached Hizb $hizbNumber with ${hizb.totalAyahs} ayahs',
+      );
       return hizb;
     } on DioException catch (e) {
       debugPrint('Dio error fetching Hizb $hizbNumber: ${e.message}');
@@ -92,6 +117,70 @@ class HizbRepository {
     } catch (e) {
       debugPrint('Unexpected error fetching Hizb $hizbNumber: $e');
       throw Exception('Failed to load Hizb $hizbNumber: $e');
+    }
+  }
+
+  // Alternative method using HizbQuarter endpoint (more accurate)
+  Future<Hizb> getHizbUsingQuarters(
+    int hizbNumber, {
+    String edition = 'quran-uthmani',
+  }) async {
+    if (hizbNumber < 1 || hizbNumber > 60) {
+      throw ArgumentError('Hizb number must be between 1 and 60');
+    }
+
+    // Check cache first
+    final cacheKey = hizbNumber;
+    if (_hizbCache.containsKey(cacheKey)) {
+      debugPrint('Returning cached Hizb $hizbNumber');
+      return _hizbCache[cacheKey]!;
+    }
+
+    try {
+      debugPrint('Fetching Hizb $hizbNumber using quarters from API...');
+
+      // Each Hizb consists of 4 quarters
+      // Hizb 1 = Quarters 1,2,3,4
+      // Hizb 2 = Quarters 5,6,7,8, etc.
+      final startQuarter = (hizbNumber - 1) * 4 + 1;
+      final endQuarter = hizbNumber * 4;
+
+      debugPrint(
+        'Fetching quarters $startQuarter to $endQuarter for Hizb $hizbNumber',
+      );
+
+      List<HizbAyah> allAyahs = [];
+
+      // Fetch all 4 quarters for this Hizb
+      for (int quarter = startQuarter; quarter <= endQuarter; quarter++) {
+        try {
+          final response = await _hizbService.getHizbQuarter(quarter, edition);
+          if (response.code == 200) {
+            allAyahs.addAll(response.data.ayahs);
+          }
+        } catch (e) {
+          debugPrint('Error fetching quarter $quarter: $e');
+        }
+      }
+
+      if (allAyahs.isEmpty) {
+        throw Exception('No ayahs found for Hizb $hizbNumber');
+      }
+
+      // Create Hizb object
+      final hizb = Hizb(number: hizbNumber, ayahs: allAyahs);
+
+      // Cache the result
+      _hizbCache[cacheKey] = hizb;
+
+      debugPrint(
+        'Successfully fetched and cached Hizb $hizbNumber with ${hizb.totalAyahs} ayahs',
+      );
+      return hizb;
+    } catch (e) {
+      debugPrint('Error fetching Hizb $hizbNumber using quarters: $e');
+      // Fallback to Juz method
+      return getHizb(hizbNumber, edition: edition);
     }
   }
 

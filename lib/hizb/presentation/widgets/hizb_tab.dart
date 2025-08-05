@@ -25,6 +25,11 @@ class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
     super.initState();
     _hizbCubit = HizbCubit(repository: HizbRepository());
     _hizbCubit.loadHizbSummaries();
+
+    // Preload popular Hizb sections in background
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _hizbCubit.preloadPopularHizb();
+    });
   }
 
   @override
@@ -48,6 +53,20 @@ class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
 
   void performClearSearch() {
     clearSearch();
+  }
+
+  // Method to get current search state for HomeScreen
+  bool get isSearching => _hizbCubit.isSearching;
+
+  String get currentSearchQuery => _hizbCubit.getCurrentSearchQuery();
+
+  int get filteredCount => _hizbCubit.getFilteredCount();
+
+  int get totalCount => _hizbCubit.getTotalCount();
+
+  // Method to filter by Juzz (can be called from other components)
+  void filterByJuzz(int juzzNumber) {
+    _hizbCubit.filterByJuzz(juzzNumber);
   }
 
   @override

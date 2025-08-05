@@ -20,7 +20,10 @@ class _HizbService implements HizbService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HizbResponse> getHizb(int hizbNumber, String edition) async {
+  Future<HizbResponse> getHizbQuarter(
+    int hizbQuarterNumber,
+    String edition,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -29,7 +32,7 @@ class _HizbService implements HizbService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'hizb/${hizbNumber}/${edition}',
+            'hizbQuarter/${hizbQuarterNumber}/${edition}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -47,7 +50,7 @@ class _HizbService implements HizbService {
   }
 
   @override
-  Future<HizbResponse> getHizbArabic(int hizbNumber) async {
+  Future<HizbResponse> getHizbQuarterArabic(int hizbQuarterNumber) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -56,7 +59,61 @@ class _HizbService implements HizbService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'hizb/${hizbNumber}/quran-uthmani',
+            'hizbQuarter/${hizbQuarterNumber}/quran-uthmani',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late HizbResponse _value;
+    try {
+      _value = HizbResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<HizbResponse> getJuz(int juzNumber, String edition) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HizbResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'juz/${juzNumber}/${edition}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late HizbResponse _value;
+    try {
+      _value = HizbResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<HizbResponse> getJuzArabic(int juzNumber) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HizbResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'juz/${juzNumber}/quran-uthmani',
             queryParameters: queryParameters,
             data: _data,
           )

@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late TabController tabController;
   final GlobalKey<SurahTabState> surahTabKey = GlobalKey<SurahTabState>();
   final GlobalKey<JuzTabState> juzTabKey = GlobalKey<JuzTabState>();
+  final GlobalKey<HizbTabState> hizbTabKey = GlobalKey<HizbTabState>();
 
   @override
   void initState() {
@@ -54,6 +55,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       case 1:
         juzTabKey.currentState?.performClearSearch();
         break;
+      case 2:
+        hizbTabKey.currentState?.performClearSearch();
+        break;
     }
   }
 
@@ -65,11 +69,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       case 1:
         juzTabKey.currentState?.performSearch(query);
         break;
+      case 2:
+        hizbTabKey.currentState?.performSearch(query);
+        break;
     }
   }
 
   bool _canSearchInCurrentTab() {
-    return tabController.index == 0 || tabController.index == 1;
+    return tabController.index == 0 ||
+        tabController.index == 1 ||
+        tabController.index == 2;
   }
 
   String _getSearchHint() {
@@ -78,6 +87,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         return 'Search Surahs...';
       case 1:
         return 'Search Juzz...';
+      case 2:
+        return 'Search Hizb sections...';
       default:
         return 'Search...';
     }
@@ -132,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               children: [
                 SurahTab(key: surahTabKey),
                 JuzTab(key: juzTabKey),
-                HizbTab(),
+                HizbTab(key: hizbTabKey),
               ],
             ),
           ),

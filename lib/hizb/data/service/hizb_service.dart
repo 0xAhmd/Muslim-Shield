@@ -8,12 +8,26 @@ part 'hizb_service.g.dart';
 abstract class HizbService {
   factory HizbService(Dio dio, {String baseUrl}) = _HizbService;
 
-  @GET('hizb/{hizbNumber}/{edition}')
-  Future<HizbResponse> getHizb(
-    @Path('hizbNumber') int hizbNumber,
+  // The correct endpoint is hizbQuarter, not hizb
+  // There are 240 hizb quarters (1-240), where each 4 quarters = 1 Hizb
+  @GET('hizbQuarter/{hizbQuarterNumber}/{edition}')
+  Future<HizbResponse> getHizbQuarter(
+    @Path('hizbQuarterNumber') int hizbQuarterNumber,
     @Path('edition') String edition,
   );
 
-  @GET('hizb/{hizbNumber}/quran-uthmani')
-  Future<HizbResponse> getHizbArabic(@Path('hizbNumber') int hizbNumber);
+  @GET('hizbQuarter/{hizbQuarterNumber}/quran-uthmani')
+  Future<HizbResponse> getHizbQuarterArabic(
+    @Path('hizbQuarterNumber') int hizbQuarterNumber,
+  );
+
+  // Alternative: Use Juz endpoint since 1 Hizb = 1/2 Juz
+  @GET('juz/{juzNumber}/{edition}')
+  Future<HizbResponse> getJuz(
+    @Path('juzNumber') int juzNumber,
+    @Path('edition') String edition,
+  );
+
+  @GET('juz/{juzNumber}/quran-uthmani')
+  Future<HizbResponse> getJuzArabic(@Path('juzNumber') int juzNumber);
 }
