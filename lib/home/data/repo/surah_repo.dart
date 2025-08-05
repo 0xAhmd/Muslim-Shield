@@ -1,7 +1,7 @@
 // lib/home/data/repo/surah_repo.dart
 import 'package:azkar/home/data/models/surah.dart';
 import 'package:azkar/home/data/service/dio_client.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 class SurahRepository {
   final _apiService = DioClient().apiService;
@@ -12,7 +12,7 @@ class SurahRepository {
       final response = await _apiService.getSurahs();
       return response.data;
     } catch (e) {
-      print('Error in getSurahs: $e');
+      debugPrint('Error in getSurahs: $e');
       throw Exception('Failed to fetch surahs: $e');
     }
   }
@@ -22,7 +22,7 @@ class SurahRepository {
       final response = await _apiService.getSurah(number);
       return response.data;
     } catch (e) {
-      print('Error in getSurah: $e');
+      debugPrint('Error in getSurah: $e');
       throw Exception('Failed to fetch surah: $e');
     }
   }
@@ -32,17 +32,17 @@ class SurahRepository {
       final response = await _apiService.getSurahWithAudio(number);
       return response.data;
     } catch (e) {
-      print('Error in getSurahWithAudio: $e');
+      debugPrint('Error in getSurahWithAudio: $e');
       throw Exception('Failed to fetch surah with audio: $e');
     }
   }
 
   Future<List<Reciter>> getReciters() async {
     try {
-      print('Calling audioApiService.getRecitersRaw()...');
+      debugPrint('Calling audioApiService.getRecitersRaw()...');
       final Map<String, String> reciterMap = await _audioApiService
           .getRecitersRaw();
-      print('Raw API response: $reciterMap');
+      debugPrint('Raw API response: $reciterMap');
 
       final List<Reciter> reciters = [];
 
@@ -50,19 +50,19 @@ class SurahRepository {
         try {
           final reciter = Reciter.fromApiResponse(id, name);
           reciters.add(reciter);
-          print('Added reciter: ${reciter.name} (ID: ${reciter.id})');
+          debugPrint('Added reciter: ${reciter.name} (ID: ${reciter.id})');
         } catch (e) {
-          print('Error parsing reciter ID $id, name $name: $e');
+          debugPrint('Error parsing reciter ID $id, name $name: $e');
         }
       });
 
       reciters.sort((a, b) => a.id.compareTo(b.id));
 
-      print('Successfully loaded ${reciters.length} reciters');
+      debugPrint('Successfully loaded ${reciters.length} reciters');
       return reciters;
     } catch (e, stackTrace) {
-      print('Error in getReciters: $e');
-      print('Stack trace: $stackTrace');
+      debugPrint('Error in getReciters: $e');
+      debugPrint('Stack trace: $stackTrace');
       throw Exception('Failed to fetch reciters: $e');
     }
   }
@@ -72,13 +72,15 @@ class SurahRepository {
     int chapterNumber,
   ) async {
     try {
-      print('Getting audio for reciter $reciterId, chapter $chapterNumber');
+      debugPrint(
+        'Getting audio for reciter $reciterId, chapter $chapterNumber',
+      );
 
       // Get surah details to know how many ayahs there are
       final surahDetail = await getSurah(chapterNumber);
       final totalAyahs = surahDetail.numberOfAyahs;
 
-      print('Total ayahs in chapter $chapterNumber: $totalAyahs');
+      debugPrint('Total ayahs in chapter $chapterNumber: $totalAyahs');
 
       List<AudioAyah> verses = [];
 
@@ -106,18 +108,18 @@ class SurahRepository {
 
           verses.add(AudioAyah(verse: ayahNumber, url: audioUrl));
 
-          print('Generated URL for ayah $ayahNumber: $audioUrl');
+          debugPrint('Generated URL for ayah $ayahNumber: $audioUrl');
         }
       } else {
         // Fallback to the Quran-Audio project URLs
-        print('Unknown reciter ID: $reciterId, using fallback URLs');
+        debugPrint('Unknown reciter ID: $reciterId, using fallback URLs');
         for (int ayahNumber = 1; ayahNumber <= totalAyahs; ayahNumber++) {
           String audioUrl =
               'https://the-quran-project.github.io/Quran-Audio/Data/$reciterId/${chapterNumber}_$ayahNumber.mp3';
 
           verses.add(AudioAyah(verse: ayahNumber, url: audioUrl));
 
-          print('Generated fallback URL for ayah $ayahNumber: $audioUrl');
+          debugPrint('Generated fallback URL for ayah $ayahNumber: $audioUrl');
         }
       }
 
@@ -126,11 +128,11 @@ class SurahRepository {
         data: SurahAudioData(chapter: chapterNumber, verses: verses),
       );
 
-      print('✅ Audio response created with ${verses.length} verses');
+      debugPrint('✅ Audio response created with ${verses.length} verses');
       return audioResponse;
     } catch (e, stackTrace) {
-      print('❌ Error in getSurahAudio: $e');
-      print('Stack trace: $stackTrace');
+      debugPrint('❌ Error in getSurahAudio: $e');
+      debugPrint('Stack trace: $stackTrace');
 
       return SurahAudioResponse(
         success: false,
@@ -145,7 +147,7 @@ class SurahRepository {
     int chapterNumber,
   ) async {
     try {
-      print(
+      debugPrint(
         'Getting full chapter audio for reciter $reciterId, chapter $chapterNumber',
       );
 
@@ -153,7 +155,7 @@ class SurahRepository {
       final surahDetail = await getSurah(chapterNumber);
       final totalAyahs = surahDetail.numberOfAyahs;
 
-      print('Total ayahs in chapter $chapterNumber: $totalAyahs');
+      debugPrint('Total ayahs in chapter $chapterNumber: $totalAyahs');
 
       List<AudioAyah> verses = [];
       final dio = DioClient().audioDio;
@@ -161,7 +163,7 @@ class SurahRepository {
       // Get audio for each ayah in the chapter
       for (int ayahNumber = 1; ayahNumber <= totalAyahs; ayahNumber++) {
         try {
-          print('Fetching audio for ayah $ayahNumber...');
+          debugPrint('Fetching audio for ayah $ayahNumber...');
           final response = await dio.get('/$reciterId/$chapterNumber.json');
 
           if (response.data != null && response.data is Map<String, dynamic>) {
@@ -177,13 +179,13 @@ class SurahRepository {
 
                 if (audioUrl != null) {
                   verses.add(AudioAyah(verse: ayahNumber, url: audioUrl));
-                  print('Added audio for ayah $ayahNumber: $audioUrl');
+                  debugPrint('Added audio for ayah $ayahNumber: $audioUrl');
                 }
               }
             }
           }
         } catch (e) {
-          print('Error loading audio for ayah $ayahNumber: $e');
+          debugPrint('Error loading audio for ayah $ayahNumber: $e');
           // Continue with other ayahs even if one fails
         }
       }
@@ -193,11 +195,13 @@ class SurahRepository {
         data: SurahAudioData(chapter: chapterNumber, verses: verses),
       );
 
-      print('Full chapter audio response created with ${verses.length} verses');
+      debugPrint(
+        'Full chapter audio response created with ${verses.length} verses',
+      );
       return audioResponse;
     } catch (e, stackTrace) {
-      print('Error in getFullChapterAudio: $e');
-      print('Stack trace: $stackTrace');
+      debugPrint('Error in getFullChapterAudio: $e');
+      debugPrint('Stack trace: $stackTrace');
       throw Exception('Failed to fetch full chapter audio: $e');
     }
   }

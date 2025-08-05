@@ -139,9 +139,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         isLoadingReciters = true;
       });
 
-      print('Starting to load reciters...');
+      debugPrint('Starting to load reciters...');
       final fetchedReciters = await _repository.getReciters();
-      print('Loaded ${fetchedReciters.length} reciters successfully');
+      debugPrint('Loaded ${fetchedReciters.length} reciters successfully');
 
       setState(() {
         reciters = fetchedReciters;
@@ -151,13 +151,13 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
             (r) => r.id == defaultReciterId,
             orElse: () => reciters.first,
           );
-          print('Selected reciter: ${selectedReciter?.name}');
+          debugPrint('Selected reciter: ${selectedReciter?.name}');
         }
         isLoadingReciters = false;
       });
     } catch (e, stackTrace) {
-      print('Error loading reciters: $e');
-      print('Stack trace: $stackTrace');
+      debugPrint('Error loading reciters: $e');
+      debugPrint('Stack trace: $stackTrace');
       setState(() {
         isLoadingReciters = false;
       });
