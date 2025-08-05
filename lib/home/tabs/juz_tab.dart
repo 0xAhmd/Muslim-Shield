@@ -15,19 +15,29 @@ class JuzTab extends StatefulWidget {
   State<JuzTab> createState() => JuzTabState();
 }
 
-class JuzTabState extends State<JuzTab> {
+class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
   late JuzzCubit _juzzCubit;
+  bool _isInitialized = false;
+
+  @override
+  bool get wantKeepAlive => true; // This keeps the state alive
 
   @override
   void initState() {
     super.initState();
-    _juzzCubit = JuzzCubit(repository: SurahRepository());
-    _juzzCubit.loadJuzzSummaries();
+    _initializeCubit();
+  }
+
+  void _initializeCubit() {
+    if (!_isInitialized) {
+      _juzzCubit = JuzzCubit(repository: SurahRepository());
+      _juzzCubit.loadJuzzSummaries();
+      _isInitialized = true;
+    }
   }
 
   @override
   void dispose() {
-    _juzzCubit.close();
     super.dispose();
   }
 
@@ -41,6 +51,10 @@ class JuzTabState extends State<JuzTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(
+      context,
+    ); // Important: call super.build when using AutomaticKeepAliveClientMixin
+
     return BlocProvider.value(
       value: _juzzCubit,
       child: BlocBuilder<JuzzCubit, JuzzState>(
@@ -107,11 +121,18 @@ class JuzTabState extends State<JuzTab> {
             return _buildJuzzList(context, state);
           }
 
-          // Initial state
+          // Initial state - show loading instead of "Initializing..."
           return Center(
-            child: Text(
-              'Initializing...',
-              style: GoogleFonts.poppins(color: textColor),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(color: primary),
+                const SizedBox(height: 16),
+                Text(
+                  'Loading Juzz sections...',
+                  style: GoogleFonts.poppins(color: textColor, fontSize: 14),
+                ),
+              ],
             ),
           );
         },
