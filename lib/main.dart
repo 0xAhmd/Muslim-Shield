@@ -1,6 +1,6 @@
 import 'package:azkar/constants.dart';
 import 'package:azkar/home/presentation/pages/audio_state.dart';
-import 'package:azkar/splash/splash.dart';
+import 'package:azkar/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(backgroundColor: background),
       ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: HomeScreen(),
     );
   }
 }
