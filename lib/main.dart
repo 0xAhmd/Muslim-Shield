@@ -1,6 +1,7 @@
 import 'package:azkar/bookmarks/model/bookmark.dart';
 import 'package:azkar/bookmarks/service/bookmark_service.dart';
 import 'package:azkar/constants.dart';
+import 'package:azkar/core/blocked.dart';
 import 'package:azkar/surah/audio/audio_state.dart';
 import 'package:azkar/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
@@ -17,7 +19,15 @@ void main() async {
   Hive.registerAdapter(BookmarkModelAdapter());
   Hive.registerAdapter(BookmarkTypeAdapter());
   await BookmarksService().init();
+  final isJailBroken = await JailbreakRootDetection.instance.isJailBroken;
+  final isRealDevice = await JailbreakRootDetection.instance.isRealDevice;
 
+  final isUnsafe = isJailBroken || isRealDevice;
+
+  if (isUnsafe) {
+    runApp(const BlockedDeviceApp());
+    return;
+  }
   await AudioService().initialize();
   runApp(const MyApp());
 }
