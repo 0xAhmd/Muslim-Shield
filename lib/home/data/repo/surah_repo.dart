@@ -1,12 +1,15 @@
 // lib/home/data/repo/surah_repo.dart
 import 'package:azkar/home/data/models/surah.dart';
 import 'package:azkar/home/data/service/dio_client.dart';
+import 'package:azkar/juzz/data/models/juzz.dart';
+import 'package:azkar/juzz/data/models/juzz_summary.dart';
 import 'package:flutter/material.dart';
 
 class SurahRepository {
   final _apiService = DioClient().apiService;
   final _audioApiService = DioClient().audioApiService;
 
+  // Existing Surah methods...
   Future<List<Surah>> getSurahs() async {
     try {
       final response = await _apiService.getSurahs();
@@ -37,6 +40,62 @@ class SurahRepository {
     }
   }
 
+  // New Juzz methods
+  Future<List<JuzzSummary>> getAllJuzzSummaries() async {
+    try {
+      // Return pre-defined summaries for performance
+      // In production, you might want to cache full juzz data
+      return JuzzSummary.getAllJuzzSummaries();
+    } catch (e) {
+      debugPrint('Error in getAllJuzzSummaries: $e');
+      throw Exception('Failed to fetch juzz summaries: $e');
+    }
+  }
+
+  Future<Juzz> getJuzz(int number) async {
+    try {
+      if (number < 1 || number > 30) {
+        throw Exception('Invalid Juzz number. Must be between 1 and 30');
+      }
+
+      debugPrint('Fetching Juzz $number...');
+      final response = await _apiService.getJuzz(number);
+      debugPrint(
+        'Successfully fetched Juzz $number with ${response.data.totalAyahs} ayahs',
+      );
+      return response.data;
+    } catch (e) {
+      debugPrint('Error in getJuzz($number): $e');
+      throw Exception('Failed to fetch juzz $number: $e');
+    }
+  }
+
+  // Batch load multiple Juzz (useful for offline caching)
+  Future<List<Juzz>> getMultipleJuzz(List<int> numbers) async {
+    try {
+      final List<Juzz> juzzList = [];
+
+      for (int number in numbers) {
+        if (number >= 1 && number <= 30) {
+          try {
+            final juzz = await getJuzz(number);
+            juzzList.add(juzz);
+            debugPrint('Loaded Juzz $number');
+          } catch (e) {
+            debugPrint('Failed to load Juzz $number: $e');
+            // Continue with other Juzz even if one fails
+          }
+        }
+      }
+
+      return juzzList;
+    } catch (e) {
+      debugPrint('Error in getMultipleJuzz: $e');
+      throw Exception('Failed to fetch multiple juzz: $e');
+    }
+  }
+
+  // Existing Audio methods...
   Future<List<Reciter>> getReciters() async {
     try {
       debugPrint('Calling audioApiService.getRecitersRaw()...');
