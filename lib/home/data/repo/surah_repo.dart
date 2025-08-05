@@ -46,8 +46,24 @@ class SurahRepository {
 
       final List<Reciter> reciters = [];
 
+      // List of reciter names to exclude (case-insensitive)
+      final Set<String> excludedNames = {
+        'hani ar rifai',
+        'hani rifai',
+        'hani al rifai',
+        'hani al-rifai',
+        'hani ar-rifai',
+      };
+
       reciterMap.forEach((id, name) {
         try {
+          // Check if this reciter should be excluded
+          final normalizedName = name.toLowerCase().trim();
+          if (excludedNames.contains(normalizedName)) {
+            debugPrint('Excluding reciter: $name (ID: $id)');
+            return; // Skip this reciter
+          }
+
           final reciter = Reciter.fromApiResponse(id, name);
           reciters.add(reciter);
           debugPrint('Added reciter: ${reciter.name} (ID: ${reciter.id})');
@@ -58,7 +74,9 @@ class SurahRepository {
 
       reciters.sort((a, b) => a.id.compareTo(b.id));
 
-      debugPrint('Successfully loaded ${reciters.length} reciters');
+      debugPrint(
+        'Successfully loaded ${reciters.length} reciters (after exclusions)',
+      );
       return reciters;
     } catch (e, stackTrace) {
       debugPrint('Error in getReciters: $e');
@@ -85,13 +103,13 @@ class SurahRepository {
       List<AudioAyah> verses = [];
 
       // Use EveryAyah.com URLs which are more reliable
-      // Map reciter IDs to EveryAyah folder names
+      // Map reciter IDs to EveryAyah folder names (excluding Hani Rifai - ID 5)
       Map<int, String> reciterFolders = {
         1: 'Alafasy_128kbps',
         2: 'Abu_Bakr_Ash-Shaatree_128kbps',
         3: 'Nasser_Alqatami_128kbps',
         4: 'Yasser_Ad-Dussary_128kbps',
-        5: 'Hani_Rifai_128kbps',
+        // 5: 'Hani_Rifai_128kbps', // Excluded
       };
 
       String? folderName = reciterFolders[reciterId];
