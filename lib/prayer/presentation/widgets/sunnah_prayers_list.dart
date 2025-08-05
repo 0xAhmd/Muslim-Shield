@@ -42,7 +42,7 @@ class SunnahPrayersList extends StatelessWidget {
                 index == SunnahPrayersConstants.sunnahPrayers.length - 1;
 
             return _SunnahPrayerItem(prayer: prayer, isLast: isLast);
-          }).toList(),
+          }),
         ],
       ),
     );

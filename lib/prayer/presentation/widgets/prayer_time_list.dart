@@ -37,7 +37,7 @@ class PrayerTimesList extends StatelessWidget {
             final isLast = index == prayers.length - 1;
 
             return _PrayerTimeItem(prayer: prayer, isLast: isLast);
-          }).toList(),
+          }),
         ],
       ),
     );
