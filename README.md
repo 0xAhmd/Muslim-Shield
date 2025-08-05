@@ -75,6 +75,7 @@ dependencies:
   geolocator: ^13.0.4
   geocoding: ^4.0.0
   animated_text_kit: ^4.2.3
+  package_info_plus:
   permission_handler: ^12.0.1
   jailbreak_root_detection: ^1.1.6
   cupertino_icons: ^1.0.8
