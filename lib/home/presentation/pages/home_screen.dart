@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:azkar/constants.dart';
 import 'package:azkar/home/data/service/last_read.dart';
 import 'package:azkar/hizb/presentation/widgets/hizb_tab.dart';
@@ -193,11 +194,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildNormalTitle() {
     return Row(
       children: [
-        IconButton(
-          onPressed: () {},
-          icon: SvgPicture.asset('assets/svgs/menu-icon.svg'),
-        ),
-        const SizedBox(width: 24),
+        const SizedBox(width: 8),
         Text(
           "Azkar",
           style: GoogleFonts.poppins(
@@ -255,28 +252,47 @@ class Greetings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Colors.grey.shade300;
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start, // Align to right
       children: [
-        Text(
-          "Assalamalaikum",
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: textColor,
-          ),
+        // First line: Assalamu Alaikum
+        AnimatedTextKit(
+          isRepeatingAnimation: false,
+          animatedTexts: [
+            TypewriterAnimatedText(
+              'Assalamu Alaikum',
+              textAlign: TextAlign.left,
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: textColor,
+              ),
+              speed: const Duration(milliseconds: 100),
+            ),
+          ],
         ),
         const SizedBox(height: 4),
-        Text(
-          "Bless Muhammad",
-          style: GoogleFonts.poppins(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+
+        // Second line: Bless Muhammad
+        AnimatedTextKit(
+          isRepeatingAnimation: false,
+          animatedTexts: [
+            TypewriterAnimatedText(
+              'Bless Muhammad',
+              textAlign: TextAlign.left,
+              textStyle: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+              speed: Duration(milliseconds: 100),
+            ),
+          ],
         ),
         const SizedBox(height: 24),
-        LastRead(),
+        const LastRead(),
       ],
     );
   }
@@ -501,7 +517,7 @@ class _LastReadState extends State<LastRead> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Begin your Quran journey',
+                      'Start Thawab Streak',
                       style: GoogleFonts.poppins(color: Colors.white),
                     ),
                   ],
