@@ -7,14 +7,26 @@ import 'package:azkar/Doa/presentation/cubit/dua_state.dart';
 import 'package:azkar/Doa/presentation/cubit/dua_cubit.dart';
 import 'package:azkar/constants.dart';
 
-class DoaPage extends StatefulWidget {
+class DoaPage extends StatelessWidget {
   const DoaPage({super.key});
 
   @override
-  State<DoaPage> createState() => _DoaPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => DuaCubit()..loadDuas(),
+      child: const DoaPageContent(),
+    );
+  }
 }
 
-class _DoaPageState extends State<DoaPage> {
+class DoaPageContent extends StatefulWidget {
+  const DoaPageContent({super.key});
+
+  @override
+  State<DoaPageContent> createState() => _DoaPageContentState();
+}
+
+class _DoaPageContentState extends State<DoaPageContent> {
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
 
@@ -36,76 +48,73 @@ class _DoaPageState extends State<DoaPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => DuaCubit()..loadDuas(),
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Header with search
-              _buildHeader(),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header with search
+            _buildHeader(),
 
-              // Search bar (when active)
-              if (_isSearching) _buildSearchBar(),
+            // Search bar (when active)
+            if (_isSearching) _buildSearchBar(),
 
-              // Category filters
-              BlocBuilder<DuaCubit, DuaState>(
+            // Category filters
+            BlocBuilder<DuaCubit, DuaState>(
+              builder: (context, state) {
+                if (state is DuaLoaded && !_isSearching) {
+                  return _buildCategoryFilters(state);
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+
+            // Duas list
+            Expanded(
+              child: BlocBuilder<DuaCubit, DuaState>(
                 builder: (context, state) {
-                  if (state is DuaLoaded && !_isSearching) {
-                    return _buildCategoryFilters(state);
+                  if (state is DuaLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: primary),
+                    );
+                  } else if (state is DuaError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Colors.red.withOpacity(0.6),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Error loading Duas',
+                            style: TextStyle(
+                              color: textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            state.message,
+                            style: TextStyle(
+                              color: textColor.withOpacity(0.7),
+                              fontSize: 14,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (state is DuaLoaded) {
+                    return _buildDuasList(state);
                   }
                   return const SizedBox.shrink();
                 },
               ),
-
-              // Duas list
-              Expanded(
-                child: BlocBuilder<DuaCubit, DuaState>(
-                  builder: (context, state) {
-                    if (state is DuaLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(color: primary),
-                      );
-                    } else if (state is DuaError) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error_outline,
-                              size: 64,
-                              color: Colors.red.withOpacity(0.6),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Error loading Duas',
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              state.message,
-                              style: TextStyle(
-                                color: textColor.withOpacity(0.7),
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      );
-                    } else if (state is DuaLoaded) {
-                      return _buildDuasList(state);
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -120,7 +129,7 @@ class _DoaPageState extends State<DoaPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Duas',
                   style: TextStyle(
                     color: Colors.white,
@@ -186,26 +195,35 @@ class _DoaPageState extends State<DoaPage> {
 
   Widget _buildCategoryFilters(DuaLoaded state) {
     return Container(
-      height: 60,
+      height: 42,
       margin: const EdgeInsets.only(top: 16),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        itemCount: context.read<DuaCubit>().getCategories().length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return CategoryFilterChip(
-              label: 'All',
-              isSelected: state.selectedCategory == null,
-              onTap: () => context.read<DuaCubit>().filterByCategory(null),
-            );
-          }
+      child: BlocBuilder<DuaCubit, DuaState>(
+        builder: (context, state) {
+          if (state is! DuaLoaded) return const SizedBox.shrink();
 
-          final category = context.read<DuaCubit>().getCategories()[index - 1];
-          return CategoryFilterChip(
-            label: category,
-            isSelected: state.selectedCategory == category,
-            onTap: () => context.read<DuaCubit>().filterByCategory(category),
+          final cubit = context.read<DuaCubit>();
+          final categories = cubit.getCategories();
+
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            itemCount: categories.length + 1,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return CategoryFilterButton(
+                  label: 'All',
+                  isSelected: state.selectedCategory == null,
+                  onTap: () => cubit.filterByCategory(null),
+                );
+              }
+
+              final category = categories[index - 1];
+              return CategoryFilterButton(
+                label: category,
+                isSelected: state.selectedCategory == category,
+                onTap: () => cubit.filterByCategory(category),
+              );
+            },
           );
         },
       ),

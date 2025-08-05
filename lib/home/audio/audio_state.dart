@@ -1,5 +1,5 @@
 import 'package:azkar/home/data/models/surah.dart';
-import 'package:azkar/home/presentation/widgets/audi_player_manager.dart';
+import 'package:azkar/home/presentation/widgets/audio_player_manager.dart';
 import 'package:azkar/home/presentation/widgets/audio_prefs.dart';
 import 'package:azkar/home/presentation/widgets/ayah_manager.dart';
 

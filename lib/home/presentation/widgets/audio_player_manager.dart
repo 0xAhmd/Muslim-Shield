@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:azkar/home/presentation/pages/audio_state.dart';
+import 'package:azkar/home/audio/audio_state.dart';
 
 class AudioPlayerManager {
   final AudioPlayer _audioPlayer = AudioPlayer();
