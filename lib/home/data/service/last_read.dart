@@ -2,26 +2,53 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/surah.dart';
 
 class LastReadService {
+  // Updated keys to match new LastReadData structure
   static const String _surahNumberKey = 'last_read_surah_number';
-  static const String _surahNameKey = 'last_read_surah_name';
   static const String _surahEnglishNameKey = 'last_read_surah_english_name';
   static const String _ayahNumberKey = 'last_read_ayah_number';
-  static const String _totalAyahsKey = 'last_read_total_ayahs';
+  static const String _progressPercentageKey = 'last_read_progress_percentage';
+  static const String _lastReadAtKey = 'last_read_at';
+  static const String _juzzNumberKey = 'last_read_juzz_number';
 
-  // Save last read progress
-  static Future<void> saveLastRead({
+  // Save last read progress using LastReadData model
+  static Future<void> saveLastRead(LastReadData lastReadData) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_surahNumberKey, lastReadData.surahNumber);
+    await prefs.setString(_surahEnglishNameKey, lastReadData.surahEnglishName);
+    await prefs.setInt(_ayahNumberKey, lastReadData.ayahNumber);
+    await prefs.setDouble(
+      _progressPercentageKey,
+      lastReadData.progressPercentage,
+    );
+    await prefs.setString(
+      _lastReadAtKey,
+      lastReadData.lastReadAt.toIso8601String(),
+    );
+
+    if (lastReadData.juzzNumber != null) {
+      await prefs.setInt(_juzzNumberKey, lastReadData.juzzNumber!);
+    } else {
+      await prefs.remove(_juzzNumberKey);
+    }
+  }
+
+  // Legacy method for backward compatibility
+  static Future<void> saveLastReadLegacy({
     required int surahNumber,
     required String surahName,
     required String surahEnglishName,
     required int ayahNumber,
     required int totalAyahs,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_surahNumberKey, surahNumber);
-    await prefs.setString(_surahNameKey, surahName);
-    await prefs.setString(_surahEnglishNameKey, surahEnglishName);
-    await prefs.setInt(_ayahNumberKey, ayahNumber);
-    await prefs.setInt(_totalAyahsKey, totalAyahs);
+    final progressPercentage = (ayahNumber / totalAyahs) * 100;
+    final lastReadData = LastReadData(
+      surahNumber: surahNumber,
+      surahEnglishName: surahEnglishName,
+      ayahNumber: ayahNumber,
+      progressPercentage: progressPercentage,
+      lastReadAt: DateTime.now(),
+    );
+    await saveLastRead(lastReadData);
   }
 
   // Save from Surah model and ayah number
@@ -29,13 +56,15 @@ class LastReadService {
     required Surah surah,
     required int ayahNumber,
   }) async {
-    await saveLastRead(
+    final progressPercentage = (ayahNumber / surah.numberOfAyahs) * 100;
+    final lastReadData = LastReadData(
       surahNumber: surah.number,
-      surahName: surah.name,
       surahEnglishName: surah.englishName,
       ayahNumber: ayahNumber,
-      totalAyahs: surah.numberOfAyahs,
+      progressPercentage: progressPercentage,
+      lastReadAt: DateTime.now(),
     );
+    await saveLastRead(lastReadData);
   }
 
   // Get last read progress
@@ -43,36 +72,45 @@ class LastReadService {
     final prefs = await SharedPreferences.getInstance();
 
     final surahNumber = prefs.getInt(_surahNumberKey);
-    final surahName = prefs.getString(_surahNameKey);
     final surahEnglishName = prefs.getString(_surahEnglishNameKey);
     final ayahNumber = prefs.getInt(_ayahNumberKey);
-    final totalAyahs = prefs.getInt(_totalAyahsKey);
+    final progressPercentage = prefs.getDouble(_progressPercentageKey);
+    final lastReadAtString = prefs.getString(_lastReadAtKey);
+    final juzzNumber = prefs.getInt(_juzzNumberKey);
 
     if (surahNumber == null ||
-        surahName == null ||
         surahEnglishName == null ||
         ayahNumber == null ||
-        totalAyahs == null) {
+        progressPercentage == null ||
+        lastReadAtString == null) {
       return null;
     }
 
-    return LastReadData(
-      surahNumber: surahNumber,
-      surahName: surahName,
-      surahEnglishName: surahEnglishName,
-      ayahNumber: ayahNumber,
-      totalAyahs: totalAyahs,
-    );
+    try {
+      final lastReadAt = DateTime.parse(lastReadAtString);
+      return LastReadData(
+        surahNumber: surahNumber,
+        surahEnglishName: surahEnglishName,
+        ayahNumber: ayahNumber,
+        progressPercentage: progressPercentage,
+        lastReadAt: lastReadAt,
+        juzzNumber: juzzNumber,
+      );
+    } catch (e) {
+      // If date parsing fails, return null
+      return null;
+    }
   }
 
   // Clear last read data
   static Future<void> clearLastRead() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_surahNumberKey);
-    await prefs.remove(_surahNameKey);
     await prefs.remove(_surahEnglishNameKey);
     await prefs.remove(_ayahNumberKey);
-    await prefs.remove(_totalAyahsKey);
+    await prefs.remove(_progressPercentageKey);
+    await prefs.remove(_lastReadAtKey);
+    await prefs.remove(_juzzNumberKey);
   }
 
   // Check if user has any reading history
@@ -80,16 +118,33 @@ class LastReadService {
     final lastRead = await getLastRead();
     return lastRead != null;
   }
+
+  // Save from JuzzAyah model - moved from extension to main class
+  static Future<void> saveLastReadFromJuzzAyah({
+    required dynamic juzzAyah, // JuzzAyah type
+    required int juzzNumber,
+  }) async {
+    final lastReadData = LastReadData(
+      surahNumber: juzzAyah.surah.number,
+      surahEnglishName: juzzAyah.surah.englishName,
+      ayahNumber: juzzAyah.numberInSurah,
+      progressPercentage:
+          (juzzAyah.numberInSurah / juzzAyah.surah.numberOfAyahs) * 100,
+      lastReadAt: DateTime.now(),
+      juzzNumber: juzzNumber,
+    );
+
+    await LastReadService.saveLastRead(lastReadData);
+  }
 }
 
-// Add this to your existing LastReadData class
 class LastReadData {
   final int surahNumber;
   final String surahEnglishName;
   final int ayahNumber;
   final double progressPercentage;
   final DateTime lastReadAt;
-  final int? juzzNumber; // Add Juzz support
+  final int? juzzNumber; // Optional Juzz number
 
   LastReadData({
     required this.surahNumber,

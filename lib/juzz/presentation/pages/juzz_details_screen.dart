@@ -112,7 +112,7 @@ class _JuzzDetailScreenState extends State<JuzzDetailScreen> {
       leading: IconButton(
         onPressed: () => Navigator.pop(context),
         icon: SvgPicture.asset(
-          'assets/svgs/arrow-left.svg',
+          'assets/svgs/back-icon.svg',
           // ignore: deprecated_member_use
           color: Colors.white,
         ),
