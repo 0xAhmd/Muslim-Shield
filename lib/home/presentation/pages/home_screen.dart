@@ -255,16 +255,15 @@ class Greetings extends StatelessWidget {
     final textColor = Colors.grey.shade300;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // Align to right
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // First line: Assalamu Alaikum
         AnimatedTextKit(
           isRepeatingAnimation: false,
           animatedTexts: [
             TypewriterAnimatedText(
               'Assalamu Alaikum',
               textAlign: TextAlign.left,
-              textStyle: TextStyle(
+              textStyle: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
                 color: textColor,
@@ -282,7 +281,7 @@ class Greetings extends StatelessWidget {
             TypewriterAnimatedText(
               'Bless Muhammad',
               textAlign: TextAlign.left,
-              textStyle: const TextStyle(
+              textStyle: GoogleFonts.poppins(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
