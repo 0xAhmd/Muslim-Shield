@@ -1,5 +1,5 @@
 import 'package:azkar/constants.dart';
-import 'package:azkar/home/data/service/last_read.dart';
+import 'package:azkar/surah/data/service/last_read.dart';
 import 'package:azkar/juzz/data/models/juzz_ayah.dart';
 import 'package:azkar/juzz/presentation/widgets/meta_data_chip.dart';
 import 'package:flutter/material.dart';

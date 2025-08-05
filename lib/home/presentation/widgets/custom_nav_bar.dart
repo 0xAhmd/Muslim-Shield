@@ -23,10 +23,10 @@ class CustomBottomNav extends StatelessWidget {
       showUnselectedLabels: false,
       items: [
         _buildNavItem(icon: "assets/svgs/quran-icon.svg"),
-        _buildNavItem(icon: "assets/svgs/lamp-icon.svg"),
         _buildNavItem(icon: "assets/svgs/pray-icon.svg"),
         _buildNavItem(icon: "assets/svgs/doa-icon.svg"),
-        _buildNavItem(icon: "assets/svgs/bookmark-icon.svg"),
+        // _buildNavItem(icon: "assets/svgs/lamp-icon.svg"),
+        // _buildNavItem(icon: "assets/svgs/bookmark-icon.svg"),
       ],
     );
   }

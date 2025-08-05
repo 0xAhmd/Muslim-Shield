@@ -1,4 +1,4 @@
-import 'package:azkar/home/data/models/surah.dart';
+import 'package:azkar/surah/data/models/surah.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'hizb_ayah.g.dart';

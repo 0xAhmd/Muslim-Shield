@@ -1,5 +1,5 @@
-import 'package:azkar/home/data/models/surah.dart';
-import 'package:azkar/home/data/service/dio_client.dart';
+import 'package:azkar/surah/data/models/surah.dart';
+import 'package:azkar/surah/data/service/dio_client.dart';
 import 'package:azkar/juzz/data/models/juzz.dart';
 import 'package:azkar/juzz/data/models/juzz_summary.dart';
 import 'package:flutter/material.dart';

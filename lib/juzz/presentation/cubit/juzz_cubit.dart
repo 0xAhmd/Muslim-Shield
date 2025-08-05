@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:azkar/home/data/repo/surah_repo.dart';
+import 'package:azkar/surah/data/repo/surah_repo.dart';
 import 'package:azkar/juzz/data/models/juzz_summary.dart';
 import 'package:azkar/juzz/presentation/cubit/juzz_state.dart';
 

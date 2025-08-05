@@ -1,7 +1,7 @@
 import 'package:azkar/constants.dart';
-import 'package:azkar/home/data/models/surah.dart';
-import 'package:azkar/home/data/repo/surah_repo.dart';
-import 'package:azkar/home/data/service/last_read.dart';
+import 'package:azkar/surah/data/models/surah.dart';
+import 'package:azkar/surah/data/repo/surah_repo.dart';
+import 'package:azkar/surah/data/service/last_read.dart';
 import 'package:azkar/surah/pages/surah_details_page.dart';
 
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'package:azkar/constants.dart';
-import 'package:azkar/home/audio/audio_state.dart';
+import 'package:azkar/surah/audio/audio_state.dart';
 import 'package:azkar/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
