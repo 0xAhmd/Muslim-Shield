@@ -1,4 +1,3 @@
-// lib/bookmarks/presentation/widgets/bookmark_card.dart
 import 'package:azkar/bookmarks/model/bookmark.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
