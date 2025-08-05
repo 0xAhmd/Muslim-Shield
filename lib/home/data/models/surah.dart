@@ -1,4 +1,3 @@
-// lib/home/data/models/surah.dart
 import 'package:json_annotation/json_annotation.dart';
 
 part 'surah.g.dart';

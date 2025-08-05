@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/juzz_content_view.dart
 import 'package:azkar/juzz/data/models/juzz.dart';
 import 'package:azkar/juzz/data/models/juzz_ayah.dart';
 import 'package:azkar/juzz/presentation/widgets/ayah_tile.dart';

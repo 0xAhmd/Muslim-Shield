@@ -1,4 +1,3 @@
-// lib/home/presentation/screens/home_screen.dart
 import 'package:azkar/home/presentation/pages/main_tab.dart';
 import 'package:azkar/home/presentation/widgets/custom_nav_bar.dart';
 import 'package:azkar/prayer/presentation/pages/prayer_page.dart';

@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/highlighted_text.dart
 import 'package:azkar/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

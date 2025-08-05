@@ -1,4 +1,3 @@
-// lib/prayer/data/constants/sunnah_prayers.dart
 
 class SunnahPrayer {
   final String name;

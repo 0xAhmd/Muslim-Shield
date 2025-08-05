@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/juzz_search_indicator.dart
 import 'package:azkar/constants.dart';
 import 'package:azkar/juzz/presentation/cubit/juzz_state.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,3 @@
-// lib/prayer/presentation/widgets/prayer_times_list.dart
 import 'package:azkar/prayer/data/models/prayer_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

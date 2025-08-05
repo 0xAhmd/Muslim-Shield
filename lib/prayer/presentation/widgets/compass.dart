@@ -1,4 +1,3 @@
-// lib/prayer/presentation/widgets/qiblah_compass.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';

@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/surah_header_card.dart
 import 'package:azkar/constants.dart';
 import 'package:azkar/juzz/data/models/juzz_ayah.dart';
 import 'package:flutter/material.dart';

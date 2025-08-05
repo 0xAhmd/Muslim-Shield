@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/juzz_header_card.dart
 import 'package:azkar/constants.dart';
 import 'package:azkar/juzz/data/models/juzz.dart';
 import 'package:flutter/material.dart';

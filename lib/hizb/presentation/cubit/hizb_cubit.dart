@@ -1,4 +1,3 @@
-// lib/hizb/presentation/cubit/hizb_cubit.dart
 import 'package:azkar/hizb/data/repo/hizb_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';

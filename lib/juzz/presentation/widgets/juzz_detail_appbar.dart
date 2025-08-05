@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/juzz_detail_app_bar.dart
 import 'package:azkar/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

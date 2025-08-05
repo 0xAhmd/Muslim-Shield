@@ -1,4 +1,3 @@
-// lib/home/presentation/widgets/search_app_bar.dart
 import 'package:azkar/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -48,7 +47,6 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: canSearch ? onToggleSearch : null,
           icon: SvgPicture.asset(
             'assets/svgs/search-icon.svg',
-            // ignore: deprecated_member_use
             color: canSearch ? null : textColor.withOpacity(0.5),
           ),
         ),

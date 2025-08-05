@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/ayah_tile.dart
 import 'package:azkar/constants.dart';
 import 'package:azkar/home/data/service/last_read.dart';
 import 'package:azkar/juzz/data/models/juzz_ayah.dart';

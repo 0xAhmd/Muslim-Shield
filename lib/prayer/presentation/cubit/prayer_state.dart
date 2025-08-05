@@ -1,4 +1,3 @@
-// lib/prayer/presentation/cubit/prayer_times_cubit.dart
 import 'package:azkar/prayer/data/models/prayer_location.dart';
 import 'package:azkar/prayer/data/models/prayer_time.dart';
 

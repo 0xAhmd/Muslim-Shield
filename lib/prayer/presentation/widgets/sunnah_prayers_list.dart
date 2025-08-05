@@ -1,4 +1,3 @@
-// lib/prayer/presentation/widgets/sunnah_prayers_list.dart
 import 'package:azkar/prayer/data/constants/sunnah_prayer_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -1,4 +1,3 @@
-// lib/hizb/presentation/cubit/hizb_state.dart
 import 'package:azkar/hizb/data/models/hizb.dart';
 import 'package:azkar/hizb/data/models/hizb_summary.dart';
 

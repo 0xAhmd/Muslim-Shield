@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/juzz_tile.dart
 import 'package:azkar/constants.dart';
 import 'package:azkar/juzz/data/models/juzz_summary.dart';
 import 'package:azkar/juzz/presentation/widgets/highlighted_text.dart';

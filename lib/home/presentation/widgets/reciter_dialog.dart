@@ -1,4 +1,3 @@
-// lib/home/presentation/widgets/reciter_dialog.dart
 import 'package:azkar/constants.dart';
 import 'package:azkar/home/data/models/surah.dart';
 import 'package:flutter/material.dart';

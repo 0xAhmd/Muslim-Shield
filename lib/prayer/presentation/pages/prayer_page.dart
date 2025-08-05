@@ -1,4 +1,3 @@
-// lib/prayer/presentation/prayer_page.dart
 import 'package:azkar/constants.dart';
 import 'package:azkar/prayer/data/repo/prayer_repo.dart';
 import 'package:azkar/prayer/data/service/prayer_api_service.dart';

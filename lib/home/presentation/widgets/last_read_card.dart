@@ -1,4 +1,3 @@
-// lib/home/presentation/widgets/last_read_card.dart
 import 'package:azkar/constants.dart';
 import 'package:azkar/home/data/service/last_read.dart';
 import 'package:flutter/material.dart';

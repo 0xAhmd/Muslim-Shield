@@ -1,4 +1,3 @@
-// lib/home/data/models/juzz.dart
 import 'package:azkar/home/data/models/surah.dart';
 import 'package:json_annotation/json_annotation.dart';
 

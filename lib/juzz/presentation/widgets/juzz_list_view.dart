@@ -1,4 +1,3 @@
-// lib/juzz/presentation/widgets/juzz_list_view.dart
 import 'package:azkar/juzz/presentation/cubit/juzz_cubit.dart';
 import 'package:azkar/juzz/presentation/cubit/juzz_state.dart';
 import 'package:azkar/juzz/presentation/pages/juzz_details_screen.dart';
