@@ -36,7 +36,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
       children: [
         const SizedBox(width: 8),
         Text(
-          "Azkar",
+          "Muslim Shield",
           style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.bold,

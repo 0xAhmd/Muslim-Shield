@@ -1,4 +1,3 @@
-// lib/home/presentation/widgets/greeting_section.dart
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:azkar/home/presentation/widgets/last_read_card.dart';
 import 'package:flutter/material.dart';
