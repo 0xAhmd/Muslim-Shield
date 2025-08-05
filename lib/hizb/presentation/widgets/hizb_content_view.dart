@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:azkar/constants.dart';
 import 'package:azkar/hizb/data/models/hizb.dart';
 import 'package:azkar/hizb/data/models/hizb_ayah.dart';

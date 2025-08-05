@@ -1,5 +1,5 @@
 import 'package:azkar/constants.dart';
-import 'package:azkar/home/presentation/pages/home_screen.dart';
+import 'package:azkar/home/presentation/pages/main_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,7 +56,7 @@ class SplashScreen extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
+                                builder: (context) => MainTabScreen(),
                               ),
                               (Route<dynamic> route) =>
                                   false, // This removes all previous routes

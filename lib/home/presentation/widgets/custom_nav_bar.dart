@@ -1,14 +1,22 @@
-// lib/home/presentation/widgets/custom_bottom_nav.dart
 import 'package:azkar/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomNav extends StatelessWidget {
-  const CustomBottomNav({super.key});
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+
+  const CustomBottomNav({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: onTap,
       type: BottomNavigationBarType.fixed,
       backgroundColor: gray,
       showSelectedLabels: false,
@@ -25,7 +33,6 @@ class CustomBottomNav extends StatelessWidget {
 
   BottomNavigationBarItem _buildNavItem({required String icon}) {
     return BottomNavigationBarItem(
-      // ignore: deprecated_member_use
       icon: SvgPicture.asset(icon, color: textColor),
       activeIcon: SvgPicture.asset(icon, color: primary),
       label: "",
