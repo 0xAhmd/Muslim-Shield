@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final TextEditingController searchController = TextEditingController();
   late TabController tabController;
   final GlobalKey<SurahTabState> surahTabKey = GlobalKey<SurahTabState>();
+  final GlobalKey<JuzTabState> juzTabKey = GlobalKey<JuzTabState>();
 
   @override
   void initState() {
@@ -40,17 +41,48 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       if (!isSearching) {
         searchController.clear();
         // Clear search when closing
-        if (tabController.index == 0) {
-          surahTabKey.currentState?.clearSearch();
-        }
+        _clearCurrentTabSearch();
       }
     });
   }
 
+  void _clearCurrentTabSearch() {
+    switch (tabController.index) {
+      case 0: // Surah tab
+        surahTabKey.currentState?.clearSearch();
+        break;
+      case 1: // Juzz tab
+        juzTabKey.currentState?.performClearSearch();
+        break;
+      // Page and Hizb tabs don't have search yet
+    }
+  }
+
   void _onSearchChanged(String query) {
-    // Only search in Surah tab (index 0)
-    if (tabController.index == 0) {
-      surahTabKey.currentState?.searchSurahs(query);
+    switch (tabController.index) {
+      case 0: // Surah tab
+        surahTabKey.currentState?.searchSurahs(query);
+        break;
+      case 1: // Juzz tab
+        juzTabKey.currentState?.performSearch(query);
+        break;
+      // Page and Hizb tabs don't have search yet
+    }
+  }
+
+  bool _canSearchInCurrentTab() {
+    // Only allow search in Surah (0) and Juzz (1) tabs
+    return tabController.index == 0 || tabController.index == 1;
+  }
+
+  String _getSearchHint() {
+    switch (tabController.index) {
+      case 0:
+        return 'Search Surahs...';
+      case 1:
+        return 'Search Juzz...';
+      default:
+        return 'Search...';
     }
   }
 
@@ -86,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               controller: tabController,
               children: [
                 SurahTab(key: surahTabKey),
-                JuzTab(),
+                JuzTab(key: juzTabKey),
                 PageTab(),
                 HizbTab(),
               ],
@@ -109,10 +141,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
       dividerHeight: 0,
       onTap: (index) {
-        // Clear search when switching tabs
-        if (isSearching && index != 0) {
+        // Clear search when switching tabs if not searchable
+        if (isSearching && !_canSearchInCurrentTab()) {
           _toggleSearch();
         }
+        // Clear search in previous tab
+        _clearCurrentTabSearch();
       },
       tabs: [
         tabItem(title: "Surah"),
@@ -174,15 +208,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Spacer(),
         IconButton(
           onPressed: () {
-            // Only allow search in Surah tab
-            if (tabController.index == 0) {
+            // Only allow search in searchable tabs
+            if (_canSearchInCurrentTab()) {
               _toggleSearch();
             }
           },
           icon: SvgPicture.asset(
             'assets/svgs/search-icon.svg',
             // ignore: deprecated_member_use
-            color: tabController.index == 0 ? null : textColor.withOpacity(0.5),
+            color: _canSearchInCurrentTab() ? null : textColor.withOpacity(0.5),
           ),
         ),
       ],
@@ -199,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             onChanged: _onSearchChanged,
             style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
             decoration: InputDecoration(
-              hintText: 'Search Surahs...',
+              hintText: _getSearchHint(),
               hintStyle: GoogleFonts.poppins(color: textColor, fontSize: 16),
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(horizontal: 16),
@@ -405,6 +439,27 @@ class _LastReadState extends State<LastRead> {
                           'Ayah ${lastReadData!.ayahNumber}',
                           style: GoogleFonts.poppins(color: Colors.white),
                         ),
+                        if (lastReadData!.juzzNumber != null) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Juzz ${lastReadData!.juzzNumber}',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
