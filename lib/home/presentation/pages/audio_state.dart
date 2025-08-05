@@ -1,6 +1,7 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:azkar/home/data/models/surah.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:azkar/home/presentation/widgets/audi_player_manager.dart';
+import 'package:azkar/home/presentation/widgets/audio_prefs.dart';
+import 'package:azkar/home/presentation/widgets/ayah_manager.dart';
 
 enum PlaybackState { stopped, playing, paused, loading }
 
@@ -9,82 +10,53 @@ class AudioService {
   factory AudioService() => _instance;
   AudioService._internal();
 
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  late final AudioPreferences _preferences;
+  late final AudioPlayerManager _playerManager;
+  late final AyahManager _ayahManager;
+
   PlaybackState _playbackState = PlaybackState.stopped;
-  int _currentAyah = 0;
-  int _selectedReciterId = 1; // Default reciter
-  String _selectedReciterName = 'AbdulBaset AbdulSamad';
-  List<AudioAyah>? _currentAyahs;
 
   // Getters
   PlaybackState get playbackState => _playbackState;
-  int get currentAyah => _currentAyah;
-  int get selectedReciterId => _selectedReciterId;
-  String get selectedReciterName => _selectedReciterName;
+  int get currentAyah => _ayahManager.currentAyah;
+  int get selectedReciterId => _preferences.selectedReciterId;
+  String get selectedReciterName => _preferences.selectedReciterName;
 
-  // Stream controllers for state updates
+  // Streams
   Stream<PlaybackState> get playbackStateStream =>
-      _audioPlayer.onPlayerStateChanged.map((state) {
-        switch (state) {
-          case PlayerState.playing:
-            return PlaybackState.playing;
-          case PlayerState.paused:
-            return PlaybackState.paused;
-          case PlayerState.stopped:
-          case PlayerState.completed:
-            return PlaybackState.stopped;
-          case PlayerState.disposed:
-            return PlaybackState.stopped;
-        }
-      });
+      _playerManager.playbackStateStream;
+  Stream<Duration> get positionStream => _playerManager.positionStream;
+  Stream<Duration?> get durationStream => _playerManager.durationStream;
 
-  Stream<Duration> get positionStream => _audioPlayer.onPositionChanged;
-  Stream<Duration?> get durationStream => _audioPlayer.onDurationChanged;
-
-  // Initialize audio player
+  // Initialize
   Future<void> initialize() async {
-    await _loadSelectedReciter();
+    _preferences = AudioPreferences();
+    _playerManager = AudioPlayerManager();
+    _ayahManager = AyahManager();
 
-    // Handle audio completion
-    _audioPlayer.onPlayerComplete.listen((_) {
-      _onAyahCompleted();
-    });
+    await _preferences.initialize();
+    await _playerManager.initialize(_onAyahCompleted);
   }
 
-  // Load saved reciter preference
-  Future<void> _loadSelectedReciter() async {
-    final prefs = await SharedPreferences.getInstance();
-    _selectedReciterId = prefs.getInt('selected_reciter_id') ?? 1;
-    _selectedReciterName =
-        prefs.getString('selected_reciter_name') ?? 'AbdulBaset AbdulSamad';
-  }
-
-  // Save reciter preference
+  // Reciter management
   Future<void> setReciter(int reciterId, String reciterName) async {
-    _selectedReciterId = reciterId;
-    _selectedReciterName = reciterName;
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('selected_reciter_id', reciterId);
-    await prefs.setString('selected_reciter_name', reciterName);
+    await _preferences.setReciter(reciterId, reciterName);
   }
 
-  // Set current surah audio data
+  // Audio playback
   void setSurahAudio(List<AudioAyah> ayahs) {
-    _currentAyahs = ayahs;
-    _currentAyah = 0;
+    _ayahManager.setSurahAudio(ayahs);
   }
 
-  // Play specific ayah
   Future<void> playAyah(int ayahIndex) async {
-    if (_currentAyahs == null || ayahIndex >= _currentAyahs!.length) return;
+    if (!_ayahManager.isValidIndex(ayahIndex)) return;
 
     try {
       _playbackState = PlaybackState.loading;
-      _currentAyah = ayahIndex;
+      _ayahManager.setCurrentAyah(ayahIndex);
 
-      final audioUrl = _currentAyahs![ayahIndex].url;
-      await _audioPlayer.play(UrlSource(audioUrl));
+      final audioUrl = _ayahManager.getCurrentAyahUrl();
+      await _playerManager.play(audioUrl);
 
       _playbackState = PlaybackState.playing;
     } catch (e) {
@@ -93,79 +65,74 @@ class AudioService {
     }
   }
 
-  // Play/pause current ayah
   Future<void> playPause() async {
-    if (_playbackState == PlaybackState.playing) {
-      await pause();
-    } else if (_playbackState == PlaybackState.paused) {
-      await resume();
-    } else {
-      // Start playing from current ayah
-      await playAyah(_currentAyah);
+    switch (_playbackState) {
+      case PlaybackState.playing:
+        await pause();
+        break;
+      case PlaybackState.paused:
+        await resume();
+        break;
+      default:
+        await playAyah(currentAyah);
     }
   }
 
-  // Pause playback
   Future<void> pause() async {
-    await _audioPlayer.pause();
+    await _playerManager.pause();
     _playbackState = PlaybackState.paused;
   }
 
-  // Resume playback
   Future<void> resume() async {
-    await _audioPlayer.resume();
+    await _playerManager.resume();
     _playbackState = PlaybackState.playing;
   }
 
-  // Stop playback
   Future<void> stop() async {
-    await _audioPlayer.stop();
+    await _playerManager.stop();
     _playbackState = PlaybackState.stopped;
   }
 
-  // Go to next ayah
   Future<void> nextAyah() async {
-    if (_currentAyahs == null) return;
-
-    if (_currentAyah < _currentAyahs!.length - 1) {
-      await playAyah(_currentAyah + 1);
+    final nextIndex = _ayahManager.getNextAyahIndex();
+    if (nextIndex != null) {
+      await playAyah(nextIndex);
     }
   }
 
-  // Go to previous ayah
   Future<void> previousAyah() async {
-    if (_currentAyahs == null) return;
-
-    if (_currentAyah > 0) {
-      await playAyah(_currentAyah - 1);
+    final prevIndex = _ayahManager.getPreviousAyahIndex();
+    if (prevIndex != null) {
+      await playAyah(prevIndex);
     }
   }
 
-  // Handle ayah completion
+  Future<void> seek(Duration position) async {
+    await _playerManager.seek(position);
+  }
+
+  Future<void> setPlaybackRate(double rate) async {
+    await _playerManager.setPlaybackRate(rate);
+  }
+
   void _onAyahCompleted() {
-    if (_currentAyahs != null && _currentAyah < _currentAyahs!.length - 1) {
-      // Auto-play next ayah
+    final nextIndex = _ayahManager.getNextAyahIndex();
+    if (nextIndex != null) {
       Future.delayed(const Duration(milliseconds: 500), () {
         nextAyah();
       });
     } else {
-      // End of surah
       _playbackState = PlaybackState.stopped;
     }
   }
 
-  // Seek to position
-  Future<void> seek(Duration position) async {
-    await _audioPlayer.seek(position);
-  }
-
-  // Set playback speed
-  Future<void> setPlaybackRate(double rate) async {
-    await _audioPlayer.setPlaybackRate(rate);
-  }
-
-  // Dispose resources
   Future<void> dispose() async {
-    await _audioPlayer.dispose();
+    await _playerManager.dispose();
   }
 }
+
+// lib/home/data/service/audio_preferences.dart
+
+// lib/home/data/service/audio_player_manager.dart
+
+// lib/home/data/service/ayah_manager.dart
