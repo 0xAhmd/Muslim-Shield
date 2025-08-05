@@ -81,6 +81,8 @@ dependencies:
   json_annotation: ^4.9.0
   quickalert: ^1.1.0
   rename: ^3.1.0
+  url_launcher: ^6.3.2
+
 ````
 
 ---

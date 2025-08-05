@@ -1,3 +1,4 @@
+import 'package:azkar/core/app_updater.dart';
 import 'package:azkar/home/presentation/pages/main_tab.dart';
 import 'package:azkar/home/presentation/widgets/custom_nav_bar.dart';
 import 'package:azkar/prayer/presentation/pages/prayer_page.dart';
@@ -15,11 +16,16 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    MainTabScreen(), 
+    MainTabScreen(),
     PrayerPage(),
     DoaPage(),
     BookmarksPage(),
   ];
+  @override
+  void initState() {
+    AppUpdater.checkForUpdate(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
