@@ -526,7 +526,10 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                         isExpanded: true,
                         dropdownColor: background,
                         style: GoogleFonts.poppins(color: Colors.white),
-                        icon: const Icon(Icons.keyboard_arrow_down, color: primary),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: primary,
+                        ),
                         items: List.generate(
                           surahDetail?.ayahs.length ?? 0,
                           (index) => DropdownMenuItem<int>(
@@ -554,7 +557,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.info_outline, color: primary, size: 16),
+                        const Icon(
+                          Icons.info_outline,
+                          color: primary,
+                          size: 16,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -593,7 +600,10 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                         SnackBar(
                           content: Row(
                             children: [
-                              const Icon(Icons.check_circle, color: Colors.white),
+                              const Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                              ),
                               const SizedBox(width: 8),
                               Text('Progress saved: Ayah $selectedAyah'),
                             ],
@@ -808,9 +818,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           ayahNumber: ayah.numberInSurah,
           surahName: widget.surah.englishName,
           ayahText: ayah.text,
-          translation:
-              ayah.translation ??
-              '', // You might need to add translation to your ayah model
+          translation: '', // Provide an empty string as a fallback
         );
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

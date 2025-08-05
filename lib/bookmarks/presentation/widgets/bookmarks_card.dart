@@ -113,9 +113,9 @@ class BookmarkCard extends StatelessWidget {
                           IconButton(
                             onPressed: () => _showRemoveDialog(context),
                             icon: Icon(
-                              Icons.delete_outline,
+                              Icons.remove,
                               color: Colors.red.withOpacity(0.7),
-                              size: 18,
+                              size: 24,
                             ),
                             visualDensity: VisualDensity.compact,
                           ),

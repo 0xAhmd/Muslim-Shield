@@ -279,142 +279,170 @@ class _DoaPageContentState extends State<DoaPageContent> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        maxChildSize: 0.95,
-        minChildSize: 0.5,
-        builder: (context, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: gray,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: textColor.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
+      // Provide the BookmarksCubit to the modal sheet's widget tree
+      builder: (_) => BlocProvider.value(
+        value: context.read<BookmarksCubit>(),
+        child: DraggableScrollableSheet(
+          initialChildSize: 0.7,
+          maxChildSize: 0.95,
+          minChildSize: 0.5,
+          builder: (context, scrollController) => Container(
+            decoration: const BoxDecoration(
+              color: gray,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(20),
               ),
+            ),
+            child: Column(
+              children: [
+                // Handle bar
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: textColor.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
 
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title, category, and bookmark button
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  dua.title,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: primary.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    dua.category,
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title, category, and bookmark button
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    dua.title,
                                     style: const TextStyle(
-                                      color: primary,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Bookmark button
-                          BlocBuilder<BookmarksCubit, BookmarksState>(
-                            builder: (context, bookmarkState) {
-                              return FutureBuilder<bool>(
-                                future: context
-                                    .read<BookmarksCubit>()
-                                    .isDuaBookmarked(dua.id),
-                                builder: (context, snapshot) {
-                                  final isBookmarked = snapshot.data ?? false;
-
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: isBookmarked
-                                          ? primary.withOpacity(0.2)
-                                          : gray.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(12),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
                                     ),
-                                    child: IconButton(
-                                      onPressed: () =>
-                                          _toggleBookmark(dua, isBookmarked),
-                                      icon: Icon(
-                                        isBookmarked
-                                            ? Icons.bookmark
-                                            : Icons.bookmark_border,
-                                        color: isBookmarked
-                                            ? primary
-                                            : textColor,
-                                        size: 24,
+                                    decoration: BoxDecoration(
+                                      color: primary.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      dua.category,
+                                      style: const TextStyle(
+                                        color: primary,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                  );
-                                },
-                              );
-                            },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Bookmark button
+                            BlocBuilder<BookmarksCubit, BookmarksState>(
+                              builder: (context, bookmarkState) {
+                                return FutureBuilder<bool>(
+                                  future: context
+                                      .read<BookmarksCubit>()
+                                      .isDuaBookmarked(dua.id),
+                                  builder: (context, snapshot) {
+                                    final isBookmarked = snapshot.data ?? false;
+
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        color: isBookmarked
+                                            ? primary.withOpacity(0.2)
+                                            : gray.withOpacity(0.5),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: IconButton(
+                                        onPressed: () =>
+                                            _toggleBookmark(dua, isBookmarked),
+                                        icon: Icon(
+                                          isBookmarked
+                                              ? Icons.bookmark
+                                              : Icons.bookmark_border,
+                                          color: isBookmarked
+                                              ? primary
+                                              : textColor,
+                                          size: 24,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Arabic text
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: background,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: primary.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            dua.arabic,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              height: 2.0,
+                            ),
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                          ),
+                        ),
+
+                        // Transliteration
+                        if (dua.transliteration != null) ...[
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Transliteration:',
+                            style: TextStyle(
+                              color: primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            dua.transliteration!,
+                            style: const TextStyle(
+                              color: textColor,
+                              fontSize: 16,
+                              fontStyle: FontStyle.italic,
+                              height: 1.6,
+                            ),
                           ),
                         ],
-                      ),
 
-                      const SizedBox(height: 24),
-
-                      // Arabic text
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: background,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: primary.withOpacity(0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          dua.arabic,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                            height: 2.0,
-                          ),
-                          textAlign: TextAlign.right,
-                          textDirection: TextDirection.rtl,
-                        ),
-                      ),
-
-                      // Transliteration
-                      if (dua.transliteration != null) ...[
                         const SizedBox(height: 20),
+
+                        // Translation
                         const Text(
-                          'Transliteration:',
+                          'Translation:',
                           style: TextStyle(
                             color: primary,
                             fontSize: 16,
@@ -423,69 +451,47 @@ class _DoaPageContentState extends State<DoaPageContent> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          dua.transliteration!,
+                          dua.translation,
                           style: const TextStyle(
-                            color: textColor,
+                            color: Colors.white,
                             fontSize: 16,
-                            fontStyle: FontStyle.italic,
                             height: 1.6,
                           ),
                         ),
-                      ],
 
-                      const SizedBox(height: 20),
-
-                      // Translation
-                      const Text(
-                        'Translation:',
-                        style: TextStyle(
-                          color: primary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        dua.translation,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          height: 1.6,
-                        ),
-                      ),
-
-                      // Reference
-                      if (dua.reference != null) ...[
-                        const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: background,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.book, color: orange, size: 16),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Reference: ${dua.reference}',
-                                style: const TextStyle(
-                                  color: textColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                        // Reference
+                        if (dua.reference != null) ...[
+                          const SizedBox(height: 20),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: background,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.book, color: orange, size: 16),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Reference: ${dua.reference}',
+                                  style: const TextStyle(
+                                    color: textColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
 
-                      const SizedBox(height: 24),
-                    ],
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
