@@ -1,9 +1,9 @@
 import 'package:azkar/constants.dart';
 import 'package:azkar/home/data/service/last_read.dart';
-import 'package:azkar/home/tabs/hizb_tab.dart';
-import 'package:azkar/home/tabs/juz_tab.dart';
-import 'package:azkar/home/tabs/page_tab.dart';
-import 'package:azkar/home/tabs/surah_tab.dart';
+import 'package:azkar/hizb/presentation/widgets/hizb_tab.dart';
+import 'package:azkar/juzz/presentation/widgets/juz_tab.dart';
+import 'package:azkar/page/presentation/widgets/page_tab.dart';
+import 'package:azkar/surah/widgets/surah_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
