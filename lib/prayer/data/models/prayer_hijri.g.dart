@@ -10,7 +10,7 @@ PrayerHijri _$PrayerHijriFromJson(Map<String, dynamic> json) => PrayerHijri(
   date: json['date'] as String,
   format: json['format'] as String,
   day: json['day'] as String,
-  weekday: json['weekday'] as String,
+  weekday: PrayerHijri._weekdayFromJson(json['weekday']),
   month: HijriMonth.fromJson(json['month'] as Map<String, dynamic>),
   year: json['year'] as String,
 );

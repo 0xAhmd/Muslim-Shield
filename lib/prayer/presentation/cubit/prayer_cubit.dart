@@ -39,6 +39,7 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
           nextPrayer: nextPrayer,
         ),
       );
+      
     } catch (e) {
       emit(PrayerTimesError(e.toString()));
     }

@@ -14,7 +14,9 @@ PrayerMeta _$PrayerMetaFromJson(Map<String, dynamic> json) => PrayerMeta(
   latitudeAdjustmentMethod: json['latitudeAdjustmentMethod'] as String,
   midnightMode: json['midnightMode'] as String,
   school: json['school'] as String,
-  offset: Map<String, int>.from(json['offset'] as Map),
+  offset: json['offset'] == null
+      ? {}
+      : PrayerMeta._offsetFromJson(json['offset']),
 );
 
 Map<String, dynamic> _$PrayerMetaToJson(PrayerMeta instance) =>

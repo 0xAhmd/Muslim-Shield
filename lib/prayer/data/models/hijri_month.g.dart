@@ -10,6 +10,7 @@ HijriMonth _$HijriMonthFromJson(Map<String, dynamic> json) => HijriMonth(
   number: (json['number'] as num).toInt(),
   en: json['en'] as String,
   ar: json['ar'] as String,
+  days: (json['days'] as num?)?.toInt() ?? 30,
 );
 
 Map<String, dynamic> _$HijriMonthToJson(HijriMonth instance) =>
@@ -17,4 +18,5 @@ Map<String, dynamic> _$HijriMonthToJson(HijriMonth instance) =>
       'number': instance.number,
       'en': instance.en,
       'ar': instance.ar,
+      'days': instance.days,
     };
