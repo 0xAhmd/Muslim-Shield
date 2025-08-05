@@ -64,6 +64,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  http: ^1.4.0
   dio: ^5.8.0+1
   retrofit: ^4.7.0
   shared_preferences: ^2.5.3
@@ -75,7 +76,7 @@ dependencies:
   geolocator: ^13.0.4
   geocoding: ^4.0.0
   animated_text_kit: ^4.2.3
-  package_info_plus:
+  package_info_plus: ^8.3.0
   permission_handler: ^12.0.1
   jailbreak_root_detection: ^1.1.6
   cupertino_icons: ^1.0.8
