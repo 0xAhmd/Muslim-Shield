@@ -13,7 +13,7 @@ class JuzzLoadingView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(color: primary),
+          const CircularProgressIndicator(color: primary),
           const SizedBox(height: 24),
           Text(
             'Loading Juzz $juzzNumber...',

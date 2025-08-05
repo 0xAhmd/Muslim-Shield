@@ -84,7 +84,7 @@ class _QiblahCompassState extends State<QiblahCompass>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: primary, strokeWidth: 3),
+            const CircularProgressIndicator(color: primary, strokeWidth: 3),
             SizedBox(height: 16.h),
             Text(
               'Loading compass...',

@@ -1,3 +1,6 @@
+import 'package:azkar/bookmarks/presentation/cubit/bookmark_cubit.dart';
+import 'package:azkar/bookmarks/presentation/cubit/bookmark_state.dart';
+import 'package:azkar/bookmarks/service/bookmark_service.dart';
 import 'package:azkar/constants.dart';
 import 'package:azkar/surah/data/models/surah.dart';
 import 'package:azkar/surah/data/repo/surah_repo.dart';
@@ -6,6 +9,7 @@ import 'package:azkar/home/presentation/widgets/reciter_dialog.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -340,7 +344,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           if (_tabController.index == 1 && reciters.isNotEmpty)
             IconButton(
               onPressed: _showReciterDialog,
-              icon: Icon(Icons.person, color: primary),
+              icon: const Icon(Icons.person, color: primary),
               tooltip: 'Select Reciter',
             ),
         ],
@@ -440,7 +444,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
   Widget _buildContent() {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator(color: primary));
+      return const Center(child: CircularProgressIndicator(color: primary));
     }
 
     if (error != null) {
@@ -522,7 +526,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                         isExpanded: true,
                         dropdownColor: background,
                         style: GoogleFonts.poppins(color: Colors.white),
-                        icon: Icon(Icons.keyboard_arrow_down, color: primary),
+                        icon: const Icon(Icons.keyboard_arrow_down, color: primary),
                         items: List.generate(
                           surahDetail?.ayahs.length ?? 0,
                           (index) => DropdownMenuItem<int>(
@@ -550,7 +554,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.info_outline, color: primary, size: 16),
+                        const Icon(Icons.info_outline, color: primary, size: 16),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -589,7 +593,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                         SnackBar(
                           content: Row(
                             children: [
-                              Icon(Icons.check_circle, color: Colors.white),
+                              const Icon(Icons.check_circle, color: Colors.white),
                               const SizedBox(width: 8),
                               Text('Progress saved: Ayah $selectedAyah'),
                             ],
@@ -673,24 +677,77 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: primary.withOpacity(.2),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        '${ayah.numberInSurah}',
-                        style: GoogleFonts.poppins(
-                          color: primary,
-                          fontWeight: FontWeight.w500,
+                    // Header with ayah number and bookmark button
+                    Row(
+                      children: [
+                        // Bookmark button
+                        BlocProvider(
+                          create: (context) =>
+                              BookmarksCubit(BookmarksService()),
+                          child: BlocBuilder<BookmarksCubit, BookmarksState>(
+                            builder: (context, bookmarkState) {
+                              return FutureBuilder<bool>(
+                                future: context
+                                    .read<BookmarksCubit>()
+                                    .isAyahBookmarked(
+                                      widget.surah.number,
+                                      ayah.numberInSurah,
+                                    ),
+                                builder: (context, snapshot) {
+                                  final isBookmarked = snapshot.data ?? false;
+
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: isBookmarked
+                                          ? primary.withOpacity(0.2)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () => _toggleAyahBookmark(
+                                        ayah,
+                                        isBookmarked,
+                                        context.read<BookmarksCubit>(),
+                                      ),
+                                      icon: Icon(
+                                        isBookmarked
+                                            ? Icons.bookmark
+                                            : Icons.bookmark_border,
+                                        color: isBookmarked
+                                            ? primary
+                                            : textColor.withOpacity(0.7),
+                                        size: 20,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+
+                        const Spacer(),
+
+                        // Ayah number
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: primary.withOpacity(.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            '${ayah.numberInSurah}',
+                            style: GoogleFonts.poppins(
+                              color: primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 24),
                     Text(
@@ -714,6 +771,81 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
     );
   }
 
+  // Add this method to SurahDetailScreen class
+  void _toggleAyahBookmark(
+    dynamic ayah,
+    bool isCurrentlyBookmarked,
+    BookmarksCubit bookmarksCubit,
+  ) async {
+    try {
+      if (isCurrentlyBookmarked) {
+        await bookmarksCubit.removeAyahBookmark(
+          widget.surah.number,
+          ayah.numberInSurah,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.bookmark_remove, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Bookmark removed'),
+                ],
+              ),
+              duration: const Duration(seconds: 2),
+              backgroundColor: Colors.red.withOpacity(0.8),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
+      } else {
+        await bookmarksCubit.bookmarkAyah(
+          surahNumber: widget.surah.number,
+          ayahNumber: ayah.numberInSurah,
+          surahName: widget.surah.englishName,
+          ayahText: ayah.text,
+          translation:
+              ayah.translation ??
+              '', // You might need to add translation to your ayah model
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.bookmark_added, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Ayah bookmarked'),
+                ],
+              ),
+              duration: const Duration(seconds: 2),
+              backgroundColor: primary,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
+      }
+      // Force rebuild
+      if (mounted) setState(() {});
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   Widget _buildListenMode() {
     return Column(
       children: [
@@ -729,7 +861,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
             ),
             child: Row(
               children: [
-                Icon(Icons.person, color: primary),
+                const Icon(Icons.person, color: primary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -771,7 +903,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
               if (isLoadingAudio)
                 Column(
                   children: [
-                    CircularProgressIndicator(color: primary),
+                    const CircularProgressIndicator(color: primary),
                     const SizedBox(height: 12),
                     Text(
                       'Loading audio...',

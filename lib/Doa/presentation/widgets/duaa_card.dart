@@ -51,7 +51,7 @@ class DuaCard extends StatelessWidget {
                       ),
                       child: Text(
                         dua.category,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: primary,
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
@@ -94,7 +94,7 @@ class DuaCard extends StatelessWidget {
                 // Translation preview
                 Text(
                   _truncateTranslation(dua.translation),
-                  style: TextStyle(color: textColor, fontSize: 14, height: 1.5),
+                  style: const TextStyle(color: textColor, fontSize: 14, height: 1.5),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -105,12 +105,12 @@ class DuaCard extends StatelessWidget {
                 Row(
                   children: [
                     if (dua.reference != null) ...[
-                      Icon(Icons.book, color: orange, size: 14),
+                      const Icon(Icons.book, color: orange, size: 14),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           dua.reference!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: orange,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -121,7 +121,7 @@ class DuaCard extends StatelessWidget {
                     ] else
                       const Spacer(),
 
-                    Row(
+                    const Row(
                       children: [
                         Text(
                           'Read more',
@@ -131,7 +131,7 @@ class DuaCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Icon(Icons.arrow_forward_ios, color: primary, size: 12),
                       ],
                     ),

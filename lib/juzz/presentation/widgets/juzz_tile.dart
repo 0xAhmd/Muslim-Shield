@@ -47,7 +47,7 @@ class JuzzTile extends StatelessWidget {
               BoxShadow(
                 color: primary.withOpacity(0.3),
                 blurRadius: 8,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -100,7 +100,7 @@ class JuzzTile extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.book_outlined, size: 14, color: primary),
+          const Icon(Icons.book_outlined, size: 14, color: primary),
           const SizedBox(width: 4),
           Text(
             '${juzzSummary.containedSurahs.length} Surah${juzzSummary.containedSurahs.length == 1 ? '' : 's'}',

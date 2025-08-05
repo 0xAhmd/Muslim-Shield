@@ -101,7 +101,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(color: primary, strokeWidth: 3),
+          const CircularProgressIndicator(color: primary, strokeWidth: 3),
           SizedBox(height: 24.h),
           Text(
             'Getting your location...',

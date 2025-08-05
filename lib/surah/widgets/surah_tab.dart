@@ -78,7 +78,7 @@ class SurahTabState extends State<SurahTab> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator(color: primary));
+      return const Center(child:  CircularProgressIndicator(color: primary));
     }
 
     if (error != null) {
@@ -100,7 +100,7 @@ class SurahTabState extends State<SurahTab> {
             ElevatedButton(
               onPressed: _loadSurahs,
               style: ElevatedButton.styleFrom(backgroundColor: primary),
-              child: Text('Retry'),
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -112,7 +112,7 @@ class SurahTabState extends State<SurahTab> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 64, color: textColor),
+            const Icon(Icons.search_off, size: 64, color: textColor),
             const SizedBox(height: 16),
             Text(
               'No surahs found',
@@ -145,7 +145,7 @@ class SurahTabState extends State<SurahTab> {
             ),
             child: Row(
               children: [
-                Icon(Icons.search, color: primary, size: 16),
+                const Icon(Icons.search, color: primary, size: 16),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(

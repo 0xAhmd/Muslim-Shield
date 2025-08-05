@@ -83,7 +83,7 @@ class AyahTile extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.bookmark, color: Colors.white, size: 12),
+          const Icon(Icons.bookmark, color: Colors.white, size: 12),
           const SizedBox(width: 4),
           Text(
             'Last Read',
@@ -140,7 +140,7 @@ class AyahTile extends StatelessWidget {
         MetadataChip(label: 'Page ${ayah.page}', icon: Icons.book),
         MetadataChip(label: 'Ruku ${ayah.ruku}', icon: Icons.bookmark_outlined),
         if (ayah.sajda)
-          MetadataChip(
+          const MetadataChip(
             label: 'Sajda',
             icon: Icons.keyboard_arrow_down,
             color: orange,
@@ -164,7 +164,7 @@ class AyahTile extends StatelessWidget {
             content: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.bookmark, color: Colors.white, size: 16),
+                const Icon(Icons.bookmark, color: Colors.white, size: 16),
                 const SizedBox(width: 8),
                 Text(
                   'Bookmark saved',

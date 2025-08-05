@@ -37,7 +37,7 @@ class JuzzDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: onRefresh,
-          icon: Icon(Icons.refresh, color: Colors.white),
+          icon: const Icon(Icons.refresh, color: Colors.white),
         ),
       ],
     );

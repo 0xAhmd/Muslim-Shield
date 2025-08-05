@@ -56,7 +56,7 @@ class SplashScreen extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                builder: (context) => MainTabScreen(),
+                                builder: (context) =>  const MainTabScreen(),
                               ),
                               (Route<dynamic> route) =>
                                   false, // This removes all previous routes

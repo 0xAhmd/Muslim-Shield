@@ -20,6 +20,7 @@ class JuzzSearchIndicator extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // ignore: prefer_const_constructors
           Icon(Icons.search, color: primary, size: 16),
           const SizedBox(width: 8),
           Expanded(

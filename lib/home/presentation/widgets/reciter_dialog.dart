@@ -100,7 +100,7 @@ class _DialogHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.record_voice_over, color: primary, size: 28),
+        const Icon(Icons.record_voice_over, color: primary, size: 28),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
@@ -114,7 +114,7 @@ class _DialogHeader extends StatelessWidget {
         ),
         IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(Icons.close, color: textColor),
+          icon: const Icon(Icons.close, color: textColor),
         ),
       ],
     );
@@ -134,7 +134,7 @@ class _SearchField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Search reciters...',
         hintStyle: GoogleFonts.poppins(color: textColor),
-        prefixIcon: Icon(Icons.search, color: textColor),
+        prefixIcon: const Icon(Icons.search, color: textColor),
         filled: true,
         fillColor: background,
         border: OutlineInputBorder(
@@ -225,7 +225,7 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.search_off, size: 48, color: textColor),
+          const Icon(Icons.search_off, size: 48, color: textColor),
           const SizedBox(height: 12),
           Text(
             searchQuery.isEmpty
@@ -347,7 +347,7 @@ class _ReciterTrailing extends StatelessWidget {
         ),
         if (isSelected) ...[
           const SizedBox(width: 8),
-          Icon(Icons.check_circle, color: primary),
+          const Icon(Icons.check_circle, color: primary),
         ],
       ],
     );

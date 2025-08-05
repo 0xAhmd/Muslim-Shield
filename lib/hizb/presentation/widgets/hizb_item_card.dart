@@ -129,7 +129,7 @@ class HizbItemCard extends StatelessWidget {
         color: primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Icon(Icons.arrow_forward_ios, size: 16, color: primary),
+      child: const Icon(Icons.arrow_forward_ios, size: 16, color: primary),
     );
   }
 }

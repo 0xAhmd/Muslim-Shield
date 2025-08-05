@@ -42,7 +42,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: textColor,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         IconButton(
           onPressed: canSearch ? onToggleSearch : null,
           icon: SvgPicture.asset(
@@ -67,13 +67,13 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               hintText: searchHint,
               hintStyle: GoogleFonts.poppins(color: textColor, fontSize: 16),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             ),
           ),
         ),
         IconButton(
           onPressed: onToggleSearch,
-          icon: Icon(Icons.close, color: textColor),
+          icon: const Icon(Icons.close, color: textColor),
         ),
       ],
     );

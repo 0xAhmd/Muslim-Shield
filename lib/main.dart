@@ -1,3 +1,5 @@
+import 'package:azkar/bookmarks/model/bookmark.dart';
+import 'package:azkar/bookmarks/service/bookmark_service.dart';
 import 'package:azkar/constants.dart';
 import 'package:azkar/surah/audio/audio_state.dart';
 import 'package:azkar/home/presentation/pages/home_screen.dart';
@@ -5,13 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/adapters.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(BookmarkModelAdapter());
+  Hive.registerAdapter(BookmarkTypeAdapter());
+  await BookmarksService().init();
+
   await AudioService().initialize();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,10 +38,10 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             fontFamily: GoogleFonts.poppins().fontFamily,
             scaffoldBackgroundColor: background,
-            appBarTheme: AppBarTheme(backgroundColor: background),
+            appBarTheme: const AppBarTheme(backgroundColor: background),
           ),
           debugShowCheckedModeBanner: false,
-          home: HomeScreen(),
+          home: const HomeScreen(),
         );
       },
     );

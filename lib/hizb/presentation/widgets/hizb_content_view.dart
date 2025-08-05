@@ -474,7 +474,7 @@ class _HizbContentViewState extends State<HizbContentView> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.keyboard_arrow_down, color: orange, size: 16),
+          const Icon(Icons.keyboard_arrow_down, color: orange, size: 16),
           const SizedBox(width: 4),
           Text(
             'Sajdah',

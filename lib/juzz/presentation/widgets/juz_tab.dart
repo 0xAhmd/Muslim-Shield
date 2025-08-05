@@ -64,7 +64,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: primary),
+                  const CircularProgressIndicator(color: primary),
                   const SizedBox(height: 16),
                   Text(
                     'Loading Juzz sections...',
@@ -109,8 +109,8 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
                       backgroundColor: primary,
                       foregroundColor: Colors.white,
                     ),
-                    icon: Icon(Icons.refresh, size: 18),
-                    label: Text('Retry'),
+                    icon: const Icon(Icons.refresh, size: 18),
+                    label: const Text('Retry'),
                   ),
                 ],
               ),
@@ -126,7 +126,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(color: primary),
+                const CircularProgressIndicator(color: primary),
                 const SizedBox(height: 16),
                 Text(
                   'Loading Juzz sections...',
@@ -146,7 +146,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 64, color: textColor),
+            const Icon(Icons.search_off, size: 64, color: textColor),
             const SizedBox(height: 16),
             Text(
               'No Juzz found',
@@ -213,7 +213,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
       ),
       child: Row(
         children: [
-          Icon(Icons.search, color: primary, size: 16),
+          const Icon(Icons.search, color: primary, size: 16),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -342,7 +342,7 @@ class _JuzzTile extends StatelessWidget {
                 BoxShadow(
                   color: primary.withOpacity(0.3),
                   blurRadius: 8,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -386,7 +386,7 @@ class _JuzzTile extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.book_outlined, size: 14, color: primary),
+            const Icon(Icons.book_outlined, size: 14, color: primary),
             const SizedBox(width: 4),
             Text(
               '${juzzSummary.containedSurahs.length} Surah${juzzSummary.containedSurahs.length == 1 ? '' : 's'}',

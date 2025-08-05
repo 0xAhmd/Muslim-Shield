@@ -78,7 +78,7 @@ class _GradientBackground extends StatelessWidget {
     return Container(
       height: 133,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           stops: [0, .6, 1],

@@ -12,7 +12,7 @@ class DuaCubit extends Cubit<DuaState> {
       emit(DuaLoading());
 
       final groupedDuas = DuasData.getDuasGroupedByCategory();
-      final allDuas = DuasData.duas;
+      const allDuas = DuasData.duas;
 
       emit(DuaLoaded(groupedDuas: groupedDuas, filteredDuas: allDuas));
     } catch (e) {

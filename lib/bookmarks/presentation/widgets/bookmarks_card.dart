@@ -84,7 +84,7 @@ class BookmarkCard extends StatelessWidget {
                         ),
                         child: Text(
                           bookmark.category!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: primary,
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
@@ -148,7 +148,7 @@ class BookmarkCard extends StatelessWidget {
                   children: [
                     // Reference
                     if (bookmark.reference != null) ...[
-                      Icon(Icons.book, color: orange, size: 14),
+                      const Icon(Icons.book, color: orange, size: 14),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -351,10 +351,10 @@ class BookmarkCard extends StatelessWidget {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
+        content: const Row(
           children: [
             Icon(Icons.check_circle, color: Colors.white, size: 16),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text('Copied to clipboard'),
           ],
         ),

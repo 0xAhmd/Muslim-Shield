@@ -13,7 +13,7 @@ class JuzzEmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.search_off, size: 64, color: textColor),
+          const Icon(Icons.search_off, size: 64, color: textColor),
           const SizedBox(height: 16),
           Text(
             'No Juzz found',

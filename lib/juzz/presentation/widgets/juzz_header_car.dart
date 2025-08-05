@@ -25,7 +25,7 @@ class JuzzHeaderCard extends StatelessWidget {
           BoxShadow(
             color: primary.withOpacity(0.3),
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),

@@ -16,8 +16,8 @@ class DioClient {
     // Original API dio instance
     _dio = Dio();
     _dio.options = BaseOptions(
-      connectTimeout: Duration(seconds: 30),
-      receiveTimeout: Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -25,8 +25,8 @@ class DioClient {
     _audioDio = Dio();
     _audioDio.options = BaseOptions(
       baseUrl: 'https://quranapi.pages.dev/api',
-      connectTimeout: Duration(seconds: 30),
-      receiveTimeout: Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
       headers: {'Content-Type': 'application/json'},
     );
 
