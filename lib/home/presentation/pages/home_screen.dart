@@ -7,6 +7,7 @@ import 'package:azkar/home/tabs/surah_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -332,29 +333,32 @@ class _LastReadState extends State<LastRead> {
           ),
         ),
         Positioned(
-          bottom: 0,
+          bottom: -6.h, // was 0, now slightly lowered using flutter_screenutil
           right: 0,
-          child: SvgPicture.asset('assets/svgs/quran.svg'),
+          child: SvgPicture.asset(
+            'assets/svgs/quran.svg',
+            height: 80.h, // optional: make it a bit smaller if needed
+          ),
         ),
 
         // Refresh Button
+        // Refresh Button with flutter_screenutil
         Positioned(
-          top: 70,
-          left: 140,
+          top: 12.h,
+          right: 12.w,
           child: GestureDetector(
             onTap: () {
               _loadLastRead();
-              // Show brief feedback
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.refresh, color: Colors.white),
-                      const SizedBox(width: 8),
+                      Icon(Icons.refresh, color: Colors.white, size: 14.sp),
+                      SizedBox(width: 6.w),
                       Text(
                         'Refreshed',
-                        style: GoogleFonts.poppins(fontSize: 12),
+                        style: GoogleFonts.poppins(fontSize: 11.sp),
                       ),
                     ],
                   ),
@@ -362,18 +366,18 @@ class _LastReadState extends State<LastRead> {
                   backgroundColor: primary,
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6.r),
                   ),
                 ),
               );
             },
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(6.r),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16.r),
               ),
-              child: Icon(Icons.refresh, color: Colors.white, size: 16),
+              child: Icon(Icons.refresh, color: Colors.white, size: 14.sp),
             ),
           ),
         ),
