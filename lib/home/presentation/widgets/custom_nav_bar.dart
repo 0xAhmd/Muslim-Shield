@@ -33,7 +33,7 @@ class CustomBottomNav extends StatelessWidget {
               border: Border.all(color: Colors.white.withOpacity(0.2)),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF1E1E1E).withOpacity(0.2),
+                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
