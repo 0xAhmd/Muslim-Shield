@@ -32,12 +32,16 @@ class CustomBottomNav extends StatelessWidget {
   }
 
   BottomNavigationBarItem _buildNavItem({required String icon}) {
+    final bool isSvg = icon.toLowerCase().endsWith('.svg');
+
     return BottomNavigationBarItem(
-      icon: SvgPicture.asset(icon, color: textColor),
-      activeIcon: SvgPicture.asset(icon, color: primary),
+      icon: isSvg
+          ? SvgPicture.asset(icon, color: textColor)
+          : Image.asset(icon, color: textColor, width: 38, height: 38),
+      activeIcon: isSvg
+          ? SvgPicture.asset(icon, color: primary)
+          : Image.asset(icon, color: primary, width: 24, height: 24),
       label: "",
     );
   }
-
-
 }
