@@ -119,7 +119,7 @@ class _MainTabScreenState extends State<MainTabScreen>
                   ),
                 ),
                 elevation: 0,
-                backgroundColor: background,
+                backgroundColor: scaffoldBackgroundColor,
                 automaticallyImplyLeading: false,
                 pinned: true,
                 bottom: PreferredSize(

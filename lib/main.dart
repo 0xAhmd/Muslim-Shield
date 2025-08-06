@@ -12,7 +12,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 
 void main() async {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
@@ -22,7 +22,7 @@ void main() async {
   final isJailBroken = await JailbreakRootDetection.instance.isJailBroken;
   final isRealDevice = await JailbreakRootDetection.instance.isRealDevice;
 
-  final isUnsafe = isJailBroken || !isRealDevice;
+  final isUnsafe = isJailBroken || isRealDevice;
 
   if (isUnsafe) {
     runApp(const BlockedDeviceApp());
@@ -46,9 +46,14 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              backgroundColor: scaffoldBackgroundColor,
+            ),
             fontFamily: GoogleFonts.poppins().fontFamily,
-            scaffoldBackgroundColor: background,
-            appBarTheme: const AppBarTheme(backgroundColor: background),
+            scaffoldBackgroundColor: scaffoldBackgroundColor,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: scaffoldBackgroundColor,
+            ),
           ),
           debugShowCheckedModeBanner: false,
           home: const HomeScreen(),

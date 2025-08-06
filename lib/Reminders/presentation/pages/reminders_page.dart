@@ -1,17 +1,17 @@
 import '../../data/models/reminder_card.dart';
-import '../../data/repo/reminders_repo_impl.dart';
-import '../../data/services/events_api_service.dart';
-import '../../data/services/notification_service.dart';
-import '../bloc/reminders_bloc.dart';
-import '../bloc/reminders_event.dart';
-import '../bloc/reminders_state.dart';
-import '../widgets/calendar.dart';
-import '../widgets/event_list.dart';
-import '../widgets/reminder_card.dart';
+import 'package:azkar/Reminders/data/repo/reminders_repo_impl.dart';
+import 'package:azkar/Reminders/data/services/events_api_service.dart';
+import 'package:azkar/Reminders/data/services/notification_service.dart';
+import 'package:azkar/Reminders/presentation/bloc/reminders_bloc.dart';
+import 'package:azkar/Reminders/presentation/bloc/reminders_event.dart';
+import 'package:azkar/Reminders/presentation/bloc/reminders_state.dart';
+import 'package:azkar/Reminders/presentation/widgets/calendar.dart';
+import 'package:azkar/Reminders/presentation/widgets/event_list.dart';
+import 'package:azkar/Reminders/presentation/widgets/reminder_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../constants.dart';
+import 'package:azkar/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RemindersPage extends StatelessWidget {
@@ -211,58 +211,51 @@ class _RemindersPageViewState extends State<_RemindersPageView>
           reminder.createdAt.day == today.day;
     }).toList();
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Today\'s Reminders',
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 16),
-          if (todayReminders.isEmpty) ...[
-            Center(
-              child: Container(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.notifications_none,
-                      size: 64,
-                      color: textColor.withOpacity(0.5),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No reminders for today',
-                      style: GoogleFonts.poppins(
-                        color: textColor,
-                        fontSize: 16,
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            if (todayReminders.isEmpty) ...[
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(32),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.notifications_none,
+                        size: 64,
+                        color: textColor.withOpacity(0.5),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+                      Text(
+                        'No reminders for today',
+                        style: GoogleFonts.poppins(
+                          color: textColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ] else ...[
-            ...todayReminders.map(
-              (reminder) => ReminderCardWidget(
-                reminder: reminder,
-                onTap: () => _handleReminderTap(context, reminder),
-                onMarkAsRead: () => context.read<RemindersBloc>().add(
-                  MarkReminderAsRead(reminder.id),
+            ] else ...[
+              ...todayReminders.map(
+                (reminder) => ReminderCardWidget(
+                  reminder: reminder,
+                  onTap: () => _handleReminderTap(context, reminder),
+                  onMarkAsRead: () => context.read<RemindersBloc>().add(
+                    MarkReminderAsRead(reminder.id),
+                  ),
                 ),
               ),
-            ),
+            ],
+            const SizedBox(height: 100), // Bottom padding
           ],
-          const SizedBox(height: 100), // Bottom padding
-        ],
+        ),
       ),
     );
   }

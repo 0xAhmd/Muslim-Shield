@@ -6,10 +6,10 @@ import '../../../bookmarks/service/bookmark_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/dua_model.dart';
-import '../cubit/dua_state.dart';
-import '../cubit/dua_cubit.dart';
-import '../../../constants.dart';
+import 'package:azkar/Doa/data/dua_model.dart';
+import 'package:azkar/Doa/presentation/cubit/dua_state.dart';
+import 'package:azkar/Doa/presentation/cubit/dua_cubit.dart';
+import 'package:azkar/constants.dart';
 
 class DoaPage extends StatelessWidget {
   const DoaPage({super.key});

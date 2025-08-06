@@ -19,10 +19,11 @@ class CustomTabBar extends StatelessWidget {
         fontSize: 18,
         color: Colors.white,
       ),
+      
       dividerHeight: 0,
       onTap: onTap,
       tabs: const [
-        Tab(text: "Surah"),
+        Tab(text: "Surah" ),
         Tab(text: "Juzz'"),
         Tab(text: "Hizb"),
       ],

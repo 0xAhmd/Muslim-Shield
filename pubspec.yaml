@@ -66,7 +66,7 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   assets:
-
+    - assets/svgs/
     - assets/
   fonts:
     - family: Amiri

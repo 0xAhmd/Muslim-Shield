@@ -73,7 +73,7 @@ class NotificationService {
           channelDescription: 'Notifications for prayer times',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@drawable/prayer_icon',
+          // Remove icon parameter to use default system icon
         );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
@@ -101,14 +101,14 @@ class NotificationService {
   }
 
   Future<void> scheduleEventReminder(MuslimEvent event) async {
-    final AndroidNotificationDetails androidDetails =
+    const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
           'event_reminders',
           'Event Reminders',
           channelDescription: 'Notifications for Islamic events',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@drawable/${event.iconName}',
+          // Remove icon parameter to use default system icon
         );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
@@ -117,7 +117,7 @@ class NotificationService {
       presentSound: true,
     );
 
-    final NotificationDetails details = NotificationDetails(
+    const NotificationDetails details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
@@ -129,7 +129,6 @@ class NotificationService {
       tz.TZDateTime.from(event.date, tz.local),
       details,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
@@ -143,7 +142,7 @@ class NotificationService {
           channelDescription: 'Friday Surah Al-Kahf reminders',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@drawable/star_icon',
+          // Remove icon parameter to use default system icon
         );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
