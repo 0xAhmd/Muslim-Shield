@@ -1,3 +1,4 @@
+import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
 import 'package:azkar/core/app_updater.dart';
 import 'package:azkar/home/presentation/pages/main_tab.dart';
 import 'package:azkar/home/presentation/widgets/custom_nav_bar.dart';
@@ -20,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     PrayerPage(),
     DoaPage(),
     BookmarksPage(),
+    RemindersPage()
   ];
   @override
   void initState() {

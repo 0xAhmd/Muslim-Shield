@@ -3,6 +3,7 @@ import 'package:azkar/Doa/presentation/widgets/duaa_card.dart';
 import 'package:azkar/bookmarks/presentation/cubit/bookmark_cubit.dart';
 import 'package:azkar/bookmarks/presentation/cubit/bookmark_state.dart';
 import 'package:azkar/bookmarks/service/bookmark_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:azkar/Doa/data/dua_model.dart';
@@ -80,7 +81,7 @@ class _DoaPageContentState extends State<DoaPageContent> {
                 builder: (context, state) {
                   if (state is DuaLoading) {
                     return const Center(
-                      child: CircularProgressIndicator(color: primary),
+                      child: CupertinoActivityIndicator(color: primary),
                     );
                   } else if (state is DuaError) {
                     return Center(

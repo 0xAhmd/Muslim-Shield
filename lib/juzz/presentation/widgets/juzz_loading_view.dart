@@ -1,5 +1,5 @@
 import 'package:azkar/constants.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JuzzLoadingView extends StatelessWidget {
@@ -13,7 +13,7 @@ class JuzzLoadingView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircularProgressIndicator(color: primary),
+          const CupertinoActivityIndicator(color: primary),
           const SizedBox(height: 24),
           Text(
             'Loading Juzz $juzzNumber...',

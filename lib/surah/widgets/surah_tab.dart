@@ -3,6 +3,7 @@ import 'package:azkar/surah/data/models/surah.dart';
 import 'package:azkar/surah/data/repo/surah_repo.dart';
 import 'package:azkar/surah/data/service/last_read.dart';
 import 'package:azkar/surah/pages/surah_details_page.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -78,7 +79,7 @@ class SurahTabState extends State<SurahTab> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(child:  CircularProgressIndicator(color: primary));
+      return const Center(child:  CupertinoActivityIndicator(color: primary));
     }
 
     if (error != null) {

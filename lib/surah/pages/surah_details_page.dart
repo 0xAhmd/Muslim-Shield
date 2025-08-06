@@ -8,6 +8,7 @@ import 'package:azkar/surah/data/service/last_read.dart';
 import 'package:azkar/surah/widgets/reciter_dialog.dart';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -444,7 +445,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
   Widget _buildContent() {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator(color: primary));
+      return const Center(child: CupertinoActivityIndicator(color: primary));
     }
 
     if (error != null) {
@@ -911,7 +912,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
               if (isLoadingAudio)
                 Column(
                   children: [
-                    const CircularProgressIndicator(color: primary),
+                    const CupertinoActivityIndicator(color: primary),
                     const SizedBox(height: 12),
                     Text(
                       'Loading audio...',
