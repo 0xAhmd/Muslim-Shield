@@ -27,13 +27,7 @@ class RadioPageContent extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [scaffoldBackgroundColor, primary.withOpacity(0.1)],
-            ),
-          ),
+          decoration: BoxDecoration(color: scaffoldBackgroundColor),
           child: Column(
             children: [
               // Header

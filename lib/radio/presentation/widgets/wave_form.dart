@@ -1,6 +1,7 @@
 import 'package:azkar/radio/presentation/cubit/radio_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubit/radio_cubit.dart';
 import '../../../constants.dart';
 
@@ -54,8 +55,8 @@ class _WaveformAnimationState extends State<WaveformAnimation>
         }
       },
       child: Container(
-        height: 120,
-        width: 200,
+        height: 94.h,
+        width: 336.w,
         decoration: BoxDecoration(
           color: background,
           borderRadius: BorderRadius.circular(16),
