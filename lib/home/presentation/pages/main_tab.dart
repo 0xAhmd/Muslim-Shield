@@ -26,7 +26,7 @@ class _MainTabScreenState extends State<MainTabScreen>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -141,6 +141,7 @@ class _MainTabScreenState extends State<MainTabScreen>
               children: [
                 SurahTab(key: surahTabKey),
                 JuzTab(key: juzTabKey),
+                HizbTab(key: hizbTabKey),
                 HizbTab(key: hizbTabKey),
               ],
             ),
