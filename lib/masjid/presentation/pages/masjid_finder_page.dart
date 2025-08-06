@@ -1,14 +1,15 @@
+import 'package:azkar/masjid/presentation/widgets/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../constants.dart';
-import '../../data/repo/masjid_repo.dart';
 import '../cubit/masjid_cubit.dart';
 import '../cubit/masjid_state.dart';
 import '../widgets/empty_masjids.dart';
 import '../widgets/location_permission_dialog.dart';
 import '../widgets/masjic_card.dart';
+import '../widgets/snackbar_helper.dart';
 
 class MasjidFinderPage extends StatelessWidget {
   const MasjidFinderPage({super.key});
@@ -95,41 +96,7 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
   }
 
   Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 80.w,
-            height: 80.w,
-            decoration: BoxDecoration(
-              color: primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(40.r),
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(color: primary, strokeWidth: 3),
-            ),
-          ),
-          SizedBox(height: 24.h),
-          Text(
-            'Finding nearby masjids...',
-            style: TextStyle(
-              color: textColor,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            'Getting your location and searching',
-            style: TextStyle(
-              color: textColor.withOpacity(0.7),
-              fontSize: 14.sp,
-            ),
-          ),
-        ],
-      ),
-    );
+    return const SingleChildScrollView(child: MasjidLoadingShimmer());
   }
 
   Widget _buildErrorState(String message, BuildContext context) {
@@ -320,6 +287,7 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
                 child: MasjidCard(
                   masjid: masjid,
                   formattedDistance: cubit.formatDistance(masjid.distance),
+                  isClosest: index == 0, // First item is closest
                   onTap: () => _handleMasjidTap(context, masjid),
                   onDirectionsTap: () => _handleDirectionsTap(context, masjid),
                 ),
@@ -336,31 +304,23 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
 
   void _handleMasjidTap(BuildContext context, masjid) async {
     final cubit = context.read<MasjidStateCubit>();
+    SnackbarHelper.showInfo(context, 'Opening ${masjid.name} in maps...');
+
     final success = await cubit.openMasjidInMaps(masjid);
 
     if (!success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Unable to open maps app'),
-          backgroundColor: Colors.red.shade600,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      SnackbarHelper.showError(context, 'Unable to open maps app');
     }
   }
 
   void _handleDirectionsTap(BuildContext context, masjid) async {
     final cubit = context.read<MasjidStateCubit>();
+    SnackbarHelper.showInfo(context, 'Getting directions to ${masjid.name}...');
+
     final success = await cubit.getDirectionsToMasjid(masjid);
 
     if (!success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Unable to open directions'),
-          backgroundColor: Colors.red.shade600,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      SnackbarHelper.showError(context, 'Unable to open directions');
     }
   }
 

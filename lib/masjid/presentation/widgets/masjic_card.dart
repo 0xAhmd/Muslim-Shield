@@ -1,11 +1,14 @@
+// lib/masjid/presentation/widgets/masjic_card.dart (Updated)
 import 'package:azkar/masjid/data/models/masjid.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
+import 'distance_badge.dart';
 
 class MasjidCard extends StatelessWidget {
   final MasjidModel masjid;
   final String formattedDistance;
+  final bool isClosest;
   final VoidCallback onTap;
   final VoidCallback onDirectionsTap;
 
@@ -13,6 +16,7 @@ class MasjidCard extends StatelessWidget {
     super.key,
     required this.masjid,
     required this.formattedDistance,
+    this.isClosest = false,
     required this.onTap,
     required this.onDirectionsTap,
   });
@@ -31,7 +35,21 @@ class MasjidCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: grey,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: primary.withOpacity(0.1), width: 1),
+              border: Border.all(
+                color: isClosest
+                    ? primary.withOpacity(0.3)
+                    : primary.withOpacity(0.1),
+                width: 1,
+              ),
+              boxShadow: isClosest
+                  ? [
+                      BoxShadow(
+                        color: primary.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                  : null,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,43 +58,64 @@ class MasjidCard extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: primary.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
+                        color: isClosest
+                            ? primary.withOpacity(0.2)
+                            : primary.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.mosque, color: primary, size: 20),
+                      child: Icon(Icons.mosque, color: primary, size: 22),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        masjid.name,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              if (isClosest) ...[
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: primary,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: const Text(
+                                    'CLOSEST',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                              Expanded(
+                                child: Text(
+                                  masjid.name,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: orange.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        formattedDistance,
-                        style: const TextStyle(
-                          color: orange,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                    DistanceBadge(
+                      distance: formattedDistance,
+                      isClosest: isClosest,
                     ),
                   ],
                 ),
@@ -182,12 +221,12 @@ class _ActionButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: BoxDecoration(
             color: isPrimary ? primary : background,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(10),
             border: isPrimary
                 ? null
                 : Border.all(color: primary.withOpacity(0.3), width: 1),
@@ -195,13 +234,13 @@ class _ActionButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: isPrimary ? Colors.white : primary, size: 16),
-              const SizedBox(width: 6),
+              Icon(icon, color: isPrimary ? Colors.white : primary, size: 18),
+              const SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
                   color: isPrimary ? Colors.white : primary,
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
