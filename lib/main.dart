@@ -4,13 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 
 import 'bookmarks/model/bookmark.dart';
 import 'bookmarks/service/bookmark_service.dart';
 import 'constants.dart';
 import 'surah/audio/audio_state.dart';
 import 'home/presentation/pages/home_screen.dart';
+
+import 'package:safe_device/safe_device.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +23,10 @@ void main() async {
   await BookmarksService().init();
   await LocalAudioService().initialize();
 
-  final bool isRooted = await JailbreakRootDetection.instance.isJailBroken;
-  final bool isEmulator = await JailbreakRootDetection.instance.isRealDevice;
+  final isRooted = await SafeDevice.isJailBroken;
+  final isRealDevice = await SafeDevice.isRealDevice;
 
-  if (isRooted || isEmulator) {
+  if (isRooted || !isRealDevice) {
     runApp(const BlockedDeviceApp());
   } else {
     runApp(const MyApp());
