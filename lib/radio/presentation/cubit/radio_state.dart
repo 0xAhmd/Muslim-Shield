@@ -1,6 +1,36 @@
-part of 'radio_cubit.dart';
+import 'package:azkar/radio/data/models/radio.dart';
 
-@immutable
-sealed class RadioState {}
 
-final class RadioInitial extends RadioState {}
+// States
+abstract class RadioState {}
+
+class RadioInitial extends RadioState {}
+
+class RadioLoading extends RadioState {}
+
+class RadioPlaying extends RadioState {
+  final RadioModel station;
+  final Duration position;
+  
+  RadioPlaying({required this.station, required this.position});
+}
+
+class RadioPaused extends RadioState {
+  final RadioModel station;
+  
+  RadioPaused({required this.station});
+}
+
+class RadioStopped extends RadioState {}
+
+class RadioError extends RadioState {
+  final String message;
+  
+  RadioError(this.message);
+}
+
+class RadioBuffering extends RadioState {
+  final RadioModel station;
+  
+  RadioBuffering({required this.station});
+}
