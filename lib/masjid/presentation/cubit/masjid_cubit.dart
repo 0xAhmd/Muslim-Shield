@@ -4,7 +4,6 @@ import 'package:azkar/masjid/data/services/url_launcher.dart';
 import 'package:azkar/masjid/presentation/cubit/masjid_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class MasjidStateCubit extends Cubit<MasjidState> {
   final MasjidRepository _repository;
   final UrlLauncherService _urlLauncherService;
@@ -12,26 +11,28 @@ class MasjidStateCubit extends Cubit<MasjidState> {
   MasjidStateCubit({
     MasjidRepository? repository,
     UrlLauncherService? urlLauncherService,
-  })  : _repository = repository ?? MasjidRepository(),
-        _urlLauncherService = urlLauncherService ?? UrlLauncherService(),
-        super(MasjidInitial());
+  }) : _repository = repository ?? MasjidRepository(),
+       _urlLauncherService = urlLauncherService ?? UrlLauncherService(),
+       super(MasjidInitial());
 
   /// Load nearby masjids
   Future<void> loadNearbyMasjids() async {
     try {
+      if (isClosed) return;
       emit(MasjidLoading());
 
-      // Get current location
       final locationResult = await _repository.getCurrentLocation();
       if (!locationResult.isSuccess) {
-        emit(MasjidError(
-          locationResult.errorMessage ?? 'Failed to get location',
-          isLocationError: true,
-        ));
+        if (isClosed) return;
+        emit(
+          MasjidError(
+            locationResult.errorMessage ?? 'Failed to get location',
+            isLocationError: true,
+          ),
+        );
         return;
       }
 
-      // Search for nearby masjids
       final masjids = await _repository.searchNearbyMasjids(
         latitude: locationResult.latitude!,
         longitude: locationResult.longitude!,
@@ -39,12 +40,16 @@ class MasjidStateCubit extends Cubit<MasjidState> {
         limit: 5,
       );
 
-      emit(MasjidLoaded(
-        masjids: masjids,
-        userLatitude: locationResult.latitude!,
-        userLongitude: locationResult.longitude!,
-      ));
+      if (isClosed) return;
+      emit(
+        MasjidLoaded(
+          masjids: masjids,
+          userLatitude: locationResult.latitude!,
+          userLongitude: locationResult.longitude!,
+        ),
+      );
     } catch (e) {
+      if (isClosed) return;
       emit(MasjidError('Failed to load nearby masjids: ${e.toString()}'));
     }
   }
@@ -56,15 +61,21 @@ class MasjidStateCubit extends Cubit<MasjidState> {
 
     try {
       // Set refreshing state
+      if (isClosed) return;
+
       emit(currentState.copyWith(isRefreshing: true));
 
       // Get updated location
       final locationResult = await _repository.getCurrentLocation();
       if (!locationResult.isSuccess) {
-        emit(MasjidError(
-          locationResult.errorMessage ?? 'Failed to get location',
-          isLocationError: true,
-        ));
+        if (isClosed) return;
+
+        emit(
+          MasjidError(
+            locationResult.errorMessage ?? 'Failed to get location',
+            isLocationError: true,
+          ),
+        );
         return;
       }
 
@@ -75,14 +86,19 @@ class MasjidStateCubit extends Cubit<MasjidState> {
         radiusInKm: 5.0,
         limit: 5,
       );
+      if (isClosed) return;
 
-      emit(MasjidLoaded(
-        masjids: masjids,
-        userLatitude: locationResult.latitude!,
-        userLongitude: locationResult.longitude!,
-      ));
+      emit(
+        MasjidLoaded(
+          masjids: masjids,
+          userLatitude: locationResult.latitude!,
+          userLongitude: locationResult.longitude!,
+        ),
+      );
     } catch (e) {
       // Return to previous state on error
+      if (isClosed) return;
+
       emit(currentState.copyWith(isRefreshing: false));
     }
   }

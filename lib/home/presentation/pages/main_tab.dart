@@ -126,16 +126,13 @@ class _MainTabScreenState extends State<MainTabScreen>
               if (!isSearching)
                 const SliverToBoxAdapter(child: GreetingSection()),
               SliverAppBar(
-                shape: Border(
-                  bottom: BorderSide(
-                    width: 3,
-                    color: const Color(0xFFAAAAAA).withOpacity(.1),
-                  ),
-                ),
+                floating: false,
+
                 elevation: 0,
                 backgroundColor: scaffoldBackgroundColor,
                 automaticallyImplyLeading: false,
                 pinned: true,
+                snap: false,
                 bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(0),
                   child: CustomTabBar(
