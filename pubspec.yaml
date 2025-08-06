@@ -66,9 +66,8 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   assets:
-    - assets/svgs/
-    - assets/datas/
-    - assets/al-quran.png
+
+    - assets/
   fonts:
     - family: Amiri
       fonts:
