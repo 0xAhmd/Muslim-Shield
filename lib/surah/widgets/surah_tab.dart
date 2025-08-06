@@ -1,8 +1,8 @@
-import 'package:azkar/constants.dart';
-import 'package:azkar/surah/data/models/surah.dart';
-import 'package:azkar/surah/data/repo/surah_repo.dart';
-import 'package:azkar/surah/data/service/last_read.dart';
-import 'package:azkar/surah/pages/surah_details_page.dart';
+import '../../constants.dart';
+import '../data/models/surah.dart';
+import '../data/repo/surah_repo.dart';
+import '../data/service/last_read.dart';
+import '../pages/surah_details_page.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';

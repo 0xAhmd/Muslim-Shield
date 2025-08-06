@@ -1,7 +1,8 @@
-import 'package:azkar/prayer/data/models/prayer_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../constants.dart';
+import '../../data/models/prayer_location.dart';
 
 class NextPrayerCard extends StatelessWidget {
   final PrayerInfo? nextPrayer;

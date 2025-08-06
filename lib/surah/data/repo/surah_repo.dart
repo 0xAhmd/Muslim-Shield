@@ -1,7 +1,7 @@
-import 'package:azkar/surah/data/models/surah.dart';
-import 'package:azkar/surah/data/service/dio_client.dart';
-import 'package:azkar/juzz/data/models/juzz.dart';
-import 'package:azkar/juzz/data/models/juzz_summary.dart';
+import '../models/surah.dart';
+import '../service/dio_client.dart';
+import '../../../juzz/data/models/juzz.dart';
+import '../../../juzz/data/models/juzz_summary.dart';
 import 'package:flutter/material.dart';
 
 class SurahRepository {

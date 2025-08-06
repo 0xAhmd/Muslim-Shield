@@ -1,5 +1,5 @@
-import 'package:azkar/hizb/data/models/hizb.dart';
-import 'package:azkar/hizb/data/models/hizb_summary.dart';
+import '../../data/models/hizb.dart';
+import '../../data/models/hizb_summary.dart';
 
 // States
 abstract class HizbState {}

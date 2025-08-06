@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:azkar/constants.dart';
+import '../../../constants.dart';
 
 class CategoryFilterButton extends StatelessWidget {
   final String label;

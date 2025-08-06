@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:azkar/bookmarks/model/bookmark.dart';
-import 'package:azkar/bookmarks/presentation/cubit/bookmark_cubit.dart';
-import 'package:azkar/bookmarks/presentation/cubit/bookmark_state.dart';
-import 'package:azkar/bookmarks/presentation/widgets/bookmarks_card.dart';
-import 'package:azkar/bookmarks/service/bookmark_service.dart';
-import 'package:azkar/constants.dart';
+import '../model/bookmark.dart';
+import 'cubit/bookmark_cubit.dart';
+import 'cubit/bookmark_state.dart';
+import 'widgets/bookmarks_card.dart';
+import '../service/bookmark_service.dart';
+import '../../constants.dart';
 
 class BookmarksPage extends StatelessWidget {
   const BookmarksPage({super.key});

@@ -1,4 +1,4 @@
-import 'package:azkar/Reminders/data/models/muslim_event.dart';
+import '../models/muslim_event.dart';
 import 'package:intl/intl.dart';
 
 class LocalEventsService {

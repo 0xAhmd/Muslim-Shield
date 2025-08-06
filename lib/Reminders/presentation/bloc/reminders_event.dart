@@ -1,4 +1,4 @@
-import 'package:azkar/prayer/data/models/prayer_timings.dart';
+import '../../../prayer/data/models/prayer_timings.dart';
 
 abstract class RemindersEvent {}
 

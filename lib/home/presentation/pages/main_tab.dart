@@ -1,10 +1,10 @@
-import 'package:azkar/constants.dart';
-import 'package:azkar/hizb/presentation/widgets/hizb_tab.dart';
-import 'package:azkar/surah/widgets/custom_tab_bar.dart';
-import 'package:azkar/home/presentation/widgets/greeting_section.dart';
-import 'package:azkar/home/presentation/widgets/search_appbar.dart';
-import 'package:azkar/juzz/presentation/widgets/juz_tab.dart';
-import 'package:azkar/surah/widgets/surah_tab.dart';
+import '../../../constants.dart';
+import '../../../hizb/presentation/widgets/hizb_tab.dart';
+import '../../../surah/widgets/custom_tab_bar.dart';
+import '../widgets/greeting_section.dart';
+import '../widgets/search_appbar.dart';
+import '../../../juzz/presentation/widgets/juz_tab.dart';
+import '../../../surah/widgets/surah_tab.dart';
 import 'package:flutter/material.dart';
 
 class MainTabScreen extends StatefulWidget {

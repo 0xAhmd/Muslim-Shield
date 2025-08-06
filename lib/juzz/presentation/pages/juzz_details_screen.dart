@@ -1,10 +1,10 @@
-import 'package:azkar/constants.dart';
-import 'package:azkar/juzz/presentation/cubit/juzz_cubit.dart';
-import 'package:azkar/juzz/presentation/cubit/juzz_state.dart';
-import 'package:azkar/juzz/presentation/widgets/juzz_content_view.dart';
-import 'package:azkar/juzz/presentation/widgets/juzz_detail_appbar.dart';
-import 'package:azkar/juzz/presentation/widgets/juzz_error_view.dart';
-import 'package:azkar/juzz/presentation/widgets/juzz_loading_view.dart';
+import '../../../constants.dart';
+import '../cubit/juzz_cubit.dart';
+import '../cubit/juzz_state.dart';
+import '../widgets/juzz_content_view.dart';
+import '../widgets/juzz_detail_appbar.dart';
+import '../widgets/juzz_error_view.dart';
+import '../widgets/juzz_loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';

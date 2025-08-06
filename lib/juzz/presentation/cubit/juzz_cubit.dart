@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:azkar/surah/data/repo/surah_repo.dart';
-import 'package:azkar/juzz/data/models/juzz_summary.dart';
-import 'package:azkar/juzz/presentation/cubit/juzz_state.dart';
+import '../../../surah/data/repo/surah_repo.dart';
+import '../../data/models/juzz_summary.dart';
+import 'juzz_state.dart';
 
 class JuzzCubit extends Cubit<JuzzState> {
   final SurahRepository _repository;

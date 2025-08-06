@@ -1,8 +1,8 @@
-import 'package:azkar/constants.dart';
-import 'package:azkar/hizb/data/models/hizb_summary.dart';
-import 'package:azkar/hizb/presentation/cubit/hizb_cubit.dart';
-import 'package:azkar/hizb/presentation/pages/hizb_details_screen.dart';
-import 'package:azkar/hizb/presentation/widgets/hizb_item_card.dart';
+import '../../../constants.dart';
+import '../../data/models/hizb_summary.dart';
+import '../cubit/hizb_cubit.dart';
+import '../pages/hizb_details_screen.dart';
+import 'hizb_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

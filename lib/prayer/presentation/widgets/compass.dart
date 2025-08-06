@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+import 'package:flutter_qiblah/flutter_qiblah.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../constants.dart';
 
 class QiblahCompass extends StatefulWidget {

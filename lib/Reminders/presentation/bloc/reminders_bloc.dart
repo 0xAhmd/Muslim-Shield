@@ -1,6 +1,6 @@
-import 'package:azkar/Reminders/data/repo/reminders_repo_impl.dart';
-import 'package:azkar/Reminders/presentation/bloc/reminders_event.dart';
-import 'package:azkar/Reminders/presentation/bloc/reminders_state.dart';
+import '../../data/repo/reminders_repo_impl.dart';
+import 'reminders_event.dart';
+import 'reminders_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {

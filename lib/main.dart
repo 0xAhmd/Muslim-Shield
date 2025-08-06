@@ -1,9 +1,9 @@
-import 'package:azkar/bookmarks/model/bookmark.dart';
-import 'package:azkar/bookmarks/service/bookmark_service.dart';
-import 'package:azkar/constants.dart';
-import 'package:azkar/core/blocked.dart';
-import 'package:azkar/surah/audio/audio_state.dart';
-import 'package:azkar/home/presentation/pages/home_screen.dart';
+import 'bookmarks/model/bookmark.dart';
+import 'bookmarks/service/bookmark_service.dart';
+import 'constants.dart';
+import 'core/blocked.dart';
+import 'surah/audio/audio_state.dart';
+import 'home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

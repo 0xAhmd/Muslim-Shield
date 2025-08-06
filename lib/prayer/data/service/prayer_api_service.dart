@@ -1,4 +1,4 @@
-import 'package:azkar/prayer/data/models/prayer_time.dart';
+import '../models/prayer_time.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:retrofit/retrofit.dart';

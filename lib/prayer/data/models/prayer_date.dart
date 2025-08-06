@@ -1,6 +1,6 @@
 
-import 'package:azkar/prayer/data/models/prayer_gregorian.dart';
-import 'package:azkar/prayer/data/models/prayer_hijri.dart';
+import 'prayer_gregorian.dart';
+import 'prayer_hijri.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_date.g.dart';
 @JsonSerializable()

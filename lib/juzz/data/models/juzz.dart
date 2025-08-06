@@ -1,4 +1,4 @@
-import 'package:azkar/juzz/data/models/juzz_ayah.dart';
+import 'juzz_ayah.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'juzz.g.dart';
 

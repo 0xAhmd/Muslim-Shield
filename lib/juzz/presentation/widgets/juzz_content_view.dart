@@ -1,8 +1,8 @@
-import 'package:azkar/juzz/data/models/juzz.dart';
-import 'package:azkar/juzz/data/models/juzz_ayah.dart';
-import 'package:azkar/juzz/presentation/widgets/ayah_tile.dart';
-import 'package:azkar/juzz/presentation/widgets/juzz_header_car.dart';
-import 'package:azkar/juzz/presentation/widgets/surah_header_car.dart';
+import '../../data/models/juzz.dart';
+import '../../data/models/juzz_ayah.dart';
+import 'ayah_tile.dart';
+import 'juzz_header_car.dart';
+import 'surah_header_car.dart';
 import 'package:flutter/material.dart';
 
 class JuzzContentView extends StatelessWidget {

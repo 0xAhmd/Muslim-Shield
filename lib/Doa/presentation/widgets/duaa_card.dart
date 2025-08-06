@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:azkar/Doa/data/dua_model.dart';
-import 'package:azkar/constants.dart';
+import '../../data/dua_model.dart';
+import '../../../constants.dart';
 
 class DuaCard extends StatelessWidget {
   final DuaModel dua;

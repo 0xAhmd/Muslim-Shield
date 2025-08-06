@@ -1,5 +1,5 @@
-import 'package:azkar/constants.dart';
-import 'package:azkar/home/presentation/pages/main_tab.dart';
+import '../constants.dart';
+import '../home/presentation/pages/main_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';

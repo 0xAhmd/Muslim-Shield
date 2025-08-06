@@ -1,4 +1,4 @@
-import 'package:azkar/hizb/data/models/hizb.dart';
+import 'hizb.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'hizb_summary.g.dart';
 

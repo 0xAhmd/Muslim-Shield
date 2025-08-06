@@ -1,8 +1,8 @@
-import 'package:azkar/juzz/presentation/cubit/juzz_cubit.dart';
-import 'package:azkar/juzz/presentation/cubit/juzz_state.dart';
-import 'package:azkar/juzz/presentation/pages/juzz_details_screen.dart';
-import 'package:azkar/juzz/presentation/widgets/juzz_tile.dart';
-import 'package:azkar/juzz/presentation/widgets/search_indicator.dart';
+import '../cubit/juzz_cubit.dart';
+import '../cubit/juzz_state.dart';
+import '../pages/juzz_details_screen.dart';
+import 'juzz_tile.dart';
+import 'search_indicator.dart';
 import 'package:flutter/material.dart';
 
 class JuzzListView extends StatelessWidget {

@@ -1,5 +1,5 @@
-import 'package:azkar/Reminders/data/models/muslim_event.dart';
-import 'package:azkar/Reminders/data/models/reminder_card.dart';
+import '../../data/models/muslim_event.dart';
+import '../../data/models/reminder_card.dart';
 
 
 abstract class RemindersState {}

@@ -1,5 +1,5 @@
 
-import 'package:azkar/juzz/data/models/juzz.dart';
+import 'juzz.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'juzz_response.g.dart';
 @JsonSerializable()

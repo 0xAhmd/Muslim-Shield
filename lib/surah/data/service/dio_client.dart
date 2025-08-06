@@ -1,5 +1,5 @@
-import 'package:azkar/surah/data/service/api_service.dart';
-import 'package:azkar/surah/data/service/audio_api_service.dart';
+import 'api_service.dart';
+import 'audio_api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 

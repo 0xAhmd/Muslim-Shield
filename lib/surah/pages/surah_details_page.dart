@@ -1,11 +1,11 @@
-import 'package:azkar/bookmarks/presentation/cubit/bookmark_cubit.dart';
-import 'package:azkar/bookmarks/presentation/cubit/bookmark_state.dart';
-import 'package:azkar/bookmarks/service/bookmark_service.dart';
-import 'package:azkar/constants.dart';
-import 'package:azkar/surah/data/models/surah.dart';
-import 'package:azkar/surah/data/repo/surah_repo.dart';
-import 'package:azkar/surah/data/service/last_read.dart';
-import 'package:azkar/surah/widgets/reciter_dialog.dart';
+import '../../bookmarks/presentation/cubit/bookmark_cubit.dart';
+import '../../bookmarks/presentation/cubit/bookmark_state.dart';
+import '../../bookmarks/service/bookmark_service.dart';
+import '../../constants.dart';
+import '../data/models/surah.dart';
+import '../data/repo/surah_repo.dart';
+import '../data/service/last_read.dart';
+import '../widgets/reciter_dialog.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';

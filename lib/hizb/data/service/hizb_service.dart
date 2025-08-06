@@ -1,4 +1,4 @@
-import 'package:azkar/hizb/data/models/hizb_reponse.dart';
+import '../models/hizb_reponse.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 

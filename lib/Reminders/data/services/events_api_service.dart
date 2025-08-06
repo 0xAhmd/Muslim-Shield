@@ -1,4 +1,4 @@
-import 'package:azkar/Reminders/data/models/muslim_event.dart';
+import '../models/muslim_event.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:retrofit/retrofit.dart';

@@ -1,4 +1,4 @@
-import 'package:azkar/prayer/data/constants/sunnah_prayer_constants.dart';
+import '../../data/constants/sunnah_prayer_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constants.dart';

@@ -1,4 +1,4 @@
-import 'package:azkar/surah/data/models/surah.dart';
+import '../../../surah/data/models/surah.dart';
 
 class AyahManager {
   List<AudioAyah>? _currentAyahs;

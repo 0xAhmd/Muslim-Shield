@@ -1,7 +1,7 @@
-import 'package:azkar/surah/data/models/surah.dart';
-import 'package:azkar/home/presentation/widgets/audio_player_manager.dart';
-import 'package:azkar/home/presentation/widgets/audio_prefs.dart';
-import 'package:azkar/home/presentation/widgets/ayah_manager.dart';
+import '../data/models/surah.dart';
+import '../../home/presentation/widgets/audio_player_manager.dart';
+import '../../home/presentation/widgets/audio_prefs.dart';
+import '../../home/presentation/widgets/ayah_manager.dart';
 
 enum PlaybackState { stopped, playing, paused, loading }
 

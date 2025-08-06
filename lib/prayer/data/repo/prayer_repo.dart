@@ -1,7 +1,7 @@
-import 'package:azkar/prayer/data/models/prayer_location.dart';
-import 'package:azkar/prayer/data/models/prayer_time.dart';
-import 'package:azkar/prayer/data/models/prayer_timings.dart';
-import 'package:azkar/prayer/data/service/prayer_api_service.dart';
+import '../models/prayer_location.dart';
+import '../models/prayer_time.dart';
+import '../models/prayer_timings.dart';
+import '../service/prayer_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';

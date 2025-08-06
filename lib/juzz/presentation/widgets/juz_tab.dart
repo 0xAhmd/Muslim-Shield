@@ -1,9 +1,9 @@
-import 'package:azkar/constants.dart';
-import 'package:azkar/surah/data/repo/surah_repo.dart';
-import 'package:azkar/juzz/data/models/juzz_summary.dart';
-import 'package:azkar/juzz/presentation/cubit/juzz_cubit.dart';
-import 'package:azkar/juzz/presentation/cubit/juzz_state.dart';
-import 'package:azkar/juzz/presentation/pages/juzz_details_screen.dart';
+import '../../../constants.dart';
+import '../../../surah/data/repo/surah_repo.dart';
+import '../../data/models/juzz_summary.dart';
+import '../cubit/juzz_cubit.dart';
+import '../cubit/juzz_state.dart';
+import '../pages/juzz_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

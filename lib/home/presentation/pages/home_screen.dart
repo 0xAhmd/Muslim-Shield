@@ -1,11 +1,11 @@
-import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
-import 'package:azkar/core/app_updater.dart';
-import 'package:azkar/home/presentation/pages/main_tab.dart';
-import 'package:azkar/home/presentation/widgets/custom_nav_bar.dart';
-import 'package:azkar/prayer/presentation/pages/prayer_page.dart';
+import '../../../Reminders/presentation/pages/reminders_page.dart';
+import '../../../core/app_updater.dart';
+import 'main_tab.dart';
+import '../widgets/custom_nav_bar.dart';
+import '../../../prayer/presentation/pages/prayer_page.dart';
 import 'package:flutter/material.dart';
-import 'package:azkar/Doa/presentation/pages/doa_page.dart';
-import 'package:azkar/bookmarks/presentation/bookmarks_page.dart';
+import '../../../Doa/presentation/pages/doa_page.dart';
+import '../../../bookmarks/presentation/bookmarks_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

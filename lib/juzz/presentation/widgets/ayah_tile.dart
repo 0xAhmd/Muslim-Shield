@@ -1,7 +1,7 @@
-import 'package:azkar/constants.dart';
-import 'package:azkar/surah/data/service/last_read.dart';
-import 'package:azkar/juzz/data/models/juzz_ayah.dart';
-import 'package:azkar/juzz/presentation/widgets/meta_data_chip.dart';
+import '../../../constants.dart';
+import '../../../surah/data/service/last_read.dart';
+import '../../data/models/juzz_ayah.dart';
+import 'meta_data_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

@@ -1,5 +1,5 @@
-import 'package:azkar/prayer/data/models/prayer_location.dart';
-import 'package:azkar/prayer/data/models/prayer_time.dart';
+import '../../data/models/prayer_location.dart';
+import '../../data/models/prayer_time.dart';
 
 
 // States

@@ -1,4 +1,4 @@
-import 'package:azkar/Doa/data/dua_model.dart';
+import '../../data/dua_model.dart';
 
 
 // States

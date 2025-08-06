@@ -1,4 +1,4 @@
-import 'package:azkar/bookmarks/model/bookmark.dart';
+import '../../model/bookmark.dart';
 
 abstract class BookmarksState {}
 

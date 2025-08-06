@@ -1,7 +1,7 @@
-import 'package:azkar/hizb/data/models/hizb.dart';
-import 'package:azkar/hizb/data/models/hizb_ayah.dart';
-import 'package:azkar/hizb/data/models/hizb_summary.dart';
-import 'package:azkar/hizb/data/service/hizb_service.dart';
+import '../models/hizb.dart';
+import '../models/hizb_ayah.dart';
+import '../models/hizb_summary.dart';
+import '../service/hizb_service.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';

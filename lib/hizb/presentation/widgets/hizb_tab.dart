@@ -1,9 +1,9 @@
-import 'package:azkar/hizb/data/repo/hizb_repo.dart';
-import 'package:azkar/hizb/presentation/cubit/hizb_cubit.dart';
-import 'package:azkar/hizb/presentation/cubit/hizb_state.dart';
-import 'package:azkar/hizb/presentation/widgets/hizb_err_view.dart';
-import 'package:azkar/hizb/presentation/widgets/hizb_list_view.dart';
-import 'package:azkar/hizb/presentation/widgets/hizb_loading.dart';
+import '../../data/repo/hizb_repo.dart';
+import '../cubit/hizb_cubit.dart';
+import '../cubit/hizb_state.dart';
+import 'hizb_err_view.dart';
+import 'hizb_list_view.dart';
+import 'hizb_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

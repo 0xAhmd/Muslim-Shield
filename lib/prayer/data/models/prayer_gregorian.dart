@@ -1,4 +1,4 @@
-import 'package:azkar/prayer/data/models/gregorian_month.dart';
+import 'gregorian_month.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_gregorian.g.dart';
 

@@ -1,9 +1,9 @@
-import 'package:azkar/Reminders/data/models/muslim_event.dart';
-import 'package:azkar/Reminders/data/models/reminder_card.dart';
-import 'package:azkar/Reminders/data/services/events_api_service.dart';
-import 'package:azkar/Reminders/data/services/local_events_service.dart';
-import 'package:azkar/Reminders/data/services/notification_service.dart';
-import 'package:azkar/prayer/data/models/prayer_timings.dart';
+import '../models/muslim_event.dart';
+import '../models/reminder_card.dart';
+import '../services/events_api_service.dart';
+import '../services/local_events_service.dart';
+import '../services/notification_service.dart';
+import '../../../prayer/data/models/prayer_timings.dart';
 import 'package:intl/intl.dart';
 
 abstract class RemindersRepository {

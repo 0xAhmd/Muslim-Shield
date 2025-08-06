@@ -1,4 +1,4 @@
-import 'package:azkar/bookmarks/model/bookmark.dart';
+import '../model/bookmark.dart';
 import 'package:hive/hive.dart';
 
 class LocalBookmarksSource {

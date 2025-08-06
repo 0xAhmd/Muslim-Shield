@@ -1,15 +1,15 @@
-import 'package:azkar/Doa/presentation/widgets/category_filter.dart';
-import 'package:azkar/Doa/presentation/widgets/duaa_card.dart';
-import 'package:azkar/bookmarks/presentation/cubit/bookmark_cubit.dart';
-import 'package:azkar/bookmarks/presentation/cubit/bookmark_state.dart';
-import 'package:azkar/bookmarks/service/bookmark_service.dart';
+import '../widgets/category_filter.dart';
+import '../widgets/duaa_card.dart';
+import '../../../bookmarks/presentation/cubit/bookmark_cubit.dart';
+import '../../../bookmarks/presentation/cubit/bookmark_state.dart';
+import '../../../bookmarks/service/bookmark_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:azkar/Doa/data/dua_model.dart';
-import 'package:azkar/Doa/presentation/cubit/dua_state.dart';
-import 'package:azkar/Doa/presentation/cubit/dua_cubit.dart';
-import 'package:azkar/constants.dart';
+import '../../data/dua_model.dart';
+import '../cubit/dua_state.dart';
+import '../cubit/dua_cubit.dart';
+import '../../../constants.dart';
 
 class DoaPage extends StatelessWidget {
   const DoaPage({super.key});

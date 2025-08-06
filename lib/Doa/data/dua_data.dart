@@ -1,5 +1,5 @@
 
-import 'package:azkar/Doa/data/dua_model.dart';
+import 'dua_model.dart';
 
 class DuasData {
   static const List<String> categories = [

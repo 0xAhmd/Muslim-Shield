@@ -1,8 +1,8 @@
 
 
-import 'package:azkar/bookmarks/model/bookmark.dart';
-import 'package:azkar/bookmarks/presentation/cubit/bookmark_state.dart';
-import 'package:azkar/bookmarks/service/bookmark_service.dart';
+import '../../model/bookmark.dart';
+import 'bookmark_state.dart';
+import '../../service/bookmark_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BookmarksCubit extends Cubit<BookmarksState> {

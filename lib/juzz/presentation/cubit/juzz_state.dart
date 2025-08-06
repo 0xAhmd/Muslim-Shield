@@ -1,5 +1,5 @@
-import 'package:azkar/juzz/data/models/juzz.dart';
-import 'package:azkar/juzz/data/models/juzz_summary.dart';
+import '../../data/models/juzz.dart';
+import '../../data/models/juzz_summary.dart';
 
 
 // States

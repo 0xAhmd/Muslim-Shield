@@ -1,7 +1,7 @@
-import 'package:azkar/Reminders/data/models/muslim_event.dart';
+import '../../data/models/muslim_event.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:azkar/constants.dart';
+import '../../../constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class IslamicCalendarWidget extends StatefulWidget {

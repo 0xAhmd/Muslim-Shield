@@ -1,4 +1,4 @@
-import 'package:azkar/surah/data/models/surah.dart';
+import '../models/surah.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 

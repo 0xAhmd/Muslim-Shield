@@ -1,5 +1,5 @@
-import 'package:azkar/constants.dart';
-import 'package:azkar/hizb/presentation/cubit/hizb_state.dart';
+import '../../../constants.dart';
+import '../cubit/hizb_state.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

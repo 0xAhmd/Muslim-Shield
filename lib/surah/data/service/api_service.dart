@@ -1,5 +1,5 @@
-import 'package:azkar/surah/data/models/surah.dart';
-import 'package:azkar/juzz/data/models/juzz_response.dart';
+import '../models/surah.dart';
+import '../../../juzz/data/models/juzz_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 

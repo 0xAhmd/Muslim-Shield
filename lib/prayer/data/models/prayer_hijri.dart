@@ -1,4 +1,4 @@
-import 'package:azkar/prayer/data/models/hijri_month.dart';
+import 'hijri_month.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_hijri.g.dart';
 
