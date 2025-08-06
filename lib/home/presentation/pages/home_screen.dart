@@ -1,3 +1,5 @@
+import 'package:azkar/radio/presentation/pages/radio_page.dart';
+
 import '../../../Reminders/presentation/pages/reminders_page.dart';
 import '../../../core/app_updater.dart';
 import 'main_tab.dart';
@@ -17,11 +19,12 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    MainTabScreen(),
-    PrayerPage(),
-    DoaPage(),
-    RemindersPage(),
-    BookmarksPage(),
+    MainTabScreen(), // 0 - Quran
+    PrayerPage(), // 1 - Prayer
+    DoaPage(), // 2 - Duas
+    RadioPage(), // 3 - Radio (NEW)
+    RemindersPage(), // 4 - Reminders (moved)
+    BookmarksPage(), // 5 - Bookmarks (moved)
   ];
   @override
   void initState() {
