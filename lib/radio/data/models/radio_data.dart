@@ -11,35 +11,6 @@ class RadioData {
       language: 'Arabic',
     ),
 
-    // Alternative working Islamic radio stations
-    RadioModel(
-      name: 'Radio Islam International',
-      url: 'https://stream-148.zeno.fm/ye3tbzpx1nhvv?zs=_ZVduVUbThOiGrALtNsUzw',
-      description: 'International Islamic radio with Quran recitation',
-      language: 'Arabic',
-    ),
-
-    RadioModel(
-      name: 'Quran Radio - Live Recitation',
-      url: 'https://quraan.us:9874/stream',
-      description: 'Continuous Quran recitation by various reciters',
-      language: 'Arabic',
-    ),
-
-    // Backup stations with known working streams
-    RadioModel(
-      name: 'Voice of Islam Radio',
-      url: 'https://stream.zenolive.com/gxb8gds8vfhvv',
-      description: 'Islamic teachings and Quran recitation',
-      language: 'Arabic',
-    ),
-
-    RadioModel(
-      name: 'Al-Quran Al-Kareem Radio',
-      url: 'https://stream-156.zeno.fm/b7npe06x1nhvv?zs=hj_z2MfPTB2g4I5rn8xGnA',
-      description: 'Holy Quran recitation 24/7',
-      language: 'Arabic',
-    ),
   ];
 
   static RadioModel get defaultStation => stations.first;
