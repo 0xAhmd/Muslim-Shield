@@ -40,9 +40,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(
               backgroundColor: scaffoldBackgroundColor,
             ),
-            bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-              backgroundColor: scaffoldBackgroundColor,
-            ),
+
             fontFamily: GoogleFonts.poppins().fontFamily,
           ),
           home: const HomeScreen(),

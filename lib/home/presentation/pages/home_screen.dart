@@ -1,5 +1,4 @@
 import 'package:azkar/radio/presentation/pages/radio_page.dart';
-
 import '../../../Reminders/presentation/pages/reminders_page.dart';
 import '../../../core/app_updater.dart';
 import 'main_tab.dart';
@@ -22,10 +21,11 @@ class _HomeScreenState extends State<HomeScreen> {
     MainTabScreen(), // 0 - Quran
     PrayerPage(), // 1 - Prayer
     DoaPage(), // 2 - Duas
-    RadioPage(), // 3 - Radio (NEW)
-    RemindersPage(), // 4 - Reminders (moved)
-    BookmarksPage(), // 5 - Bookmarks (moved)
+    RadioPage(), // 3 - Radio
+    RemindersPage(), // 4 - Reminders
+    BookmarksPage(), // 5 - Bookmarks
   ];
+
   @override
   void initState() {
     AppUpdater.checkForUpdate(context);
@@ -35,14 +35,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: _pages[_selectedIndex]),
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+      extendBody: true, // Needed to allow bottom nav bar to float over body
+      body: Stack(
+        children: [
+          SafeArea(child: _pages[_selectedIndex]),
+
+          /// Glassmorphic Bottom Nav Bar
+          CustomBottomNav(
+            currentIndex: _selectedIndex,
+            onTap: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+          ),
+        ],
       ),
     );
   }

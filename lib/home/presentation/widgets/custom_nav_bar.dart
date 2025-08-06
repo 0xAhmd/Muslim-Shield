@@ -1,7 +1,8 @@
-import '../../../constants.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../constants.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -15,48 +16,77 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      type: BottomNavigationBarType.fixed,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      items: [
-        _buildNavItem(icon: "assets/svgs/quran-icon.svg"),
-        _buildNavItem(icon: "assets/svgs/pray-icon.svg"),
-        _buildNavItem(icon: "assets/svgs/doa-icon.svg"),
-        _buildNavItem(
-          icon: "assets/radio.png",
-        ), // Fixed radio item with hardcoded size
-        _buildNavItem(icon: "assets/svgs/lamp-icon.svg"),
-        _buildNavItem(icon: "assets/svgs/bookmark-icon.svg"),
-      ],
+    return Positioned(
+      bottom: 16.h,
+      left: 16.w,
+      right: 16.w,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30.r),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            height: 60.h, // Adjusted height
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(30.r),
+              border: Border.all(color: Colors.white.withOpacity(0.2)),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1E1E1E).withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildBounceIcon(icon: "assets/svgs/quran-icon.svg", index: 0),
+                _buildBounceIcon(icon: "assets/svgs/pray-icon.svg", index: 1),
+                _buildBounceIcon(icon: "assets/svgs/doa-icon.svg", index: 2),
+                _buildBounceIcon(icon: "assets/radio.png", index: 3),
+                _buildBounceIcon(icon: "assets/svgs/lamp-icon.svg", index: 4),
+                _buildBounceIcon(
+                  icon: "assets/svgs/bookmark-icon.svg",
+                  index: 5,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  BottomNavigationBarItem _buildNavItem({required String icon}) {
+  Widget _buildBounceIcon({required String icon, required int index}) {
     final bool isSvg = icon.toLowerCase().endsWith('.svg');
 
-    return BottomNavigationBarItem(
-      icon: isSvg
-          ? SvgPicture.asset(icon, color: textColor)
-          : Image.asset(
-              icon,
-              color: textColor,
-              width: 38.w, // Using ScreenUtil with hardcoded size
-              height: 38.h, // Using ScreenUtil with hardcoded size
-            ),
-      activeIcon: isSvg
-          ? SvgPicture.asset(icon, color: primary)
-          : Image.asset(
-              icon,
-              color: primary,
-              width: 38
-                  .w, // Using ScreenUtil with hardcoded size for active state too
-              height: 38
-                  .h, // Using ScreenUtil with hardcoded size for active state too
-            ),
-      label: "",
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 1.0, end: currentIndex == index ? 1.25 : 1.0),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutBack,
+      builder: (context, scale, child) {
+        return GestureDetector(
+          onTap: () => onTap(index),
+          child: Transform.scale(
+            scale: scale,
+            child: isSvg
+                ? SvgPicture.asset(
+                    icon,
+                    color: currentIndex == index ? primary : textColor,
+                    width: 28.w,
+                    height: 28.h,
+                  )
+                : Image.asset(
+                    icon,
+                    color: currentIndex == index ? primary : textColor,
+                    width: 28.w,
+                    height: 28.h,
+                  ),
+          ),
+        );
+      },
     );
   }
 }
