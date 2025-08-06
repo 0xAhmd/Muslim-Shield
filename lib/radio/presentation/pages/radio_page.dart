@@ -49,17 +49,17 @@ class RadioPageContent extends StatelessWidget {
                         // Station info
                         const StationInfo(),
 
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
 
                         // Waveform animation or Islamic pattern
                         const WaveformAnimation(),
 
-                        const SizedBox(height: 60),
+                        const SizedBox(height: 50),
 
                         // Radio controls
                         const RadioControls(),
 
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 35),
 
                         // Status text
                         _buildStatusText(state),

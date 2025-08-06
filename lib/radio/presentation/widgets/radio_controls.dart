@@ -52,7 +52,7 @@ class RadioControls extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
 
             // Main playback controls
             Row(

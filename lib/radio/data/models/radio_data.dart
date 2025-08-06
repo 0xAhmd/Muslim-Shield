@@ -10,7 +10,6 @@ class RadioData {
       description: '24-hour Quran broadcast from Cairo',
       language: 'Arabic',
     ),
-
   ];
 
   static RadioModel get defaultStation => stations.first;
