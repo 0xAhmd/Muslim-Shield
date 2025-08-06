@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   animated_text_kit: ^4.2.3
+  audio_service: ^0.18.18
   audioplayers: ^6.5.0
   bloc: ^9.0.0
   cupertino_icons: ^1.0.8
