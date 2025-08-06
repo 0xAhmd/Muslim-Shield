@@ -83,128 +83,19 @@ class SajdaTabState extends State<SajdaTab> with AutomaticKeepAliveClientMixin {
     }
 
     if (state is SajdaLoaded) {
-      return Column(
-        children: [
-          _buildFilterControls(state),
-          Expanded(
-            child: SajdaListView(
-              sajdaSummaries: state.filteredSajdas,
-              isSearching:
-                  _currentSearchQuery.isNotEmpty ||
-                  state.searchQuery.isNotEmpty,
-              searchQuery: state.searchQuery.isEmpty
-                  ? _currentSearchQuery
-                  : state.searchQuery,
-              sajdaCubit: _sajdaCubit,
-              showObligatory: state.showObligatory,
-              showRecommended: state.showRecommended,
-            ),
-          ),
-        ],
+      return SajdaListView(
+        sajdaSummaries: state.filteredSajdas,
+        isSearching:
+            _currentSearchQuery.isNotEmpty || state.searchQuery.isNotEmpty,
+        searchQuery: state.searchQuery.isEmpty
+            ? _currentSearchQuery
+            : state.searchQuery,
+        sajdaCubit: _sajdaCubit,
+        showObligatory: state.showObligatory,
+        showRecommended: state.showRecommended,
       );
     }
 
     return const SajdaLoadingView();
-  }
-
-  Widget _buildFilterControls(SajdaLoaded state) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(24, 8, 24, 0),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => _sajdaCubit.toggleObligatory(),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: state.showObligatory
-                      ? Colors.red.withOpacity(0.1)
-                      : grey.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: state.showObligatory
-                        ? Colors.red.withOpacity(0.3)
-                        : textColor.withOpacity(0.1),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.priority_high,
-                      size: 18,
-                      color: state.showObligatory
-                          ? Colors.red
-                          : textColor.withOpacity(0.6),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Obligatory',
-                      style: TextStyle(
-                        color: state.showObligatory
-                            ? Colors.red
-                            : textColor.withOpacity(0.6),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => _sajdaCubit.toggleRecommended(),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: state.showRecommended
-                      ? orange.withOpacity(0.1)
-                      : grey.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: state.showRecommended
-                        ? orange.withOpacity(0.3)
-                        : textColor.withOpacity(0.1),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.star_outline,
-                      size: 18,
-                      color: state.showRecommended
-                          ? orange
-                          : textColor.withOpacity(0.6),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Recommended',
-                      style: TextStyle(
-                        color: state.showRecommended
-                            ? orange
-                            : textColor.withOpacity(0.6),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

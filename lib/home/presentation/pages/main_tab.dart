@@ -1,3 +1,5 @@
+import 'package:azkar/sajda/presentation/widget/sajda_tab.dart';
+
 import '../../../constants.dart';
 import '../../../hizb/presentation/widgets/hizb_tab.dart';
 import '../../../surah/widgets/custom_tab_bar.dart';
@@ -22,6 +24,8 @@ class _MainTabScreenState extends State<MainTabScreen>
   final GlobalKey<SurahTabState> surahTabKey = GlobalKey<SurahTabState>();
   final GlobalKey<JuzTabState> juzTabKey = GlobalKey<JuzTabState>();
   final GlobalKey<HizbTabState> hizbTabKey = GlobalKey<HizbTabState>();
+  final GlobalKey<SajdaTabState> sajdaTabKey =
+      GlobalKey<SajdaTabState>(); // Add SajdaTab key
 
   @override
   void initState() {
@@ -57,6 +61,10 @@ class _MainTabScreenState extends State<MainTabScreen>
       case 2:
         hizbTabKey.currentState?.performClearSearch();
         break;
+      case 3:
+        sajdaTabKey.currentState
+            ?.performClearSearch(); // Add sajda clear search
+        break;
     }
   }
 
@@ -71,13 +79,17 @@ class _MainTabScreenState extends State<MainTabScreen>
       case 2:
         hizbTabKey.currentState?.performSearch(query);
         break;
+      case 3:
+        sajdaTabKey.currentState?.performSearch(query); // Add sajda search
+        break;
     }
   }
 
   bool _canSearchInCurrentTab() {
     return tabController.index == 0 ||
         tabController.index == 1 ||
-        tabController.index == 2;
+        tabController.index == 2 ||
+        tabController.index == 3; // Enable search for sajda tab
   }
 
   String _getSearchHint() {
@@ -88,6 +100,8 @@ class _MainTabScreenState extends State<MainTabScreen>
         return 'Search Juzz...';
       case 2:
         return 'Search Hizb sections...';
+      case 3:
+        return 'Search Sajdas...'; // Add sajda search hint
       default:
         return 'Search...';
     }
@@ -142,7 +156,9 @@ class _MainTabScreenState extends State<MainTabScreen>
                 SurahTab(key: surahTabKey),
                 JuzTab(key: juzTabKey),
                 HizbTab(key: hizbTabKey),
-                HizbTab(key: hizbTabKey),
+                SajdaTab(
+                  key: sajdaTabKey,
+                ), // Replace duplicate HizbTab with SajdaTab
               ],
             ),
           ),
