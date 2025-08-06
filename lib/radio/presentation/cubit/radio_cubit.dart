@@ -164,7 +164,7 @@ class RadioCubit extends Cubit<RadioState> {
   }
 
   Future<void> nextStation() async {
-    final stations = RadioData.stations;
+    const stations = RadioData.stations;
     if (stations.isEmpty) return;
 
     final nextIndex = (_currentStationIndex + 1) % stations.length;
@@ -172,7 +172,7 @@ class RadioCubit extends Cubit<RadioState> {
   }
 
   Future<void> previousStation() async {
-    final stations = RadioData.stations;
+    const stations = RadioData.stations;
     if (stations.isEmpty) return;
 
     final prevIndex = (_currentStationIndex - 1 + stations.length) % stations.length;
@@ -180,7 +180,7 @@ class RadioCubit extends Cubit<RadioState> {
   }
 
   Future<void> switchToStation(int index) async {
-    final stations = RadioData.stations;
+    const stations = RadioData.stations;
     if (index < 0 || index >= stations.length) return;
 
     _currentStationIndex = index;
