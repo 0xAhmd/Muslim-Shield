@@ -20,8 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
     MainTabScreen(),
     PrayerPage(),
     DoaPage(),
+    RemindersPage(),
     BookmarksPage(),
-    RemindersPage()
   ];
   @override
   void initState() {
