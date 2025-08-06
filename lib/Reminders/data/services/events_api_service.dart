@@ -1,5 +1,6 @@
 import 'package:azkar/Reminders/data/models/muslim_event.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'events_api_service.g.dart';
@@ -24,7 +25,7 @@ class EventsApiServiceFactory {
         requestBody: true,
         responseBody: true,
         logPrint: (object) {
-          print('API LOG: $object');
+          debugPrint('API LOG: $object');
         },
       ),
     );
