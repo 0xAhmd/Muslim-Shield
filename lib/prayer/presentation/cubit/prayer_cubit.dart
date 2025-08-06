@@ -10,26 +10,31 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
 
   Future<void> fetchPrayerTimes() async {
     try {
+      if (isClosed) return; // Check if cubit is closed
       emit(PrayerTimesLoading());
 
       // Get current location
       final location = await _repository.getCurrentLocation();
+      if (isClosed) return; // Check again after async operation
 
       // Fetch prayer times
       final prayerTimes = await _repository.getPrayerTimes(
         location.latitude,
         location.longitude,
       );
+      if (isClosed) return; // Check again after async operation
 
       // Get today's prayers list
       final prayersList = await _repository.getTodayPrayersList(
         prayerTimes.data.timings,
       );
+      if (isClosed) return; // Check again after async operation
 
       // Get next prayer
       final nextPrayer = await _repository.getNextPrayer(
         prayerTimes.data.timings,
       );
+      if (isClosed) return; // Check again after async operation
 
       emit(
         PrayerTimesLoaded(
@@ -39,9 +44,11 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
           nextPrayer: nextPrayer,
         ),
       );
-      
     } catch (e) {
-      emit(PrayerTimesError(e.toString()));
+      if (!isClosed) {
+        // Only emit error if not closed
+        emit(PrayerTimesError(e.toString()));
+      }
     }
   }
 
