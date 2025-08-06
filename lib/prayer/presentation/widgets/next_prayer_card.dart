@@ -18,7 +18,7 @@ class NextPrayerCard extends StatelessWidget {
         children: [
           // Background icon
           Positioned(
-            bottom: 0.h,
+            bottom: -6.h,
             right: 0.w,
             child: Image.asset("assets/masjid.png", width: 130),
           ),

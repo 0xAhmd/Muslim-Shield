@@ -26,7 +26,7 @@ void main() async {
   final isRooted = await SafeDevice.isJailBroken;
   final isRealDevice = await SafeDevice.isRealDevice;
 
-  if (isRooted || !isRealDevice) {
+  if (isRooted || isRealDevice) {
     runApp(const BlockedDeviceApp());
   } else {
     runApp(const MyApp());

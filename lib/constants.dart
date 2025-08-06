@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-const Color scaffoldBackgroundColor = Color.fromARGB(255, 3, 10, 29);
+const Color scaffoldBackgroundColor = Color(0xff030A1D);
 
 const Color background = Color(0xFF040C23);
 const Color textColor = Color(0xFFA19CC5);

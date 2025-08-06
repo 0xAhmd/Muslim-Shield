@@ -29,7 +29,6 @@ class HizbContentView extends StatefulWidget {
 
 class _HizbContentViewState extends State<HizbContentView> {
   double _fontSize = 18.0;
-  bool _showTranslation = false;
   String? _currentSurahName;
   int _currentSurahNumber = 0;
 
@@ -171,18 +170,14 @@ class _HizbContentViewState extends State<HizbContentView> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: primary.withOpacity(0.1)),
       ),
-      child: Row(
-        children: [
-          _buildFontControls(),
-          const Spacer(),
-          _buildTranslationToggle(),
-        ],
-      ),
+      child: Row(children: [_buildFontControls()]),
     );
   }
 
   Widget _buildFontControls() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         IconButton(
           onPressed: () {
@@ -209,41 +204,6 @@ class _HizbContentViewState extends State<HizbContentView> {
           icon: const Icon(Icons.text_increase, color: textColor, size: 20),
         ),
       ],
-    );
-  }
-
-  Widget _buildTranslationToggle() {
-    return GestureDetector(
-      onTap: () {
-        setState(() => _showTranslation = !_showTranslation);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: _showTranslation ? primary : background,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: primary),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.translate,
-              size: 16,
-              color: _showTranslation ? Colors.white : primary,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              'Translation',
-              style: GoogleFonts.poppins(
-                color: _showTranslation ? Colors.white : primary,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -353,10 +313,7 @@ class _HizbContentViewState extends State<HizbContentView> {
             _buildAyahHeader(ayah, index, isLastRead),
             const SizedBox(height: 12),
             _buildAyahText(ayah),
-            if (_showTranslation) ...[
-              const SizedBox(height: 12),
-              _buildTranslationText(),
-            ],
+
             if (ayah.sajda) _buildSajdaIndicator(),
           ],
         ),
@@ -437,27 +394,6 @@ class _HizbContentViewState extends State<HizbContentView> {
         ),
         textAlign: TextAlign.right,
         textDirection: TextDirection.rtl,
-      ),
-    );
-  }
-
-  Widget _buildTranslationText() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: background.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: primary.withOpacity(0.1)),
-      ),
-      child: Text(
-        'Translation would be loaded here from API or local storage',
-        style: GoogleFonts.poppins(
-          color: textColor.withOpacity(0.8),
-          fontSize: 14,
-          height: 1.6,
-          fontStyle: FontStyle.italic,
-        ),
-        textAlign: TextAlign.left,
       ),
     );
   }
