@@ -25,6 +25,8 @@ class CustomBottomNav extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 16.w),
+
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             height: 60.h, // Adjusted height
             decoration: BoxDecoration(
