@@ -5,10 +5,10 @@ import '../../home/presentation/widgets/ayah_manager.dart';
 
 enum PlaybackState { stopped, playing, paused, loading }
 
-class AudioService {
-  static final AudioService _instance = AudioService._internal();
-  factory AudioService() => _instance;
-  AudioService._internal();
+class LocalAudioService {
+  static final LocalAudioService _instance = LocalAudioService._internal();
+  factory LocalAudioService() => _instance;
+  LocalAudioService._internal();
 
   late final AudioPreferences _preferences;
   late final AudioPlayerManager _playerManager;
