@@ -27,7 +27,7 @@ class RadioPageContent extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(color: scaffoldBackgroundColor),
+          decoration: const BoxDecoration(color: scaffoldBackgroundColor),
           child: Column(
             children: [
               // Header
