@@ -94,7 +94,6 @@ class RadioPageContent extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 4),
                 Text(
                   'Live Quran broadcast',
                   style: TextStyle(color: textColor, fontSize: 16),
