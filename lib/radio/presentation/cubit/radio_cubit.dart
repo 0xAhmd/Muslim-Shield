@@ -11,6 +11,8 @@ class RadioCubit extends Cubit<RadioState> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   RadioAudioHandler? _audioHandler;
   RadioModel? _currentStation;
+  int _currentStationIndex = 0;
+  bool _isRetrying = false;
 
   RadioCubit() : super(RadioInitial()) {
     _init();
@@ -32,7 +34,6 @@ class RadioCubit extends Cubit<RadioState> {
       );
       _setupAudioServiceListeners();
     } catch (e) {
-      // Fallback to regular audio player if audio service fails
       debugPrint('Audio service initialization failed: $e');
       _setupAudioPlayerListeners();
     }
@@ -50,12 +51,7 @@ class RadioCubit extends Cubit<RadioState> {
             break;
           case AudioProcessingState.ready:
             if (playbackState.playing) {
-              emit(
-                RadioPlaying(
-                  station: _currentStation!,
-                  position: Duration.zero,
-                ),
-              );
+              emit(RadioPlaying(station: _currentStation!, position: Duration.zero));
             } else {
               emit(RadioPaused(station: _currentStation!));
             }
@@ -64,7 +60,7 @@ class RadioCubit extends Cubit<RadioState> {
           case AudioProcessingState.idle:
           case AudioProcessingState.error:
             if (playbackState.processingState == AudioProcessingState.error) {
-              emit(RadioError('Playback error occurred'));
+              _handlePlaybackError();
             } else {
               emit(RadioStopped());
             }
@@ -75,7 +71,6 @@ class RadioCubit extends Cubit<RadioState> {
   }
 
   void _setupAudioPlayerListeners() {
-    // Listen to player state changes with error handling
     _audioPlayer.playerStateStream.listen(
       (playerState) {
         if (_currentStation != null) {
@@ -86,12 +81,7 @@ class RadioCubit extends Cubit<RadioState> {
               break;
             case ProcessingState.ready:
               if (playerState.playing) {
-                emit(
-                  RadioPlaying(
-                    station: _currentStation!,
-                    position: _audioPlayer.position,
-                  ),
-                );
+                emit(RadioPlaying(station: _currentStation!, position: _audioPlayer.position));
               } else {
                 emit(RadioPaused(station: _currentStation!));
               }
@@ -104,11 +94,10 @@ class RadioCubit extends Cubit<RadioState> {
         }
       },
       onError: (error) {
-        emit(RadioError('Audio player error: ${error.toString()}'));
+        _handlePlaybackError();
       },
     );
 
-    // Listen to position changes with error handling
     _audioPlayer.positionStream.listen(
       (position) {
         if (state is RadioPlaying && _currentStation != null) {
@@ -116,35 +105,97 @@ class RadioCubit extends Cubit<RadioState> {
         }
       },
       onError: (error) {
-        // Handle position stream errors silently
         debugPrint('Position stream error: $error');
       },
     );
+  }
+
+  Future<void> _handlePlaybackError() async {
+    if (_isRetrying) return; // Prevent infinite retry loop
+    
+    _isRetrying = true;
+    emit(RadioError('Station unavailable, trying next station...'));
+    
+    // Wait a moment before retrying
+    await Future.delayed(const Duration(seconds: 2));
+    
+    // Try next station
+    await nextStation();
+    _isRetrying = false;
   }
 
   Future<void> playStation(RadioModel station) async {
     try {
       emit(RadioLoading());
       _currentStation = station;
+      _currentStationIndex = RadioData.stations.indexOf(station);
 
       if (_audioHandler != null) {
-        // Use audio service for background playback
         await _audioHandler!.playFromUrl(station.url, title: station.name);
       } else {
-        // Fallback to regular audio player
         await _audioPlayer.setAudioSource(
           AudioSource.uri(
             Uri.parse(station.url),
-            headers: {'User-Agent': 'Muslim Shield Radio Player/1.0'},
+            headers: {
+              'User-Agent': 'Muslim Shield Radio Player/1.0',
+              'Accept': '*/*',
+              'Connection': 'keep-alive',
+            },
           ),
           preload: false,
         );
         await _audioPlayer.play();
       }
     } catch (e) {
-      emit(RadioError('Failed to play radio: ${e.toString()}'));
-      _currentStation = null;
+      debugPrint('Failed to play station ${station.name}: $e');
+      
+      // If current station fails and we're not already retrying, try next station
+      if (!_isRetrying && RadioData.stations.length > 1) {
+        _isRetrying = true;
+        emit(RadioError('Station failed, trying next...'));
+        await Future.delayed(const Duration(seconds: 1));
+        await nextStation();
+        _isRetrying = false;
+      } else {
+        emit(RadioError('All stations unavailable. Please check your connection.'));
+        _currentStation = null;
+      }
     }
+  }
+
+  Future<void> nextStation() async {
+    final stations = RadioData.stations;
+    if (stations.isEmpty) return;
+
+    final nextIndex = (_currentStationIndex + 1) % stations.length;
+    await switchToStation(nextIndex);
+  }
+
+  Future<void> previousStation() async {
+    final stations = RadioData.stations;
+    if (stations.isEmpty) return;
+
+    final prevIndex = (_currentStationIndex - 1 + stations.length) % stations.length;
+    await switchToStation(prevIndex);
+  }
+
+  Future<void> switchToStation(int index) async {
+    final stations = RadioData.stations;
+    if (index < 0 || index >= stations.length) return;
+
+    _currentStationIndex = index;
+    final station = stations[index];
+    
+    // Stop current playback first
+    if (_currentStation != null) {
+      await stop();
+    }
+    
+    // Small delay to ensure clean stop
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    // Play new station
+    await playStation(station);
   }
 
   Future<void> pause() async {
@@ -172,12 +223,7 @@ class RadioCubit extends Cubit<RadioState> {
       }
 
       if (_currentStation != null) {
-        emit(
-          RadioPlaying(
-            station: _currentStation!,
-            position: _audioPlayer.position,
-          ),
-        );
+        emit(RadioPlaying(station: _currentStation!, position: _audioPlayer.position));
       }
     } catch (e) {
       emit(RadioError('Failed to resume: ${e.toString()}'));
@@ -199,6 +245,14 @@ class RadioCubit extends Cubit<RadioState> {
     }
   }
 
+  Future<void> retryCurrentStation() async {
+    if (_currentStation != null) {
+      await playStation(_currentStation!);
+    } else {
+      await playStation(defaultStation);
+    }
+  }
+
   bool get isPlaying {
     if (_audioHandler != null) {
       return _audioHandler!.playbackState.value.playing;
@@ -207,6 +261,9 @@ class RadioCubit extends Cubit<RadioState> {
   }
 
   RadioModel get defaultStation => RadioData.defaultStation;
+  RadioModel get currentStation => _currentStation ?? defaultStation;
+  List<RadioModel> get availableStations => RadioData.stations;
+  int get currentStationIndex => _currentStationIndex;
 
   @override
   Future<void> close() async {

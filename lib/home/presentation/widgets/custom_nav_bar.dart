@@ -1,6 +1,7 @@
 import '../../../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -24,7 +25,9 @@ class CustomBottomNav extends StatelessWidget {
         _buildNavItem(icon: "assets/svgs/quran-icon.svg"),
         _buildNavItem(icon: "assets/svgs/pray-icon.svg"),
         _buildNavItem(icon: "assets/svgs/doa-icon.svg"),
-        _buildNavItem(icon: "assets/radio.png"), // Fixed radio item
+        _buildNavItem(
+          icon: "assets/radio.png",
+        ), // Fixed radio item with hardcoded size
         _buildNavItem(icon: "assets/svgs/lamp-icon.svg"),
         _buildNavItem(icon: "assets/svgs/bookmark-icon.svg"),
       ],
@@ -37,10 +40,22 @@ class CustomBottomNav extends StatelessWidget {
     return BottomNavigationBarItem(
       icon: isSvg
           ? SvgPicture.asset(icon, color: textColor)
-          : Image.asset(icon, color: textColor, width: 38, height: 38),
+          : Image.asset(
+              icon,
+              color: textColor,
+              width: 38.w, // Using ScreenUtil with hardcoded size
+              height: 38.h, // Using ScreenUtil with hardcoded size
+            ),
       activeIcon: isSvg
           ? SvgPicture.asset(icon, color: primary)
-          : Image.asset(icon, color: primary, width: 24, height: 24),
+          : Image.asset(
+              icon,
+              color: primary,
+              width: 38
+                  .w, // Using ScreenUtil with hardcoded size for active state too
+              height: 38
+                  .h, // Using ScreenUtil with hardcoded size for active state too
+            ),
       label: "",
     );
   }

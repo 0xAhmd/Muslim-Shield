@@ -49,7 +49,7 @@ class RadioPageContent extends StatelessWidget {
                         // Station info
                         const StationInfo(),
 
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 30),
 
                         // Waveform animation or Islamic pattern
                         const WaveformAnimation(),
@@ -81,8 +81,8 @@ class RadioPageContent extends StatelessWidget {
       child: const Row(
         children: [
           Icon(Icons.radio, color: primary, size: 32),
-           SizedBox(width: 12),
-           Expanded(
+          SizedBox(width: 12),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -136,7 +136,10 @@ class RadioPageContent extends StatelessWidget {
             width: 8,
             height: 8,
             margin: const EdgeInsets.only(right: 8),
-            decoration: const BoxDecoration(color: primary, shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+              color: primary,
+              shape: BoxShape.circle,
+            ),
           ),
         Text(
           statusText,

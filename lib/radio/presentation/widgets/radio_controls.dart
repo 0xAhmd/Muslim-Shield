@@ -14,26 +14,68 @@ class RadioControls extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<RadioCubit>();
 
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        return Column(
           children: [
-            // Stop button
-            _buildControlButton(
-              icon: Icons.stop,
-              onTap: state is RadioStopped || state is RadioInitial
-                  ? null
-                  : () => cubit.stop(),
-              isEnabled: !(state is RadioStopped || state is RadioInitial),
+            // Station switching controls
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Previous station button
+                _buildControlButton(
+                  icon: Icons.skip_previous,
+                  onTap: () => cubit.previousStation(),
+                  isEnabled: cubit.availableStations.length > 1,
+                ),
+
+                // Station selector button
+                _buildControlButton(
+                  icon: Icons.radio,
+                  onTap: () => _showStationSelector(context, cubit),
+                  isEnabled: true,
+                ),
+
+                // Retry button (only show when error)
+                if (state is RadioError)
+                  _buildControlButton(
+                    icon: Icons.refresh,
+                    onTap: () => cubit.retryCurrentStation(),
+                    isEnabled: true,
+                  )
+                else
+                  // Next station button
+                  _buildControlButton(
+                    icon: Icons.skip_next,
+                    onTap: () => cubit.nextStation(),
+                    isEnabled: cubit.availableStations.length > 1,
+                  ),
+              ],
             ),
 
-            // Main play/pause button
-            _buildMainControlButton(context, state, cubit),
+            const SizedBox(height: 24),
 
-            // Volume button (placeholder)
-            _buildControlButton(
-              icon: Icons.volume_up,
-              onTap: () => _showVolumeSlider(context),
-              isEnabled: true,
+            // Main playback controls
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Stop button
+                _buildControlButton(
+                  icon: Icons.stop,
+                  onTap: state is RadioStopped || state is RadioInitial
+                      ? null
+                      : () => cubit.stop(),
+                  isEnabled: !(state is RadioStopped || state is RadioInitial),
+                ),
+
+                // Main play/pause button
+                _buildMainControlButton(context, state, cubit),
+
+                // Volume button (placeholder)
+                _buildControlButton(
+                  icon: Icons.volume_up,
+                  onTap: () => _showVolumeSlider(context),
+                  isEnabled: true,
+                ),
+              ],
             ),
           ],
         );
@@ -125,6 +167,112 @@ class RadioControls extends StatelessWidget {
               size: 24,
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showStationSelector(BuildContext context, RadioCubit cubit) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: grey,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: textColor.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Row(
+              children: [
+                Icon(Icons.radio, color: primary),
+                SizedBox(width: 12),
+                Text(
+                  'Select Radio Station',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ...cubit.availableStations.asMap().entries.map((entry) {
+              final index = entry.key;
+              final station = entry.value;
+              final isSelected = index == cubit.currentStationIndex;
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: isSelected ? primary.withOpacity(0.2) : background,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: isSelected ? primary : textColor.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+                child: ListTile(
+                  leading: Icon(
+                    isSelected
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_unchecked,
+                    color: isSelected ? primary : textColor,
+                  ),
+                  title: Text(
+                    station.name,
+                    style: TextStyle(
+                      color: isSelected ? primary : Colors.white,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                      fontSize: 14,
+                    ),
+                  ),
+                  subtitle: Text(
+                    station.description,
+                    style: TextStyle(
+                      color: textColor.withOpacity(0.8),
+                      fontSize: 12,
+                    ),
+                  ),
+                  trailing: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: primary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      station.language,
+                      style: const TextStyle(
+                        color: primary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    cubit.switchToStation(index);
+                  },
+                ),
+              );
+            }).toList(),
+          ],
         ),
       ),
     );

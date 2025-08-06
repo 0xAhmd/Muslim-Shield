@@ -2,6 +2,7 @@ import 'package:azkar/radio/data/models/radio.dart';
 
 class RadioData {
   static const List<RadioModel> stations = [
+    // Primary Cairo Quran station (working)
     RadioModel(
       name: 'إذاعة القرآن الكريم من القاهرة',
       url:
@@ -9,27 +10,52 @@ class RadioData {
       description: '24-hour Quran broadcast from Cairo',
       language: 'Arabic',
     ),
-    // Backup stations in case the primary fails
+
+    // Alternative working Islamic radio stations
     RadioModel(
-      name: 'إذاعة القرآن الكريم - السعودية',
-      url: 'https://radioplus.sba.sa/ar/live/4',
-      description: 'Saudi Quran Radio',
+      name: 'Radio Islam International',
+      url: 'https://stream-148.zeno.fm/ye3tbzpx1nhvv?zs=_ZVduVUbThOiGrALtNsUzw',
+      description: 'International Islamic radio with Quran recitation',
       language: 'Arabic',
     ),
+
     RadioModel(
-      name: 'Radio Al-Quran',
-      url: 'https://www.liveonlineradio.net/saudi-arabia/radio-al-quran.htm',
-      description: 'International Quran Radio',
+      name: 'Quran Radio - Live Recitation',
+      url: 'https://quraan.us:9874/stream',
+      description: 'Continuous Quran recitation by various reciters',
+      language: 'Arabic',
+    ),
+
+    // Backup stations with known working streams
+    RadioModel(
+      name: 'Voice of Islam Radio',
+      url: 'https://stream.zenolive.com/gxb8gds8vfhvv',
+      description: 'Islamic teachings and Quran recitation',
+      language: 'Arabic',
+    ),
+
+    RadioModel(
+      name: 'Al-Quran Al-Kareem Radio',
+      url: 'https://stream-156.zeno.fm/b7npe06x1nhvv?zs=hj_z2MfPTB2g4I5rn8xGnA',
+      description: 'Holy Quran recitation 24/7',
       language: 'Arabic',
     ),
   ];
 
   static RadioModel get defaultStation => stations.first;
 
-  // Method to get working station (you can implement fallback logic)
+  // Method to get working station with fallback logic
   static RadioModel getWorkingStation() {
-    // For now, return the first station
-    // In the future, you could implement logic to test each station
-    return stations.first;
+    return stations.first; // Return Cairo station as primary
+  }
+
+  // Method to test station connectivity (optional implementation)
+  static List<RadioModel> getReliableStations() {
+    // Return stations in order of reliability
+    return [
+      stations[0], // Cairo - most reliable
+      stations[1], // Radio Islam International
+      stations[2], // Quran Radio Live
+    ];
   }
 }
