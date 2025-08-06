@@ -2,6 +2,7 @@ import 'package:azkar/radio/presentation/cubit/radio_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubit/radio_cubit.dart';
 import '../../../constants.dart';
 
@@ -176,103 +177,110 @@ class RadioControls extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: grey,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: textColor.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Row(
-              children: [
-                Icon(Icons.radio, color: primary),
-                SizedBox(width: 12),
-                Text(
-                  'Select Radio Station',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ...cubit.availableStations.asMap().entries.map((entry) {
-              final index = entry.key;
-              final station = entry.value;
-              final isSelected = index == cubit.currentStationIndex;
-
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
+      builder: (context) => SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
                 decoration: BoxDecoration(
-                  color: isSelected ? primary.withOpacity(0.2) : background,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isSelected ? primary : textColor.withOpacity(0.2),
-                    width: 1,
-                  ),
+                  color: textColor.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
-                child: ListTile(
-                  leading: Icon(
-                    isSelected
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
-                    color: isSelected ? primary : textColor,
-                  ),
-                  title: Text(
-                    station.name,
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                children: [
+                  Icon(Icons.radio, color: primary, size: 24.sp),
+                  SizedBox(width: 12.w),
+                  Text(
+                    'Select Radio Station',
                     style: TextStyle(
-                      color: isSelected ? primary : Colors.white,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                      fontSize: 14,
+                      color: Colors.white,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  subtitle: Text(
-                    station.description,
-                    style: TextStyle(
-                      color: textColor.withOpacity(0.8),
-                      fontSize: 12,
+                ],
+              ),
+              SizedBox(height: 20.h),
+              ...cubit.availableStations.asMap().entries.map((entry) {
+                final index = entry.key;
+                final station = entry.value;
+                final isSelected = index == cubit.currentStationIndex;
+
+                return Container(
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  decoration: BoxDecoration(
+                    color: isSelected ? primary.withOpacity(0.2) : background,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: isSelected ? primary : textColor.withOpacity(0.2),
+                      width: 1.w,
                     ),
                   ),
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                  child: ListTile(
+                    leading: Icon(
+                      isSelected
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_unchecked,
+                      color: isSelected ? primary : textColor,
+                      size: 24.sp,
                     ),
-                    decoration: BoxDecoration(
-                      color: primary.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      station.language,
-                      style: const TextStyle(
-                        color: primary,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
+                    title: Text(
+                      station.name,
+                      style: TextStyle(
+                        color: isSelected ? primary : Colors.white,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                        fontSize: 14.sp,
                       ),
                     ),
+                    subtitle: Text(
+                      station.description,
+                      style: TextStyle(
+                        color: textColor.withOpacity(0.8),
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                    trailing: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: primary.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Text(
+                        station.language,
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      cubit.switchToStation(index);
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    cubit.switchToStation(index);
-                  },
-                ),
-              );
-            }).toList(),
-          ],
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );
@@ -282,43 +290,48 @@ class RadioControls extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: grey,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(24),
-        height: 150,
-        child: Column(
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: textColor.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Row(
-              children: [
-                Icon(Icons.volume_up, color: primary),
-                SizedBox(width: 12),
-                Text(
-                  'Volume Control',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+      builder: (context) => SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: textColor.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Use your device volume buttons to control audio',
-              style: TextStyle(color: textColor, fontSize: 14),
-            ),
-          ],
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                children: [
+                  Icon(Icons.volume_up, color: primary, size: 24.sp),
+                  SizedBox(width: 12.w),
+                  Text(
+                    'Volume Control',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                'Use your device volume buttons to control audio',
+                style: TextStyle(color: textColor, fontSize: 14.sp),
+              ),
+            ],
+          ),
         ),
       ),
     );
