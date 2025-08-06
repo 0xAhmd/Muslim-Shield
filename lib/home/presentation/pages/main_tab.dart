@@ -1,6 +1,6 @@
 import 'package:azkar/constants.dart';
 import 'package:azkar/hizb/presentation/widgets/hizb_tab.dart';
-import 'package:azkar/home/presentation/widgets/custom_tab_bar.dart';
+import 'package:azkar/surah/widgets/custom_tab_bar.dart';
 import 'package:azkar/home/presentation/widgets/greeting_section.dart';
 import 'package:azkar/home/presentation/widgets/search_appbar.dart';
 import 'package:azkar/juzz/presentation/widgets/juz_tab.dart';

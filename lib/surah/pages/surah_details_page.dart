@@ -5,7 +5,7 @@ import 'package:azkar/constants.dart';
 import 'package:azkar/surah/data/models/surah.dart';
 import 'package:azkar/surah/data/repo/surah_repo.dart';
 import 'package:azkar/surah/data/service/last_read.dart';
-import 'package:azkar/home/presentation/widgets/reciter_dialog.dart';
+import 'package:azkar/surah/widgets/reciter_dialog.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
