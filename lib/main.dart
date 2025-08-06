@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            bottomNavigationBarTheme: const BottomNavigationBarThemeData(
               backgroundColor: scaffoldBackgroundColor,
             ),
             fontFamily: GoogleFonts.poppins().fontFamily,
