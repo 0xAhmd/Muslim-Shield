@@ -11,7 +11,7 @@ class PrayerTimesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 24.w),
+      margin: EdgeInsets.symmetric(horizontal: 22.w),
       decoration: BoxDecoration(
         color: gray,
         borderRadius: BorderRadius.circular(16.r),

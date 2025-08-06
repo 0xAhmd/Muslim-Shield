@@ -118,6 +118,14 @@ class _PrayerPageViewState extends State<PrayerPageView>
               fontSize: 14.sp,
             ),
           ),
+          Text(
+            'Please don\'t close this page till the times loaded',
+            style: TextStyle(
+              color: textColor.withOpacity(0.7),
+              fontSize: 12.sp,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
         ],
       ),
     );
