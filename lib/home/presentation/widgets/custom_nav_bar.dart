@@ -24,7 +24,7 @@ class CustomBottomNav extends StatelessWidget {
         _buildNavItem(icon: "assets/svgs/quran-icon.svg"),
         _buildNavItem(icon: "assets/svgs/pray-icon.svg"),
         _buildNavItem(icon: "assets/svgs/doa-icon.svg"),
-        _buildNavItem(icon: "assets/radio.png"),
+        _buildNavItem(icon: "assets/radio.png"), // Fixed radio item
         _buildNavItem(icon: "assets/svgs/lamp-icon.svg"),
         _buildNavItem(icon: "assets/svgs/bookmark-icon.svg"),
       ],
@@ -38,4 +38,6 @@ class CustomBottomNav extends StatelessWidget {
       label: "",
     );
   }
+
+
 }

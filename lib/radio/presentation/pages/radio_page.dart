@@ -78,11 +78,11 @@ class RadioPageContent extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(24),
-      child: Row(
+      child: const Row(
         children: [
           Icon(Icons.radio, color: primary, size: 32),
-          const SizedBox(width: 12),
-          const Expanded(
+           SizedBox(width: 12),
+           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -136,7 +136,7 @@ class RadioPageContent extends StatelessWidget {
             width: 8,
             height: 8,
             margin: const EdgeInsets.only(right: 8),
-            decoration: BoxDecoration(color: primary, shape: BoxShape.circle),
+            decoration: const BoxDecoration(color: primary, shape: BoxShape.circle),
           ),
         Text(
           statusText,

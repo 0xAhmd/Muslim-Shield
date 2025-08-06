@@ -1,51 +1,47 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- ✅ Internet permission added -->
+    <!-- Internet permission (you already have this - good!) -->
     <uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-<uses-permission android:name="android.permission.VIBRATE" />
-<uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-<uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Remove duplicate INTERNET permission -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Remove second duplicate INTERNET permission -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-<!-- For Android 12+ exact alarm scheduling -->
-<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-<uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-<!-- For compass functionality -->
-<uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
-<uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
+    <!-- For Android 12+ exact alarm scheduling -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    
+    <!-- For compass functionality -->
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+    <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
 
     <application
         android:label="Muslim Shield"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"> <!-- Optional: only needed if you're using http:// -->
+        android:usesCleartextTraffic="true">
 
+        <!-- Audio service for background playback -->
+        <service android:name="com.ryanheise.audioservice.AudioService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
 
-
-
-<service android:name="com.ryanheise.audioservice.AudioService"
-    android:foregroundServiceType="mediaPlayback"
-    android:exported="true">
-  <intent-filter>
-    <action android:name="android.media.browse.MediaBrowserService" />
-  </intent-filter>
-</service>
-
-<receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
-    android:exported="true">
-  <intent-filter>
-    <action android:name="android.intent.action.MEDIA_BUTTON" />
-  </intent-filter>
-</receiver>
-
-
-
+        <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".MainActivity"

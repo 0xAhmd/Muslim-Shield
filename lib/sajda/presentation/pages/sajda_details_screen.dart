@@ -266,7 +266,7 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.menu_book, color: primary, size: 24),
+              const Icon(Icons.menu_book, color: primary, size: 24),
               const SizedBox(width: 12),
               Text(
                 'Ayah ${sajda.numberInSurah}',
