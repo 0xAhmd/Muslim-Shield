@@ -43,7 +43,7 @@ class _QiblahCompassState extends State<QiblahCompass>
       margin: EdgeInsets.symmetric(horizontal: 24.w),
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(

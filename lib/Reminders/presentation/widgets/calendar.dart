@@ -47,7 +47,7 @@ class _IslamicCalendarWidgetState extends State<IslamicCalendarWidget> {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(

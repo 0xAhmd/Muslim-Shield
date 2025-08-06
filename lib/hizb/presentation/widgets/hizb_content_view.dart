@@ -167,7 +167,7 @@ class _HizbContentViewState extends State<HizbContentView> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: primary.withOpacity(0.1)),
       ),
@@ -339,12 +339,12 @@ class _HizbContentViewState extends State<HizbContentView> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isLastRead ? primary.withOpacity(0.1) : gray,
+          color: isLastRead ? primary.withOpacity(0.1) : grey,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isLastRead
                 ? primary.withOpacity(0.3)
-                : gray.withOpacity(0.3),
+                : grey.withOpacity(0.3),
           ),
         ),
         child: Column(
@@ -527,7 +527,7 @@ class _HizbContentViewState extends State<HizbContentView> {
   void _showAyahOptions(HizbAyah ayah, int index) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: gray,
+      backgroundColor: grey,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

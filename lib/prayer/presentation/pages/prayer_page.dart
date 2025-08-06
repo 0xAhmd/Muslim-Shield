@@ -238,7 +238,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
         Container(
           margin: EdgeInsets.symmetric(horizontal: 24.w),
           decoration: BoxDecoration(
-            color: gray,
+            color: grey,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: TabBar(

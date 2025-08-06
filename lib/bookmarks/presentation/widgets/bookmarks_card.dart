@@ -30,7 +30,7 @@ class BookmarkCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: gray,
+              color: grey,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: primary.withOpacity(0.1), width: 1),
             ),
@@ -370,7 +370,7 @@ class BookmarkCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: gray,
+          backgroundColor: grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

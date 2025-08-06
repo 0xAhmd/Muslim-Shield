@@ -20,7 +20,7 @@ class DuaCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: gray,
+              color: grey,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: primary.withOpacity(0.1), width: 1),
             ),
@@ -94,7 +94,11 @@ class DuaCard extends StatelessWidget {
                 // Translation preview
                 Text(
                   _truncateTranslation(dua.translation),
-                  style: const TextStyle(color: textColor, fontSize: 14, height: 1.5),
+                  style: const TextStyle(
+                    color: textColor,
+                    fontSize: 14,
+                    height: 1.5,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),

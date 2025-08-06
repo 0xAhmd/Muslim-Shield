@@ -7,10 +7,7 @@ import 'package:intl/intl.dart';
 class EventsListWidget extends StatelessWidget {
   final List<MuslimEvent> events;
 
-  const EventsListWidget({
-    super.key,
-    required this.events,
-  });
+  const EventsListWidget({super.key, required this.events});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +45,7 @@ class EventsListWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -88,10 +85,7 @@ class EventsListWidget extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   event.description,
-                  style: GoogleFonts.poppins(
-                    color: textColor,
-                    fontSize: 14,
-                  ),
+                  style: GoogleFonts.poppins(color: textColor, fontSize: 14),
                 ),
                 const SizedBox(height: 8),
                 Row(

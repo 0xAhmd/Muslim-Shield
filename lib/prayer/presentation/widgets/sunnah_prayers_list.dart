@@ -11,7 +11,7 @@ class SunnahPrayersList extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 24.w),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(

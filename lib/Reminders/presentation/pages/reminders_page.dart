@@ -290,7 +290,7 @@ class _RemindersPageViewState extends State<_RemindersPageView>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: gray,
+        backgroundColor: grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           '🌙 ${reminder.title}',

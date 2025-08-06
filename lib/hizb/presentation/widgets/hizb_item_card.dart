@@ -16,7 +16,7 @@ class HizbItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
-          color: gray,
+          color: grey,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: primary.withOpacity(0.1), width: 1),
         ),

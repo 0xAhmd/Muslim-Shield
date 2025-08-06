@@ -13,7 +13,7 @@ class PrayerTimesList extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 22.w),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(

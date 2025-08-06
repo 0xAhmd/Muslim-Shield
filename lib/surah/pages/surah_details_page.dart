@@ -422,7 +422,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
       margin: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: gray,
+        color: grey,
       ),
       child: TabBar(
         controller: _tabController,
@@ -490,7 +490,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: gray,
+              backgroundColor: grey,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -682,7 +682,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                   bottom: 0,
                 ),
                 decoration: BoxDecoration(
-                  color: gray,
+                  color: grey,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
@@ -865,7 +865,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
             margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: gray,
+              color: grey,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -904,7 +904,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: gray,
+            color: grey,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -1040,7 +1040,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                   margin: const EdgeInsets.only(bottom: 16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isCurrentAyah ? primary.withOpacity(0.1) : gray,
+                    color: isCurrentAyah ? primary.withOpacity(0.1) : grey,
                     borderRadius: BorderRadius.circular(10),
                     border: isCurrentAyah
                         ? Border.all(color: primary, width: 2)

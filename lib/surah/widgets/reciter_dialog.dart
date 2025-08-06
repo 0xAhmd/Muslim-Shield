@@ -50,7 +50,7 @@ class _ReciterSelectionDialogState extends State<ReciterSelectionDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: gray,
+      backgroundColor: grey,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.7,

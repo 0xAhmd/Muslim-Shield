@@ -159,7 +159,7 @@ class _DoaPageContentState extends State<DoaPageContent> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: gray,
+              color: grey,
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
@@ -181,7 +181,7 @@ class _DoaPageContentState extends State<DoaPageContent> {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextField(
@@ -289,10 +289,8 @@ class _DoaPageContentState extends State<DoaPageContent> {
           minChildSize: 0.5,
           builder: (context, scrollController) => Container(
             decoration: const BoxDecoration(
-              color: gray,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
+              color: grey,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Column(
               children: [
@@ -365,7 +363,7 @@ class _DoaPageContentState extends State<DoaPageContent> {
                                       decoration: BoxDecoration(
                                         color: isBookmarked
                                             ? primary.withOpacity(0.2)
-                                            : gray.withOpacity(0.5),
+                                            : grey.withOpacity(0.5),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: IconButton(

@@ -16,7 +16,7 @@ class SurahHeaderCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: primary.withOpacity(0.3)),
       ),

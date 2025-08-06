@@ -28,7 +28,7 @@ class ReminderCardWidget extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: gray,
+              color: grey,
               borderRadius: BorderRadius.circular(12),
               border: reminder.isRead
                   ? null
@@ -142,7 +142,7 @@ class ReminderCardWidget extends StatelessWidget {
       case ReminderType.ramadanIftar:
         return Colors.blue;
       case ReminderType.general:
-      return textColor;
+        return textColor;
     }
   }
 
@@ -159,7 +159,7 @@ class ReminderCardWidget extends StatelessWidget {
       case ReminderType.ramadanIftar:
         return Icons.nightlight_round;
       case ReminderType.general:
-      return Icons.info_outline;
+        return Icons.info_outline;
     }
   }
 }

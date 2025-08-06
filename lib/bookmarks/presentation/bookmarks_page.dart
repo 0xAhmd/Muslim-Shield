@@ -149,7 +149,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: gray,
+                  color: grey,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: IconButton(
@@ -170,7 +170,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: gray,
+                        color: grey,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: IconButton(
@@ -198,7 +198,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: gray,
+        color: grey,
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextField(
@@ -259,7 +259,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
         context.read<BookmarksCubit>().loadBookmarks();
       },
       color: primary,
-      backgroundColor: gray,
+      backgroundColor: grey,
       child: ListView.builder(
         padding: const EdgeInsets.all(24),
         itemCount: state.filteredBookmarks.length,
@@ -371,7 +371,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
         minChildSize: 0.5,
         builder: (context, scrollController) => Container(
           decoration: const BoxDecoration(
-            color: gray,
+            color: grey,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
@@ -610,7 +610,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: gray,
+          backgroundColor: grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
