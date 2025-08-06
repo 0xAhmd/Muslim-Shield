@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../constants.dart';
 import '../cubit/sajda_cubit.dart';
@@ -361,26 +362,27 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 2.5,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        childAspectRatio:
+            2.66, // Increased a bit to reduce height & avoid overflow
+        crossAxisSpacing: 12.w,
+        mainAxisSpacing: 12.h,
       ),
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
             color: grey,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             border: Border.all(color: item.color.withOpacity(0.3)),
           ),
           child: Row(
             children: [
-              Icon(item.icon, color: item.color, size: 20),
-              const SizedBox(width: 12),
+              Icon(item.icon, color: item.color, size: 20.sp),
+              SizedBox(width: 8.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -390,18 +392,22 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
                       item.label,
                       style: GoogleFonts.poppins(
                         color: textColor.withOpacity(0.7),
-                        fontSize: 12,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w500,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2.h),
                     Text(
                       item.value,
                       style: GoogleFonts.poppins(
                         color: item.color,
-                        fontSize: 16,
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ],
                 ),
