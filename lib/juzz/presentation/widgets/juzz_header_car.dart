@@ -1,6 +1,7 @@
 import 'package:azkar/constants.dart';
 import 'package:azkar/juzz/data/models/juzz.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JuzzHeaderCard extends StatelessWidget {
@@ -13,46 +14,73 @@ class JuzzHeaderCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [primary.withOpacity(0.8), primary],
-        ),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: primary.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
+      child: Stack(
         children: [
-          Text(
-            'Juzz ${juzz.number}',
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+          // Background icon
+          Positioned(
+            bottom: -8,
+            right: -8,
+            child: Icon(
+              Icons.menu_book_rounded,
+              size: 70,
+              color: Colors.white.withOpacity(0.1),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            '${juzz.totalAyahs} Ayahs • ${juzz.containedSurahs.length} Surahs',
-            style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.9),
-              fontSize: 14,
+          // Main container
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [primary.withOpacity(0.8), primary],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: primary.withOpacity(0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Juzz ${juzz.number}',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '${juzz.totalAyahs} Ayahs • ${juzz.containedSurahs.length} Surahs',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  juzz.surahRange,
+                  style: GoogleFonts.poppins(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            juzz.surahRange,
-            style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 12,
+          // Background icon - positioned after main container
+          Positioned(
+            bottom: -32.h,
+            right: 0.w,
+            child: Opacity(
+              opacity: 0.29,
+              child: Image.asset('assets/quran.png', width: 80.w, height: 80.h),
             ),
           ),
         ],
