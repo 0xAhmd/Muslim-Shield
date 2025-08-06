@@ -1,7 +1,8 @@
+import 'package:azkar/sajda/presentation/pages/sajda_details_screen.dart';
+
 import '../../../constants.dart';
 import '../../data/models/sajda_summary.dart';
 import '../cubit/sajda_cubit.dart';
-import '../pages/sajda_detail_screen.dart';
 import 'sajda_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -58,7 +59,9 @@ class SajdaListView extends StatelessWidget {
 
   Widget _buildHeader() {
     final obligatoryCount = sajdaSummaries.where((s) => s.isObligatory).length;
-    final recommendedCount = sajdaSummaries.where((s) => s.isRecommended).length;
+    final recommendedCount = sajdaSummaries
+        .where((s) => s.isRecommended)
+        .length;
 
     return Container(
       margin: const EdgeInsets.only(top: 8, bottom: 8),
@@ -126,8 +129,8 @@ class SajdaListView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            icon, 
-            size: 14, 
+            icon,
+            size: 14,
             color: isActive ? color : textColor.withOpacity(0.6),
           ),
           const SizedBox(width: 4),
@@ -220,10 +223,8 @@ class SajdaListView extends StatelessWidget {
   void _navigateToSajdaDetails(BuildContext context, SajdaSummary sajda) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => SajdaDetailScreen(
-          sajdaId: sajda.id,
-          sajdaCubit: sajdaCubit,
-        ),
+        builder: (context) =>
+            SajdaDetailScreen(sajdaId: sajda.id, sajdaCubit: sajdaCubit),
       ),
     );
   }
