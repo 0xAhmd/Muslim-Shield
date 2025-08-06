@@ -1,8 +1,10 @@
+import 'package:azkar/core/blocked.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 
 import 'bookmarks/model/bookmark.dart';
 import 'bookmarks/service/bookmark_service.dart';
@@ -20,7 +22,14 @@ void main() async {
   await BookmarksService().init();
   await LocalAudioService().initialize();
 
-  runApp(const MyApp());
+  final bool isRooted = await JailbreakRootDetection.instance.isJailBroken;
+  final bool isEmulator = await JailbreakRootDetection.instance.isRealDevice;
+
+  if (isRooted || isEmulator) {
+    runApp(const BlockedDeviceApp());
+  } else {
+    runApp(const MyApp());
+  }
 }
 
 class MyApp extends StatelessWidget {
