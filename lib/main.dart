@@ -28,7 +28,7 @@ void main() async {
     runApp(const BlockedDeviceApp());
     return;
   }
-  await AudioService().initialize();
+  await LocalAudioService().initialize();
   runApp(const MyApp());
 }
 
