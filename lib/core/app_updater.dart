@@ -92,7 +92,7 @@ class AppUpdater {
       confirmBtnText: 'Update',
       showCancelBtn: true,
       cancelBtnText: 'Later',
-      confirmBtnColor: Theme.of(context).colorScheme.primary,
+
       onConfirmBtnTap: () {
         launchUrl(Uri.parse(url));
         Navigator.pop(context);
@@ -116,7 +116,6 @@ class AppUpdater {
       text: 'You must update the app to continue.',
       confirmBtnText: 'Update Now',
       showCancelBtn: false,
-      confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () {
         launchUrl(Uri.parse(url));
       },
