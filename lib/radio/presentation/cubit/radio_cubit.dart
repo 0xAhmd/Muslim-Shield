@@ -1,14 +1,39 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:azkar/radio/data/models/radio.dart';
 import 'package:azkar/radio/data/models/radio_data.dart';
+import 'package:azkar/radio/data/services/background_service.dart';
 import 'package:azkar/radio/presentation/cubit/radio_state.dart';
 import 'package:bloc/bloc.dart';
 import 'package:just_audio/just_audio.dart';
 
 class RadioCubit extends Cubit<RadioState> {
   final AudioPlayer _audioPlayer = AudioPlayer();
+  RadioAudioHandler? _audioHandler;
   RadioModel? _currentStation;
 
   RadioCubit() : super(RadioInitial()) {
+    _init();
+  }
+
+  Future<void> _init() async {
+    try {
+      _audioHandler = await AudioService.init(
+        builder: () => RadioAudioHandler(),
+        config: const AudioServiceConfig(
+          androidNotificationChannelId: 'com.muslim_shield.radio',
+          androidNotificationChannelName: 'Muslim Shield Radio',
+          androidNotificationOngoing: true,
+          androidShowNotificationBadge: true,
+          androidNotificationIcon: 'drawable/ic_notification',
+          fastForwardInterval: Duration(seconds: 10),
+          rewindInterval: Duration(seconds: 10),
+        ),
+      );
+    } catch (e) {
+      // Fallback to regular audio player if audio service fails
+      print('Audio service initialization failed: $e');
+    }
+
     _setupAudioPlayerListeners();
   }
 
@@ -52,12 +77,17 @@ class RadioCubit extends Cubit<RadioState> {
       emit(RadioLoading());
       _currentStation = station;
 
-      await _audioPlayer.setAudioSource(
-        AudioSource.uri(Uri.parse(station.url)),
-        preload: false,
-      );
-
-      await _audioPlayer.play();
+      if (_audioHandler != null) {
+        // Use audio service for background playback
+        await _audioHandler!.playFromUrl(station.url, title: station.name);
+      } else {
+        // Fallback to regular audio player
+        await _audioPlayer.setAudioSource(
+          AudioSource.uri(Uri.parse(station.url)),
+          preload: false,
+        );
+        await _audioPlayer.play();
+      }
     } catch (e) {
       emit(RadioError('Failed to play radio: ${e.toString()}'));
     }
@@ -65,7 +95,12 @@ class RadioCubit extends Cubit<RadioState> {
 
   Future<void> pause() async {
     try {
-      await _audioPlayer.pause();
+      if (_audioHandler != null) {
+        await _audioHandler!.pause();
+      } else {
+        await _audioPlayer.pause();
+      }
+
       if (_currentStation != null) {
         emit(RadioPaused(station: _currentStation!));
       }
@@ -76,7 +111,12 @@ class RadioCubit extends Cubit<RadioState> {
 
   Future<void> resume() async {
     try {
-      await _audioPlayer.play();
+      if (_audioHandler != null) {
+        await _audioHandler!.play();
+      } else {
+        await _audioPlayer.play();
+      }
+
       if (_currentStation != null) {
         emit(
           RadioPlaying(
@@ -92,7 +132,12 @@ class RadioCubit extends Cubit<RadioState> {
 
   Future<void> stop() async {
     try {
-      await _audioPlayer.stop();
+      if (_audioHandler != null) {
+        await _audioHandler!.stop();
+      } else {
+        await _audioPlayer.stop();
+      }
+
       _currentStation = null;
       emit(RadioStopped());
     } catch (e) {
