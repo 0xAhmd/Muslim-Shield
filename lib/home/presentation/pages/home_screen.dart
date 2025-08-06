@@ -1,3 +1,4 @@
+import 'package:azkar/masjid/presentation/pages/masjid_finder_page.dart';
 import 'package:azkar/radio/presentation/pages/radio_page.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen>
     MainTabScreen(), // 0 - Quran
     PrayerPage(), // 1 - Prayer
     DoaPage(), // 2 - Duas
+    MasjidFinderPage(), // 3 - Masjid Finder (replacing Radio)
+
     RadioPage(), // 3 - Radio
     RemindersPage(), // 4 - Reminders
     BookmarksPage(), // 5 - Bookmarks

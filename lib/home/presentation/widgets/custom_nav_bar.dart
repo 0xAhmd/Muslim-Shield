@@ -16,45 +16,45 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 16.h,
-      left: 16.w,
-      right: 16.w,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30.r),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 16.w),
-
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
-            height: 60.h, // Adjusted height
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(30.r),
-              border: Border.all(color: Colors.white.withOpacity(0.2)),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.4),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildBounceIcon(icon: "assets/svgs/quran-icon.svg", index: 0),
-                _buildBounceIcon(icon: "assets/svgs/pray-icon.svg", index: 1),
-                _buildBounceIcon(icon: "assets/svgs/doa-icon.svg", index: 2),
-                _buildBounceIcon(icon: "assets/radio.png", index: 3),
-                _buildBounceIcon(icon: "assets/svgs/lamp-icon.svg", index: 4),
-                _buildBounceIcon(
-                  icon: "assets/svgs/bookmark-icon.svg",
-                  index: 5,
-                ),
-              ],
-            ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30.r),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 16.w),
+    
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          height: 60.h, // Adjusted height
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(30.r),
+            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.4),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildBounceIcon(icon: "assets/svgs/quran-icon.svg", index: 0),
+              _buildBounceIcon(icon: "assets/svgs/pray-icon.svg", index: 1),
+              _buildBounceIcon(icon: "assets/svgs/doa-icon.svg", index: 2),
+              _buildBounceIcon(icon: "assets/radio.png", index: 3),
+              _buildBounceIcon(
+                icon: 'assets/moslem-mosque.png',
+                index: 4,
+              ), 
+    
+              _buildBounceIcon(icon: "assets/svgs/lamp-icon.svg", index: 5),
+              _buildBounceIcon(
+                icon: "assets/svgs/bookmark-icon.svg",
+                index: 6,
+              ),
+            ],
           ),
         ),
       ),
