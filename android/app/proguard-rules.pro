@@ -4,3 +4,5 @@
 -dontwarn okhttp3.**
 -dontwarn retrofit2.**
 -dontwarn com.google.gson.**
+-keep class com.powermoko.jailbreak_root_detection.** { *; }
+-keep class io.flutter.embedding.engine.** { *; }
