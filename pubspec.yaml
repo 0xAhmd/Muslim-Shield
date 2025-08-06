@@ -15,15 +15,18 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_local_notifications: ^19.4.0
   flutter_qiblah: ^3.1.0+1
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.2.0
   geocoding: ^4.0.0
   geolocator: ^13.0.4
   google_fonts: ^6.3.0
+  hijri: ^3.0.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^1.4.0
+  intl: ^0.20.2
   jailbreak_root_detection: ^1.1.6
   json_annotation: ^4.9.0
   package_info_plus: ^8.3.0
@@ -32,6 +35,8 @@ dependencies:
   rename: ^3.1.0
   retrofit: ^4.7.0
   shared_preferences: ^2.5.3
+  table_calendar: ^3.2.0
+  timezone: ^0.10.1
   url_launcher: ^6.3.2
 
 dev_dependencies:
