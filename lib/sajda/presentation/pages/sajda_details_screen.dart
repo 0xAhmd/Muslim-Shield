@@ -1,3 +1,4 @@
+import 'package:azkar/sajda/data/repo/sajda_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,16 +24,26 @@ class SajdaDetailScreen extends StatefulWidget {
 }
 
 class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
+  late SajdaCubit _detailCubit;
+
   @override
   void initState() {
     super.initState();
-    widget.sajdaCubit.loadSajdaDetails(widget.sajdaId);
+    // Create a separate cubit instance for the detail screen
+    _detailCubit = SajdaCubit(repository: SajdaRepository());
+    _detailCubit.loadSajdaDetails(widget.sajdaId);
+  }
+
+  @override
+  void dispose() {
+    _detailCubit.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: widget.sajdaCubit,
+      value: _detailCubit,
       child: Scaffold(
         appBar: _buildAppBar(),
         body: BlocBuilder<SajdaCubit, SajdaState>(
@@ -49,7 +60,10 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
       elevation: 0,
       backgroundColor: scaffoldBackgroundColor,
       leading: IconButton(
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          // Simply pop without affecting the main cubit
+          Navigator.of(context).pop();
+        },
         icon: const Icon(Icons.arrow_back, color: textColor),
       ),
       title: Text(
@@ -72,8 +86,8 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
       return SajdaErrorView(
         message: state.message,
         state: state,
-        onRetry: () => widget.sajdaCubit.retry(),
-        onBack: () => widget.sajdaCubit.backToSajdaList(),
+        onRetry: () => _detailCubit.retry(),
+        onBack: () => Navigator.of(context).pop(),
       );
     }
 
