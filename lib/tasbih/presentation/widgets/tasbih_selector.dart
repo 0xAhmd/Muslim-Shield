@@ -43,8 +43,10 @@ class TasbihSelector extends StatelessWidget {
                 ),
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(height: 4.h),
                   Text(
                     tasbih.arabicText,
                     style: GoogleFonts.amiri(

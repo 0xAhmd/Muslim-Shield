@@ -48,9 +48,9 @@ class TasbihView extends StatelessWidget {
           if (state is TasbihLoaded) {
             return Column(
               children: [
-                SizedBox(height: 40.h),
+                SizedBox(height: 45.h),
                 _buildHeader(context, state),
-                SizedBox(height: 30.h),
+                SizedBox(height: 20.h),
                 TasbihSelector(
                   tasbihList: state.tasbihList,
                   selectedTasbih: state.selectedTasbih,
@@ -90,7 +90,7 @@ class TasbihView extends StatelessWidget {
           Text(
             'Digital Tasbih',
             style: GoogleFonts.poppins(
-              fontSize: 24.sp,
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
