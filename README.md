@@ -1,9 +1,9 @@
-
+# **بسم الله الرحمن الرحيم**
 # 🛡️ Muslim Shield
 
 **Muslim Shield** is a comprehensive Islamic application built with **Flutter** using **clean architecture**. It offers essential tools for Muslims, including access to the full Quran with audio, prayer times, Qiblah direction, Duaa collections, and more — all packed in a beautifully designed and secure mobile experience.
 
-> ⚠️ For security reasons, this app does **not** run on jailbroken or rooted devices or emulators.
+> ⚠️ This app does **not** run on jailbroken or rooted devices or emulators.
 
 ---
 
@@ -88,18 +88,6 @@ dependencies:
 ````
 
 ---
-
-## 🚫 Security
-
-This app enforces **strict security policies**:
-
-* ❌ **Not runnable** on rooted or jailbroken devices
-* ❌ **Not supported** on emulators or virtual machines
-
-This ensures the authenticity of use and protects sensitive features such as location and personal bookmarks.
-
----
-
 
 ## 🚀 Getting Started
 
