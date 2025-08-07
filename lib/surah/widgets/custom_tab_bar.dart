@@ -16,7 +16,7 @@ class CustomTabBar extends StatelessWidget {
       indicatorWeight: 3,
       labelStyle: GoogleFonts.poppins(
         fontWeight: FontWeight.w600,
-        fontSize: 18,
+        fontSize: 17,
         color: Colors.white,
       ),
 

@@ -1,10 +1,12 @@
+import 'package:azkar/core/connectivity_service.dart';
+import 'package:azkar/core/offline_message.dart';
+
 import '../../constants.dart';
 import '../data/models/surah.dart';
 import '../data/repo/surah_repo.dart';
 import '../data/service/last_read.dart';
 import '../pages/surah_details_page.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,23 +20,61 @@ class SurahTab extends StatefulWidget {
 
 class SurahTabState extends State<SurahTab> {
   final SurahRepository _repository = SurahRepository();
+  final ConnectivityService _connectivityService = ConnectivityService();
+
   List<Surah> allSurahs = [];
   List<Surah> filteredSurahs = [];
   bool isLoading = true;
+  bool isConnected = true;
   String? error;
   String searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    _loadSurahs();
+    _initializeConnectivity();
+  }
+
+  Future<void> _initializeConnectivity() async {
+    // Check initial connectivity
+    isConnected = _connectivityService.isConnected;
+
+    // Listen to connectivity changes
+    _connectivityService.connectionStream.listen((connected) {
+      if (mounted) {
+        setState(() {
+          isConnected = connected;
+          if (connected && allSurahs.isEmpty) {
+            _loadSurahs();
+          }
+        });
+      }
+    });
+
+    // Load surahs if connected
+    if (isConnected) {
+      _loadSurahs();
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _loadSurahs() async {
+    if (!_connectivityService.isConnected) {
+      setState(() {
+        isConnected = false;
+        isLoading = false;
+      });
+      return;
+    }
+
     try {
       setState(() {
         isLoading = true;
         error = null;
+        isConnected = true;
       });
 
       final fetchedSurahs = await _repository.getSurahs();
@@ -78,8 +118,17 @@ class SurahTabState extends State<SurahTab> {
 
   @override
   Widget build(BuildContext context) {
+    // Show offline message if not connected
+    if (!isConnected) {
+      return OfflineMessageWidget(
+        customMessage:
+            'Surahs content needs internet connectivity.\nPlease make sure you have an internet connection.',
+        onRetry: () => _initializeConnectivity(),
+      );
+    }
+
     if (isLoading) {
-      return const Center(child:  CupertinoActivityIndicator(color: primary));
+      return const Center(child: CupertinoActivityIndicator(color: primary));
     }
 
     if (error != null) {
@@ -176,6 +225,18 @@ class SurahTabState extends State<SurahTab> {
                 surah: surah,
                 searchQuery: searchQuery,
                 onTap: () async {
+                  // Check connectivity before navigating
+                  if (!_connectivityService.isConnected) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('No internet connection'),
+                        backgroundColor: Colors.red,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                    return;
+                  }
+
                   // Save as last read when tapping on a surah
                   await LastReadService.saveLastReadFromSurah(
                     surah: surah,

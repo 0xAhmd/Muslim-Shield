@@ -14,16 +14,19 @@ class JuzzCubit extends Cubit<JuzzState> {
   // Load all Juzz summaries
   Future<void> loadJuzzSummaries() async {
     try {
+      if (isClosed) return;
       emit(JuzzLoading());
 
       debugPrint('Loading Juzz summaries...');
       final juzzSummaries = await _repository.getAllJuzzSummaries();
 
+      if (isClosed) return;
       debugPrint('Successfully loaded ${juzzSummaries.length} Juzz summaries');
       emit(
         JuzzLoaded(juzzSummaries: juzzSummaries, filteredJuzz: juzzSummaries),
       );
     } catch (e) {
+      if (isClosed) return;
       debugPrint('Error loading Juzz summaries: $e');
       emit(JuzzError('Failed to load Juzz summaries: $e'));
     }
@@ -65,6 +68,8 @@ class JuzzCubit extends Cubit<JuzzState> {
     }
 
     try {
+      if (isClosed) return;
+
       emit(JuzzDetailLoading());
 
       debugPrint('Loading Juzz $juzzNumber details...');
@@ -73,9 +78,13 @@ class JuzzCubit extends Cubit<JuzzState> {
       debugPrint(
         'Successfully loaded Juzz $juzzNumber with ${juzz.totalAyahs} ayahs',
       );
+      if (isClosed) return;
+
       emit(JuzzDetailLoaded(juzz: juzz, juzzSummaries: juzzSummaries));
     } catch (e) {
       debugPrint('Error loading Juzz $juzzNumber: $e');
+      if (isClosed) return;
+
       emit(
         JuzzDetailError(
           message: 'Failed to load Juzz $juzzNumber: $e',

@@ -1,3 +1,5 @@
+import 'package:azkar/core/connectivity_service.dart';
+import 'package:azkar/core/offline_message.dart';
 import 'package:azkar/sajda/data/repo/sajda_repo.dart';
 import 'package:azkar/sajda/presentation/cubit/sajda_cubit.dart';
 import 'package:azkar/sajda/presentation/cubit/sajda_state.dart';
@@ -8,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../constants.dart';
 
-
 class SajdaTab extends StatefulWidget {
   const SajdaTab({super.key});
 
@@ -18,7 +19,10 @@ class SajdaTab extends StatefulWidget {
 
 class SajdaTabState extends State<SajdaTab> with AutomaticKeepAliveClientMixin {
   late SajdaCubit _sajdaCubit;
+  final ConnectivityService _connectivityService = ConnectivityService();
   String _currentSearchQuery = '';
+  bool _isInitialized = false;
+  bool _isConnected = true;
 
   @override
   bool get wantKeepAlive => true;
@@ -26,26 +30,61 @@ class SajdaTabState extends State<SajdaTab> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    _sajdaCubit = SajdaCubit(repository: SajdaRepository());
-    _sajdaCubit.loadSajdaSummaries();
+    _initializeConnectivity();
+  }
+
+  Future<void> _initializeConnectivity() async {
+    // Check initial connectivity
+    _isConnected = _connectivityService.isConnected;
+
+    // Listen to connectivity changes
+    _connectivityService.connectionStream.listen((connected) {
+      if (mounted) {
+        setState(() {
+          _isConnected = connected;
+          if (connected && !_isInitialized) {
+            _initializeCubit();
+          }
+        });
+      }
+    });
+
+    // Initialize if connected
+    if (_isConnected) {
+      _initializeCubit();
+    }
+  }
+
+  void _initializeCubit() {
+    if (!_isInitialized && _connectivityService.isConnected) {
+      _sajdaCubit = SajdaCubit(repository: SajdaRepository());
+      _sajdaCubit.loadSajdaSummaries();
+      _isInitialized = true;
+    }
   }
 
   @override
   void dispose() {
-    _sajdaCubit.close();
+    if (_isInitialized) {
+      _sajdaCubit.close();
+    }
     super.dispose();
   }
 
   // Method to be called from parent for search functionality
   void performSearch(String query) {
-    _currentSearchQuery = query;
-    _sajdaCubit.searchSajdas(query);
+    if (_isInitialized) {
+      _currentSearchQuery = query;
+      _sajdaCubit.searchSajdas(query);
+    }
   }
 
   // Method to be called from parent to clear search
   void performClearSearch() {
-    _currentSearchQuery = '';
-    _sajdaCubit.clearSearch();
+    if (_isInitialized) {
+      _currentSearchQuery = '';
+      _sajdaCubit.clearSearch();
+    }
   }
 
   // Get current search query
@@ -56,6 +95,19 @@ class SajdaTabState extends State<SajdaTab> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    // Show offline message if not connected
+    if (!_isConnected) {
+      return OfflineMessageWidget(
+        customMessage:
+            'Sajda content needs internet connectivity.\nPlease make sure you have an internet connection.',
+        onRetry: () => _initializeConnectivity(),
+      );
+    }
+
+    if (!_isInitialized) {
+      return const SajdaLoadingView();
+    }
 
     return BlocProvider.value(
       value: _sajdaCubit,

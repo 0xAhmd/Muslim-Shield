@@ -1,4 +1,8 @@
+import 'package:azkar/core/connectivity_service.dart';
+import 'package:azkar/core/offline_message.dart';
+
 import '../../../constants.dart';
+
 import '../../../surah/data/repo/surah_repo.dart';
 import '../../data/models/juzz_summary.dart';
 import '../cubit/juzz_cubit.dart';
@@ -18,19 +22,43 @@ class JuzTab extends StatefulWidget {
 
 class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
   late JuzzCubit _juzzCubit;
+  final ConnectivityService _connectivityService = ConnectivityService();
   bool _isInitialized = false;
+  bool _isConnected = true;
 
   @override
-  bool get wantKeepAlive => true; // This keeps the state alive
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    _initializeCubit();
+    _initializeConnectivity();
+  }
+
+  Future<void> _initializeConnectivity() async {
+    // Check initial connectivity
+    _isConnected = _connectivityService.isConnected;
+
+    // Listen to connectivity changes
+    _connectivityService.connectionStream.listen((connected) {
+      if (mounted) {
+        setState(() {
+          _isConnected = connected;
+          if (connected && !_isInitialized) {
+            _initializeCubit();
+          }
+        });
+      }
+    });
+
+    // Initialize if connected
+    if (_isConnected) {
+      _initializeCubit();
+    }
   }
 
   void _initializeCubit() {
-    if (!_isInitialized) {
+    if (!_isInitialized && _connectivityService.isConnected) {
       _juzzCubit = JuzzCubit(repository: SurahRepository());
       _juzzCubit.loadJuzzSummaries();
       _isInitialized = true;
@@ -39,22 +67,52 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
 
   @override
   void dispose() {
+    if (_isInitialized) {
+      _juzzCubit.close();
+    }
     super.dispose();
   }
 
   void searchJuzz(String query) {
-    _juzzCubit.searchJuzz(query);
+    if (_isInitialized) {
+      _juzzCubit.searchJuzz(query);
+    }
   }
 
   void clearSearch() {
-    _juzzCubit.clearSearch();
+    if (_isInitialized) {
+      _juzzCubit.clearSearch();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(
-      context,
-    ); // Important: call super.build when using AutomaticKeepAliveClientMixin
+    super.build(context);
+
+    // Show offline message if not connected
+    if (!_isConnected) {
+      return OfflineMessageWidget(
+        customMessage:
+            'Juzz content needs internet connectivity.\nPlease make sure you have an internet connection.',
+        onRetry: () => _initializeConnectivity(),
+      );
+    }
+
+    if (!_isInitialized) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CupertinoActivityIndicator(color: primary),
+            const SizedBox(height: 16),
+            Text(
+              'Loading Juzz sections...',
+              style: GoogleFonts.poppins(color: textColor, fontSize: 14),
+            ),
+          ],
+        ),
+      );
+    }
 
     return BlocProvider.value(
       value: _juzzCubit,
@@ -122,7 +180,6 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
             return _buildJuzzList(context, state);
           }
 
-          // Initial state - show loading instead of "Initializing..."
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -185,6 +242,18 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
                 juzzSummary: juzz,
                 searchQuery: state.searchQuery,
                 onTap: () {
+                  // Check connectivity before navigating
+                  if (!_connectivityService.isConnected) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('No internet connection'),
+                        backgroundColor: Colors.red,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                    return;
+                  }
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(

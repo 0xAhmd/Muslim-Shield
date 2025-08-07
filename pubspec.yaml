@@ -12,6 +12,7 @@ dependencies:
   audio_service: ^0.18.18
   audioplayers: ^6.5.0
   bloc: ^9.0.0
+  connectivity_plus: ^6.1.4
   cupertino_icons: ^1.0.8
   dio: ^5.8.0+1
   flutter:

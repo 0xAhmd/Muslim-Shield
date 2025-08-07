@@ -1,4 +1,8 @@
+import 'package:azkar/core/connectivity_service.dart';
+import 'package:azkar/core/offline_message.dart';
+
 import '../../data/repo/hizb_repo.dart';
+
 import '../cubit/hizb_cubit.dart';
 import '../cubit/hizb_state.dart';
 import 'hizb_err_view.dart';
@@ -16,6 +20,9 @@ class HizbTab extends StatefulWidget {
 
 class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
   late HizbCubit _hizbCubit;
+  final ConnectivityService _connectivityService = ConnectivityService();
+  bool _isInitialized = false;
+  bool _isConnected = true;
 
   @override
   bool get wantKeepAlive => true;
@@ -23,28 +30,64 @@ class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    _hizbCubit = HizbCubit(repository: HizbRepository());
-    _hizbCubit.loadHizbSummaries();
+    _initializeConnectivity();
+  }
 
-    // Preload popular Hizb sections in background
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _hizbCubit.preloadPopularHizb();
+  Future<void> _initializeConnectivity() async {
+    // Check initial connectivity
+    _isConnected = _connectivityService.isConnected;
+    
+    // Listen to connectivity changes
+    _connectivityService.connectionStream.listen((connected) {
+      if (mounted) {
+        setState(() {
+          _isConnected = connected;
+          if (connected && !_isInitialized) {
+            _initializeCubit();
+          }
+        });
+      }
     });
+
+    // Initialize if connected
+    if (_isConnected) {
+      _initializeCubit();
+    }
+  }
+
+  void _initializeCubit() {
+    if (!_isInitialized && _connectivityService.isConnected) {
+      _hizbCubit = HizbCubit(repository: HizbRepository());
+      _hizbCubit.loadHizbSummaries();
+
+      // Preload popular Hizb sections in background
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _hizbCubit.preloadPopularHizb();
+      });
+      
+      _isInitialized = true;
+    }
   }
 
   @override
   void dispose() {
-    _hizbCubit.close();
+    if (_isInitialized) {
+      _hizbCubit.close();
+    }
     super.dispose();
   }
 
   // Methods for search functionality (called from HomeScreen)
   void searchHizb(String query) {
-    _hizbCubit.searchHizb(query);
+    if (_isInitialized) {
+      _hizbCubit.searchHizb(query);
+    }
   }
 
   void clearSearch() {
-    _hizbCubit.clearSearch();
+    if (_isInitialized) {
+      _hizbCubit.clearSearch();
+    }
   }
 
   void performSearch(String query) {
@@ -56,22 +99,36 @@ class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
   }
 
   // Method to get current search state for HomeScreen
-  bool get isSearching => _hizbCubit.isSearching;
+  bool get isSearching => _isInitialized ? _hizbCubit.isSearching : false;
 
-  String get currentSearchQuery => _hizbCubit.getCurrentSearchQuery();
+  String get currentSearchQuery => _isInitialized ? _hizbCubit.getCurrentSearchQuery() : '';
 
-  int get filteredCount => _hizbCubit.getFilteredCount();
+  int get filteredCount => _isInitialized ? _hizbCubit.getFilteredCount() : 0;
 
-  int get totalCount => _hizbCubit.getTotalCount();
+  int get totalCount => _isInitialized ? _hizbCubit.getTotalCount() : 0;
 
   // Method to filter by Juzz (can be called from other components)
   void filterByJuzz(int juzzNumber) {
-    _hizbCubit.filterByJuzz(juzzNumber);
+    if (_isInitialized) {
+      _hizbCubit.filterByJuzz(juzzNumber);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    // Show offline message if not connected
+    if (!_isConnected) {
+      return OfflineMessageWidget(
+        customMessage: 'Hizb content needs internet connectivity.\nPlease make sure you have an internet connection.',
+        onRetry: () => _initializeConnectivity(),
+      );
+    }
+
+    if (!_isInitialized) {
+      return const HizbLoadingView();
+    }
 
     return BlocProvider.value(
       value: _hizbCubit,

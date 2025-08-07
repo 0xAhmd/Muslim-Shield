@@ -1,4 +1,5 @@
 import 'package:azkar/core/blocked.dart';
+import 'package:azkar/core/connectivity_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,7 @@ import 'package:safe_device/safe_device.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  await ConnectivityService().initialize();
 
   await Hive.initFlutter();
   Hive.registerAdapter(BookmarkModelAdapter());
@@ -29,9 +31,8 @@ void main() async {
   // if (isRooted || isRealDevice) {
   //   runApp(const BlockedDeviceApp());
   // } else {
-    runApp(const MyApp());
-  }
-
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
