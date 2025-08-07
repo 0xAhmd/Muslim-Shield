@@ -1,3 +1,5 @@
+import 'package:azkar/core/connectivity_service.dart';
+import 'package:azkar/core/offline_message.dart';
 import 'package:azkar/masjid/presentation/widgets/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +33,44 @@ class MasjidFinderView extends StatefulWidget {
 }
 
 class _MasjidFinderViewState extends State<MasjidFinderView> {
+  final ConnectivityService _connectivityService = ConnectivityService();
+  bool _isConnected = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeConnectivity();
+  }
+
+  void _initializeConnectivity() {
+    _isConnected = _connectivityService.isConnected;
+
+    _connectivityService.connectionStream.listen((connected) {
+      if (mounted) {
+        setState(() {
+          _isConnected = connected;
+        });
+
+        if (!connected) {
+          // Show snackbar when connection is lost
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                  const SizedBox(width: 8),
+                  const Text('Connection lost'),
+                ],
+              ),
+              backgroundColor: Colors.red.withOpacity(0.9),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +90,18 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
             builder: (context, state) {
               if (state is MasjidLoaded) {
                 return IconButton(
-                  onPressed: state.isRefreshing
+                  onPressed: (!_isConnected || state.isRefreshing)
                       ? null
-                      : () => context.read<MasjidStateCubit>().refreshMasjids(),
+                      : () {
+                          if (_isConnected) {
+                            context.read<MasjidStateCubit>().refreshMasjids();
+                          } else {
+                            SnackbarHelper.showError(
+                              context,
+                              'No internet connection',
+                            );
+                          }
+                        },
                   icon: state.isRefreshing
                       ? SizedBox(
                           width: 20.w,
@@ -62,7 +111,13 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
                             color: primary,
                           ),
                         )
-                      : Icon(Icons.refresh, color: textColor, size: 24.sp),
+                      : Icon(
+                          Icons.refresh,
+                          color: _isConnected
+                              ? textColor
+                              : textColor.withOpacity(0.5),
+                          size: 24.sp,
+                        ),
                 );
               }
               return const SizedBox.shrink();
@@ -70,28 +125,34 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
           ),
         ],
       ),
-      body: BlocConsumer<MasjidStateCubit, MasjidState>(
-        listener: (context, state) {
-          if (state is MasjidError && state.isLocationError) {
-            _showLocationPermissionDialog(context, state.message);
-          }
-        },
-        builder: (context, state) {
-          if (state is MasjidLoading) {
-            return _buildLoadingState();
-          }
+      body: !_isConnected
+          ? OfflineMessageWidget(
+              customMessage:
+                  'Masjid finder needs internet connectivity to locate nearby masjids.\nPlease make sure you have an internet connection.',
+              onRetry: () => _initializeConnectivity(),
+            )
+          : BlocConsumer<MasjidStateCubit, MasjidState>(
+              listener: (context, state) {
+                if (state is MasjidError && state.isLocationError) {
+                  _showLocationPermissionDialog(context, state.message);
+                }
+              },
+              builder: (context, state) {
+                if (state is MasjidLoading) {
+                  return _buildLoadingState();
+                }
 
-          if (state is MasjidError && !state.isLocationError) {
-            return _buildErrorState(state.message, context);
-          }
+                if (state is MasjidError && !state.isLocationError) {
+                  return _buildErrorState(state.message, context);
+                }
 
-          if (state is MasjidLoaded) {
-            return _buildLoadedState(state, context);
-          }
+                if (state is MasjidLoaded) {
+                  return _buildLoadedState(state, context);
+                }
 
-          return _buildInitialState(context);
-        },
-      ),
+                return _buildInitialState(context);
+              },
+            ),
     );
   }
 
@@ -143,11 +204,15 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  context.read<MasjidStateCubit>().retry();
-                },
+                onPressed: _isConnected
+                    ? () {
+                        context.read<MasjidStateCubit>().retry();
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: primary,
+                  backgroundColor: _isConnected
+                      ? primary
+                      : primary.withOpacity(0.5),
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   shape: RoundedRectangleBorder(
@@ -157,7 +222,7 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
                 ),
                 icon: const Icon(Icons.refresh, size: 20),
                 label: Text(
-                  'Try Again',
+                  _isConnected ? 'Try Again' : 'No Connection',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -204,11 +269,15 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
           ),
           SizedBox(height: 32.h),
           ElevatedButton(
-            onPressed: () {
-              context.read<MasjidStateCubit>().loadNearbyMasjids();
-            },
+            onPressed: _isConnected
+                ? () {
+                    context.read<MasjidStateCubit>().loadNearbyMasjids();
+                  }
+                : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: primary,
+              backgroundColor: _isConnected
+                  ? primary
+                  : primary.withOpacity(0.5),
               foregroundColor: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
               shape: RoundedRectangleBorder(
@@ -216,7 +285,7 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
               ),
             ),
             child: Text(
-              'Find Masjids',
+              _isConnected ? 'Find Masjids' : 'No Connection',
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
             ),
           ),
@@ -228,12 +297,20 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
   Widget _buildLoadedState(MasjidLoaded state, BuildContext context) {
     if (state.masjids.isEmpty) {
       return EmptyMasjidsWidget(
-        onRefresh: () => context.read<MasjidStateCubit>().refreshMasjids(),
+        onRefresh: () {
+          _isConnected
+              ? () => context.read<MasjidStateCubit>().refreshMasjids()
+              : null;
+        },
       );
     }
 
     return RefreshIndicator(
-      onRefresh: () => context.read<MasjidStateCubit>().refreshMasjids(),
+      onRefresh: _isConnected
+          ? () => context.read<MasjidStateCubit>().refreshMasjids()
+          : () async {
+              SnackbarHelper.showError(context, 'No internet connection');
+            },
       color: primary,
       backgroundColor: grey,
       child: CustomScrollView(
@@ -245,6 +322,34 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Connection status indicator
+                  if (!_isConnected)
+                    Container(
+                      margin: EdgeInsets.only(bottom: 16.h),
+                      padding: EdgeInsets.all(12.w),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(color: Colors.red.withOpacity(0.3)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.wifi_off, color: Colors.red, size: 16.sp),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Text(
+                              'Offline - Some features may not work',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
                   // Header Info
                   Row(
                     children: [
@@ -256,7 +361,6 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
                           size: 19.sp,
                         ),
                       ),
-
                       Expanded(
                         child: Text(
                           'Found ${state.masjids.length} masjids nearby',
@@ -297,8 +401,18 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
                   masjid: masjid,
                   formattedDistance: cubit.formatDistance(masjid.distance),
                   isClosest: index == 0, // First item is closest
-                  onTap: () => _handleMasjidTap(context, masjid),
-                  onDirectionsTap: () => _handleDirectionsTap(context, masjid),
+                  onTap: _isConnected
+                      ? () => _handleMasjidTap(context, masjid)
+                      : () => SnackbarHelper.showError(
+                          context,
+                          'No internet connection',
+                        ),
+                  onDirectionsTap: _isConnected
+                      ? () => _handleDirectionsTap(context, masjid)
+                      : () => SnackbarHelper.showError(
+                          context,
+                          'No internet connection',
+                        ),
                 ),
               );
             }, childCount: state.masjids.length),
@@ -312,6 +426,11 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
   }
 
   void _handleMasjidTap(BuildContext context, masjid) async {
+    if (!_isConnected) {
+      SnackbarHelper.showError(context, 'No internet connection');
+      return;
+    }
+
     final cubit = context.read<MasjidStateCubit>();
     SnackbarHelper.showInfo(context, 'Opening ${masjid.name} in maps...');
 
@@ -323,6 +442,11 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
   }
 
   void _handleDirectionsTap(BuildContext context, masjid) async {
+    if (!_isConnected) {
+      SnackbarHelper.showError(context, 'No internet connection');
+      return;
+    }
+
     final cubit = context.read<MasjidStateCubit>();
     SnackbarHelper.showInfo(context, 'Getting directions to ${masjid.name}...');
 
@@ -339,7 +463,11 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
       message: message,
       onRetry: () {
         Navigator.of(context).pop();
-        context.read<MasjidStateCubit>().retry();
+        if (_isConnected) {
+          context.read<MasjidStateCubit>().retry();
+        } else {
+          SnackbarHelper.showError(context, 'No internet connection');
+        }
       },
       onOpenSettings: () {
         Navigator.of(context).pop();

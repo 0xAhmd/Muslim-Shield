@@ -1,4 +1,8 @@
+import 'package:azkar/core/connectivity_service.dart';
+import 'package:azkar/core/offline_message.dart';
+
 import '../../../constants.dart';
+
 import '../../data/repo/prayer_repo.dart';
 import '../../data/service/prayer_api_service.dart';
 import '../cubit/prayer_cubit.dart';
@@ -35,11 +39,44 @@ class PrayerPageView extends StatefulWidget {
 class _PrayerPageViewState extends State<PrayerPageView>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  final ConnectivityService _connectivityService = ConnectivityService();
+  bool _isConnected = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _initializeConnectivity();
+  }
+
+  void _initializeConnectivity() {
+    _isConnected = _connectivityService.isConnected;
+
+    _connectivityService.connectionStream.listen((connected) {
+      if (mounted) {
+        setState(() {
+          _isConnected = connected;
+        });
+
+        if (!connected) {
+          // Show snackbar when connection is lost
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Connection lost - Prayer times may be outdated'),
+                ],
+              ),
+              backgroundColor: Colors.orange.withOpacity(0.9),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    });
   }
 
   @override
@@ -66,10 +103,24 @@ class _PrayerPageViewState extends State<PrayerPageView>
           BlocBuilder<PrayerTimesCubit, PrayerTimesState>(
             builder: (context, state) {
               return IconButton(
-                onPressed: () {
-                  context.read<PrayerTimesCubit>().refreshPrayerTimes();
-                },
-                icon: Icon(Icons.refresh, color: textColor, size: 24.sp),
+                onPressed: _isConnected
+                    ? () {
+                        context.read<PrayerTimesCubit>().refreshPrayerTimes();
+                      }
+                    : () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('No internet connection'),
+                            backgroundColor: Colors.red.withOpacity(0.9),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                icon: Icon(
+                  Icons.refresh,
+                  color: _isConnected ? textColor : textColor.withOpacity(0.5),
+                  size: 24.sp,
+                ),
               );
             },
           ),
@@ -77,6 +128,15 @@ class _PrayerPageViewState extends State<PrayerPageView>
       ),
       body: BlocBuilder<PrayerTimesCubit, PrayerTimesState>(
         builder: (context, state) {
+          // Only show offline message for initial load, not when already loaded
+          if (!_isConnected && state is! PrayerTimesLoaded) {
+            return OfflineMessageWidget(
+              customMessage:
+                  'Prayer times need internet connectivity to fetch accurate times based on your location.\nPlease make sure you have an internet connection.',
+              onRetry: () => _initializeConnectivity(),
+            );
+          }
+
           if (state is PrayerTimesLoading) {
             return _buildLoadingState();
           }
@@ -160,11 +220,15 @@ class _PrayerPageViewState extends State<PrayerPageView>
             ),
             SizedBox(height: 32.h),
             ElevatedButton(
-              onPressed: () {
-                context.read<PrayerTimesCubit>().fetchPrayerTimes();
-              },
+              onPressed: _isConnected
+                  ? () {
+                      context.read<PrayerTimesCubit>().fetchPrayerTimes();
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: primary,
+                backgroundColor: _isConnected
+                    ? primary
+                    : primary.withOpacity(0.5),
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
                 shape: RoundedRectangleBorder(
@@ -172,7 +236,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 ),
               ),
               child: Text(
-                'Try Again',
+                _isConnected ? 'Try Again' : 'No Connection',
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
               ),
             ),
@@ -207,11 +271,15 @@ class _PrayerPageViewState extends State<PrayerPageView>
           ),
           SizedBox(height: 32.h),
           ElevatedButton(
-            onPressed: () {
-              context.read<PrayerTimesCubit>().fetchPrayerTimes();
-            },
+            onPressed: _isConnected
+                ? () {
+                    context.read<PrayerTimesCubit>().fetchPrayerTimes();
+                  }
+                : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: primary,
+              backgroundColor: _isConnected
+                  ? primary
+                  : primary.withOpacity(0.5),
               foregroundColor: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
               shape: RoundedRectangleBorder(
@@ -219,7 +287,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
               ),
             ),
             child: Text(
-              'Get Prayer Times',
+              _isConnected ? 'Get Prayer Times' : 'No Connection',
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
             ),
           ),
@@ -231,6 +299,30 @@ class _PrayerPageViewState extends State<PrayerPageView>
   Widget _buildLoadedState(PrayerTimesLoaded state) {
     return Column(
       children: [
+        // Connection status indicator (only show when offline with loaded data)
+        if (!_isConnected)
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+            color: Colors.orange.withOpacity(0.1),
+            child: Row(
+              children: [
+                Icon(Icons.wifi_off, color: Colors.orange, size: 16.sp),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    'Offline - Showing cached prayer times',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
         // Next Prayer Card (always visible)
         NextPrayerCard(nextPrayer: state.nextPrayer, location: state.location),
 
@@ -281,17 +373,87 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 ),
               ),
 
-              // Qiblah Tab
-              const SingleChildScrollView(
+              // Qiblah Tab - Works offline with device compass
+              SingleChildScrollView(
                 child: Column(
-                  children: [QiblahCompass(), SizedBox(height: 24)],
+                  children: [
+                    if (!_isConnected)
+                      Container(
+                        margin: EdgeInsets.all(24.w),
+                        padding: EdgeInsets.all(16.w),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: Colors.blue.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              color: Colors.blue,
+                              size: 16.sp,
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: Text(
+                                'Qiblah compass works offline using device sensors',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    const QiblahCompass(),
+                    const SizedBox(height: 24),
+                  ],
                 ),
               ),
 
-              // Sunnah Prayers Tab
-              const SingleChildScrollView(
+              // Sunnah Prayers Tab - Works offline
+              SingleChildScrollView(
                 child: Column(
-                  children: [SunnahPrayersList(), SizedBox(height: 24)],
+                  children: [
+                    if (!_isConnected)
+                      Container(
+                        margin: EdgeInsets.all(24.w),
+                        padding: EdgeInsets.all(16.w),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: Colors.green.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline,
+                              color: Colors.green,
+                              size: 16.sp,
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: Text(
+                                'Sunnah prayers information is available offline',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SunnahPrayersList(),
+                    const SizedBox(height: 24),
+                  ],
                 ),
               ),
             ],

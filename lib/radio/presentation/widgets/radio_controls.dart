@@ -1,3 +1,4 @@
+import 'package:azkar/core/connectivity_service.dart';
 import 'package:azkar/radio/presentation/cubit/radio_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,8 +7,72 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubit/radio_cubit.dart';
 import '../../../constants.dart';
 
-class RadioControls extends StatelessWidget {
+class RadioControls extends StatefulWidget {
   const RadioControls({super.key});
+
+  @override
+  State<RadioControls> createState() => _RadioControlsState();
+}
+
+class _RadioControlsState extends State<RadioControls> {
+  final ConnectivityService _connectivityService = ConnectivityService();
+  bool _isConnected = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeConnectivity();
+  }
+
+  void _initializeConnectivity() {
+    _isConnected = _connectivityService.isConnected;
+
+    _connectivityService.connectionStream.listen((connected) {
+      if (mounted) {
+        setState(() {
+          _isConnected = connected;
+        });
+
+        if (!connected) {
+          // Stop radio when connection is lost
+          final cubit = context.read<RadioCubit>();
+          cubit.stop();
+
+          // Show snackbar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Connection lost - Radio stopped'),
+                ],
+              ),
+              backgroundColor: Colors.red.withOpacity(0.9),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    });
+  }
+
+  void _showOfflineMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.wifi_off, color: Colors.white, size: 16),
+            SizedBox(width: 8),
+            Text('Internet connection required for radio streaming'),
+          ],
+        ),
+        backgroundColor: Colors.red.withOpacity(0.9),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +82,34 @@ class RadioControls extends StatelessWidget {
 
         return Column(
           children: [
+            // Offline indicator
+            if (!_isConnected)
+              Container(
+                margin: EdgeInsets.only(bottom: 16.h),
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(color: Colors.red.withOpacity(0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.wifi_off, color: Colors.red, size: 16.sp),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        'No internet connection - Radio streaming unavailable',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
             // Station switching controls
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -24,30 +117,43 @@ class RadioControls extends StatelessWidget {
                 // Previous station button
                 _buildControlButton(
                   icon: Icons.skip_previous,
-                  onTap: () => cubit.previousStation(),
-                  isEnabled: cubit.availableStations.length > 1,
+                  onTap: _isConnected && cubit.availableStations.length > 1
+                      ? () => cubit.previousStation()
+                      : _isConnected
+                      ? null
+                      : _showOfflineMessage,
+                  isEnabled: _isConnected && cubit.availableStations.length > 1,
                 ),
 
                 // Station selector button
                 _buildControlButton(
                   icon: Icons.radio,
-                  onTap: () => _showStationSelector(context, cubit),
-                  isEnabled: true,
+                  onTap: _isConnected
+                      ? () => _showStationSelector(context, cubit)
+                      : _showOfflineMessage,
+                  isEnabled: _isConnected,
                 ),
 
-                // Retry button (only show when error)
+                // Retry button (only show when error) or Next station button
                 if (state is RadioError)
                   _buildControlButton(
                     icon: Icons.refresh,
-                    onTap: () => cubit.retryCurrentStation(),
-                    isEnabled: true,
+                    onTap: _isConnected
+                        ? () => cubit.retryCurrentStation()
+                        : _showOfflineMessage,
+                    isEnabled: _isConnected,
                   )
                 else
                   // Next station button
                   _buildControlButton(
                     icon: Icons.skip_next,
-                    onTap: () => cubit.nextStation(),
-                    isEnabled: cubit.availableStations.length > 1,
+                    onTap: _isConnected && cubit.availableStations.length > 1
+                        ? () => cubit.nextStation()
+                        : _isConnected
+                        ? null
+                        : _showOfflineMessage,
+                    isEnabled:
+                        _isConnected && cubit.availableStations.length > 1,
                   ),
               ],
             ),
@@ -61,20 +167,25 @@ class RadioControls extends StatelessWidget {
                 // Stop button
                 _buildControlButton(
                   icon: Icons.stop,
-                  onTap: state is RadioStopped || state is RadioInitial
-                      ? null
+                  onTap:
+                      (!_isConnected ||
+                          state is RadioStopped ||
+                          state is RadioInitial)
+                      ? (!_isConnected ? _showOfflineMessage : null)
                       : () => cubit.stop(),
-                  isEnabled: !(state is RadioStopped || state is RadioInitial),
+                  isEnabled:
+                      _isConnected &&
+                      !(state is RadioStopped || state is RadioInitial),
                 ),
 
                 // Main play/pause button
                 _buildMainControlButton(context, state, cubit),
 
-                // Volume button (placeholder)
+                // Volume button
                 _buildControlButton(
                   icon: Icons.volume_up,
                   onTap: () => _showVolumeSlider(context),
-                  isEnabled: true,
+                  isEnabled: true, // Volume slider works offline
                 ),
               ],
             ),
@@ -93,7 +204,10 @@ class RadioControls extends StatelessWidget {
     VoidCallback? onTap;
     bool showLoading = false;
 
-    if (state is RadioLoading || state is RadioBuffering) {
+    if (!_isConnected) {
+      icon = Icons.wifi_off;
+      onTap = _showOfflineMessage;
+    } else if (state is RadioLoading || state is RadioBuffering) {
       icon = Icons.pause;
       onTap = null;
       showLoading = true;
@@ -112,11 +226,15 @@ class RadioControls extends StatelessWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [primary, primary.withOpacity(0.8)]),
+        gradient: LinearGradient(
+          colors: _isConnected
+              ? [primary, primary.withOpacity(0.8)]
+              : [primary.withOpacity(0.3), primary.withOpacity(0.2)],
+        ),
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: primary.withOpacity(0.3),
+            color: primary.withOpacity(_isConnected ? 0.3 : 0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -133,7 +251,13 @@ class RadioControls extends StatelessWidget {
                     color: Colors.white,
                     radius: 12,
                   )
-                : Icon(icon, color: Colors.white, size: 32),
+                : Icon(
+                    icon,
+                    color: _isConnected
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.6),
+                    size: 32,
+                  ),
           ),
         ),
       ),
@@ -145,6 +269,8 @@ class RadioControls extends StatelessWidget {
     required VoidCallback? onTap,
     required bool isEnabled,
   }) {
+    final actuallyEnabled = _isConnected && isEnabled;
+
     return Container(
       width: 56,
       height: 56,
@@ -152,7 +278,7 @@ class RadioControls extends StatelessWidget {
         color: grey,
         shape: BoxShape.circle,
         border: Border.all(
-          color: primary.withOpacity(isEnabled ? 0.3 : 0.1),
+          color: primary.withOpacity(actuallyEnabled ? 0.3 : 0.1),
           width: 1,
         ),
       ),
@@ -164,7 +290,9 @@ class RadioControls extends StatelessWidget {
           child: Center(
             child: Icon(
               icon,
-              color: isEnabled ? Colors.white : textColor.withOpacity(0.5),
+              color: actuallyEnabled
+                  ? Colors.white
+                  : textColor.withOpacity(0.3),
               size: 24,
             ),
           ),
@@ -174,6 +302,11 @@ class RadioControls extends StatelessWidget {
   }
 
   void _showStationSelector(BuildContext context, RadioCubit cubit) {
+    if (!_isConnected) {
+      _showOfflineMessage();
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       backgroundColor: grey,
@@ -211,6 +344,33 @@ class RadioControls extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const Spacer(),
+                  if (!_isConnected)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.wifi_off, color: Colors.red, size: 12.sp),
+                          SizedBox(width: 4.w),
+                          Text(
+                            'Offline',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
               SizedBox(height: 20.h),
@@ -234,13 +394,17 @@ class RadioControls extends StatelessWidget {
                       isSelected
                           ? Icons.radio_button_checked
                           : Icons.radio_button_unchecked,
-                      color: isSelected ? primary : textColor,
+                      color: (_isConnected && isSelected)
+                          ? primary
+                          : textColor.withOpacity(0.5),
                       size: 24.sp,
                     ),
                     title: Text(
                       station.name,
                       style: TextStyle(
-                        color: isSelected ? primary : Colors.white,
+                        color: _isConnected
+                            ? (isSelected ? primary : Colors.white)
+                            : Colors.white.withOpacity(0.5),
                         fontWeight: isSelected
                             ? FontWeight.w600
                             : FontWeight.normal,
@@ -250,7 +414,7 @@ class RadioControls extends StatelessWidget {
                     subtitle: Text(
                       station.description,
                       style: TextStyle(
-                        color: textColor.withOpacity(0.8),
+                        color: textColor.withOpacity(_isConnected ? 0.8 : 0.4),
                         fontSize: 12.sp,
                       ),
                     ),
@@ -260,22 +424,27 @@ class RadioControls extends StatelessWidget {
                         vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
-                        color: primary.withOpacity(0.2),
+                        color: primary.withOpacity(_isConnected ? 0.2 : 0.1),
                         borderRadius: BorderRadius.circular(6.r),
                       ),
                       child: Text(
                         station.language,
                         style: TextStyle(
-                          color: primary,
+                          color: primary.withOpacity(_isConnected ? 1.0 : 0.5),
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      cubit.switchToStation(index);
-                    },
+                    onTap: _isConnected
+                        ? () {
+                            Navigator.pop(context);
+                            cubit.switchToStation(index);
+                          }
+                        : () {
+                            Navigator.pop(context);
+                            _showOfflineMessage();
+                          },
                   ),
                 );
               }),
@@ -330,6 +499,37 @@ class RadioControls extends StatelessWidget {
                 'Use your device volume buttons to control audio',
                 style: TextStyle(color: textColor, fontSize: 14.sp),
               ),
+              if (!_isConnected) ...[
+                SizedBox(height: 12.h),
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.orange,
+                        size: 16.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Text(
+                          'Volume controls work offline, but radio streaming requires internet connection',
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),

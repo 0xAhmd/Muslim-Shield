@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/radio_cubit.dart';
 import '../../../constants.dart';
 
-class StationInfo extends StatelessWidget {
-  const StationInfo({super.key});
+class StationInfoCard extends StatelessWidget {
+  const StationInfoCard({super.key});
 
   @override
   Widget build(BuildContext context) {
