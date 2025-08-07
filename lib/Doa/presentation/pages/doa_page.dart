@@ -57,61 +57,67 @@ class _DoaPageContentState extends State<DoaPageContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            // Header with search
-            _buildHeader(),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Header with search
+              _buildHeader(),
 
-            // Search bar (when active)
-            if (_isSearching) _buildSearchBar(),
+              // Search bar (when active)
+              if (_isSearching) _buildSearchBar(),
 
-            // Category filters
-            BlocBuilder<DuaCubit, DuaState>(
-              builder: (context, state) {
-                if (state is DuaLoaded && !_isSearching) {
-                  return _buildCategoryFilters(state);
-                }
-                return const SizedBox.shrink();
-              },
-            ),
+              // Category filters
+              BlocBuilder<DuaCubit, DuaState>(
+                builder: (context, state) {
+                  if (state is DuaLoaded && !_isSearching) {
+                    return _buildCategoryFilters(state);
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
 
-            // Duas list
-            Expanded(
-              child: BlocBuilder<DuaCubit, DuaState>(
+              // Duas list
+              BlocBuilder<DuaCubit, DuaState>(
                 builder: (context, state) {
                   if (state is DuaLoading) {
-                    return const Center(
-                      child: CupertinoActivityIndicator(color: primary),
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: const Center(
+                        child: CupertinoActivityIndicator(color: primary),
+                      ),
                     );
                   } else if (state is DuaError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            size: 64,
-                            color: Colors.red.withOpacity(0.6),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Error loading Duas',
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              size: 64,
+                              color: Colors.red.withOpacity(0.6),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            state.message,
-                            style: TextStyle(
-                              color: textColor.withOpacity(0.7),
-                              fontSize: 14,
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Error loading Duas',
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Text(
+                              state.message,
+                              style: TextStyle(
+                                color: textColor.withOpacity(0.7),
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   } else if (state is DuaLoaded) {
@@ -120,8 +126,8 @@ class _DoaPageContentState extends State<DoaPageContent> {
                   return const SizedBox.shrink();
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -132,27 +138,14 @@ class _DoaPageContentState extends State<DoaPageContent> {
       padding: const EdgeInsets.all(24),
       child: Row(
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Duas',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Islamic supplications and prayers',
-                  style: TextStyle(
-                    color: textColor.withOpacity(0.8),
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+          const Expanded(
+            child: Text(
+              'Duas',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Container(
@@ -201,9 +194,8 @@ class _DoaPageContentState extends State<DoaPageContent> {
   }
 
   Widget _buildCategoryFilters(DuaLoaded state) {
-    return Container(
-      height: 42,
-      margin: const EdgeInsets.only(top: 16),
+    return SizedBox(
+      height: 41,
       child: BlocBuilder<DuaCubit, DuaState>(
         builder: (context, state) {
           if (state is! DuaLoaded) return const SizedBox.shrink();
@@ -239,39 +231,56 @@ class _DoaPageContentState extends State<DoaPageContent> {
 
   Widget _buildDuasList(DuaLoaded state) {
     if (state.filteredDuas.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.search_off, size: 64, color: textColor.withOpacity(0.5)),
-            const SizedBox(height: 16),
-            Text(
-              _isSearching ? 'No duas found' : 'No duas in this category',
-              style: const TextStyle(
-                color: textColor,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.4,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.search_off,
+                size: 64,
+                color: textColor.withOpacity(0.5),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _isSearching
-                  ? 'Try different search terms'
-                  : 'Select a different category',
-              style: TextStyle(color: textColor.withOpacity(0.7), fontSize: 14),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Text(
+                _isSearching ? 'No duas found' : 'No duas in this category',
+                style: const TextStyle(
+                  color: textColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _isSearching
+                    ? 'Try different search terms'
+                    : 'Select a different category',
+                style: TextStyle(
+                  color: textColor.withOpacity(0.7),
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
 
-    return ListView.builder(
+    return Padding(
       padding: const EdgeInsets.all(24),
-      itemCount: state.filteredDuas.length,
-      itemBuilder: (context, index) {
-        final dua = state.filteredDuas[index];
-        return DuaCard(dua: dua, onTap: () => _showDuaDetails(context, dua));
-      },
+      child: Column(
+        children: [
+          ...state.filteredDuas
+              .map(
+                (dua) => DuaCard(
+                  dua: dua,
+                  onTap: () => _showDuaDetails(context, dua),
+                ),
+              )
+              .toList(),
+        ],
+      ),
     );
   }
 
