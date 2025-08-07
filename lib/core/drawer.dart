@@ -1,6 +1,8 @@
+import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
 import 'package:azkar/radio/presentation/pages/radio_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../constants.dart';
 import '../../../tasbih/presentation/pages/tasbih_page.dart';
@@ -90,16 +92,21 @@ class CustomDrawer extends StatelessWidget {
                     isComingSoon: false,
                   ),
 
-                  // _buildDrawerItem(
-                  //   context,
-                  //   icon: Icons.settings,
-                  //   title: 'Another Feature',
-                  //   onTap: () {
-                  //     Navigator.pop(context);
-                  //     _showComingSoonDialog(context);
-                  //   },
-                  //   isComingSoon: true,
-                  // ),
+                  _buildDrawerItem(
+                    context,
+                    iconWidget: SvgPicture.asset('assets/svgs/lamp-icon.svg'),
+                    title: 'Reminders',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RemindersPage(),
+                        ),
+                      );
+                    },
+                    isComingSoon: false,
+                  ),
                   Divider(
                     color: grey,
                     thickness: 1,
