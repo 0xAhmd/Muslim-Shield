@@ -42,7 +42,7 @@ class TasbihCubit extends Cubit<TasbihState> {
     if (currentState is TasbihLoaded && currentState.selectedTasbih != null) {
       try {
         // Haptic feedback
-        HapticFeedback.lightImpact();
+        HapticFeedback.mediumImpact();
         
         await _repository.incrementCount(currentState.selectedTasbih!.id);
         await _refreshCurrentState();

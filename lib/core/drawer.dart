@@ -61,6 +61,23 @@ class CustomDrawer extends StatelessWidget {
                 children: [
                   _buildDrawerItem(
                     context,
+                    iconWidget: SvgPicture.asset('assets/svgs/lamp-icon.svg'),
+                    title: 'Reminders',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RemindersPage(),
+                        ),
+                      );
+                    },
+                    isComingSoon: false,
+                  ),
+                  SizedBox(height: 5.h),
+
+                  _buildDrawerItem(
+                    context,
                     iconWidget: Image.asset('assets/tasbih.png'),
                     title: 'Digital Tasbih',
                     onTap: () {
@@ -73,7 +90,6 @@ class CustomDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 5.h),
 
                   // Placeholder for future features
                   // _buildDrawerItem(
@@ -91,21 +107,6 @@ class CustomDrawer extends StatelessWidget {
                   //   },
                   //   isComingSoon: false,
                   // ),
-                  _buildDrawerItem(
-                    context,
-                    iconWidget: SvgPicture.asset('assets/svgs/lamp-icon.svg'),
-                    title: 'Reminders',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RemindersPage(),
-                        ),
-                      );
-                    },
-                    isComingSoon: false,
-                  ),
                   Divider(
                     color: grey,
                     thickness: 1,
