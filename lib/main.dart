@@ -23,15 +23,15 @@ void main() async {
   await BookmarksService().init();
   await LocalAudioService().initialize();
 
-  final isRooted = await SafeDevice.isJailBroken;
-  final isRealDevice = await SafeDevice.isRealDevice;
+  // final isRooted = await SafeDevice.isJailBroken;
+  // final isRealDevice = await SafeDevice.isRealDevice;
 
-  if (isRooted || !isRealDevice) {
-    runApp(const BlockedDeviceApp());
-  } else {
+  // if (isRooted || isRealDevice) {
+  //   runApp(const BlockedDeviceApp());
+  // } else {
     runApp(const MyApp());
   }
-}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

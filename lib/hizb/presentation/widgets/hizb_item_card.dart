@@ -22,11 +22,11 @@ class HizbItemCard extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(20),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHizbNumber(),
             const SizedBox(width: 16),
             Expanded(child: _buildHizbInfo()),
-            _buildArrowIcon(),
           ],
         ),
       ),
@@ -119,17 +119,6 @@ class HizbItemCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildArrowIcon() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Icon(Icons.arrow_forward_ios, size: 16, color: primary),
     );
   }
 }
