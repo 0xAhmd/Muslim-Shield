@@ -1,5 +1,4 @@
 import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
-import 'package:azkar/radio/presentation/pages/radio_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -131,7 +130,7 @@ class CustomDrawer extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(24.r),
               child: Text(
-                'Version 1.0.0',
+                'Version 1.2.1',
                 style: GoogleFonts.poppins(
                   fontSize: 12.sp,
                   color: textColor.withOpacity(0.7),
