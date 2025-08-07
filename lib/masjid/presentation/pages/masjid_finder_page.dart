@@ -43,7 +43,7 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: background,
+        backgroundColor: scaffoldBackgroundColor,
         elevation: 0,
         actions: [
           BlocBuilder<MasjidStateCubit, MasjidState>(
@@ -248,8 +248,15 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
                   // Header Info
                   Row(
                     children: [
-                      Icon(Icons.location_on, color: primary, size: 20.sp),
-                      SizedBox(width: 8.w),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 0, right: 8),
+                        child: Icon(
+                          Icons.location_on,
+                          color: primary,
+                          size: 19.sp,
+                        ),
+                      ),
+
                       Expanded(
                         child: Text(
                           'Found ${state.masjids.length} masjids nearby',
@@ -263,14 +270,16 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
                     ],
                   ),
                   SizedBox(height: 4.h),
-                  Text(
-                    'Within 5km of your location',
-                    style: TextStyle(
-                      color: textColor.withOpacity(0.7),
-                      fontSize: 14.sp,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6.0).w,
+                    child: Text(
+                      'Within 5km of your location',
+                      style: TextStyle(
+                        color: textColor.withOpacity(0.7),
+                        fontSize: 14.sp,
+                      ),
                     ),
                   ),
-                  SizedBox(height: 24.h),
                 ],
               ),
             ),
