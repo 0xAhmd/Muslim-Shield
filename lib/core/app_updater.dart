@@ -92,6 +92,7 @@ class AppUpdater {
       confirmBtnText: 'Update',
       showCancelBtn: true,
       cancelBtnText: 'Later',
+      confirmBtnColor: Colors.white,
 
       onConfirmBtnTap: () {
         launchUrl(Uri.parse(url));
