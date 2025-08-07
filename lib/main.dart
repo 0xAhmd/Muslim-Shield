@@ -1,5 +1,6 @@
 import 'package:azkar/core/blocked.dart';
 import 'package:azkar/core/connectivity_service.dart';
+import 'package:azkar/tasbih/data/models/tasbih.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,12 +17,13 @@ import 'package:safe_device/safe_device.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
   await ConnectivityService().initialize();
 
   await Hive.initFlutter();
   Hive.registerAdapter(BookmarkModelAdapter());
   Hive.registerAdapter(BookmarkTypeAdapter());
+  Hive.registerAdapter(TasbihModelAdapter());
+
   await BookmarksService().init();
   await LocalAudioService().initialize();
 
@@ -31,9 +33,10 @@ void main() async {
   if (isRooted || isRealDevice) {
     runApp(const BlockedDeviceApp());
   } else {
-  runApp(const MyApp());
+    runApp(const MyApp());
+  }
 }
-}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
