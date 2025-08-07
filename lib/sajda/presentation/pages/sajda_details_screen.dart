@@ -365,7 +365,7 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio:
-            2.66, // Increased a bit to reduce height & avoid overflow
+            2.5, // Increased a bit to reduce height & avoid overflow
         crossAxisSpacing: 12.w,
         mainAxisSpacing: 12.h,
       ),
