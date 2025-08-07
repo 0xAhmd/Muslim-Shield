@@ -10,6 +10,14 @@ class RadioData {
       description: '24-hour Quran broadcast from Cairo',
       language: 'Arabic',
     ),
+
+    RadioModel(
+      name: 'إذاعة القرآن الكريم السعودية',
+      url:
+          'https://n0c.radiojar.com/0tpy1h0kxtzuv?rj-ttl=5&rj-tok=AAABmIRpZmYAj7iI9qShPvICSQ',
+      description: '24-hour Quran broadcast from Cairo',
+      language: 'Arabic',
+    ),
   ];
 
   static RadioModel get defaultStation => stations.first;
