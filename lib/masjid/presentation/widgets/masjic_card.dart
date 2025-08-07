@@ -1,4 +1,3 @@
-// lib/masjid/presentation/widgets/masjic_card.dart (Updated)
 import 'package:azkar/masjid/data/models/masjid.dart';
 import 'package:flutter/material.dart';
 
@@ -179,16 +178,7 @@ class MasjidCard extends StatelessWidget {
                         label: 'View Location',
                         icon: Icons.map,
                         onTap: onTap,
-                        isPrimary: false,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _ActionButton(
-                        label: 'Directions',
-                        icon: Icons.directions,
-                        onTap: onDirectionsTap,
-                        isPrimary: true,
+                        isPrimary: true, // Optional: make it colored
                       ),
                     ),
                   ],
