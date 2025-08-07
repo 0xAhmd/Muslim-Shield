@@ -124,7 +124,7 @@ class _RadioControlsState extends State<RadioControls> {
                       : _showOfflineMessage,
                   isEnabled: _isConnected && cubit.availableStations.length > 1,
                 ),
-
+                SizedBox(width: 40.w),
                 // Station selector button
                 _buildControlButton(
                   icon: Icons.radio,
@@ -133,6 +133,7 @@ class _RadioControlsState extends State<RadioControls> {
                       : _showOfflineMessage,
                   isEnabled: _isConnected,
                 ),
+                SizedBox(width: 40.w),
 
                 // Retry button (only show when error) or Next station button
                 if (state is RadioError)
@@ -177,9 +178,11 @@ class _RadioControlsState extends State<RadioControls> {
                       _isConnected &&
                       !(state is RadioStopped || state is RadioInitial),
                 ),
+                SizedBox(width: 40.w),
 
                 // Main play/pause button
                 _buildMainControlButton(context, state, cubit),
+                SizedBox(width: 40.w),
 
                 // Volume button
                 _buildControlButton(
@@ -223,8 +226,8 @@ class _RadioControlsState extends State<RadioControls> {
     }
 
     return Container(
-      width: 80,
-      height: 80,
+      width: 70,
+      height: 70,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: _isConnected
@@ -290,6 +293,7 @@ class _RadioControlsState extends State<RadioControls> {
           child: Center(
             child: Icon(
               icon,
+
               color: actuallyEnabled
                   ? Colors.white
                   : textColor.withOpacity(0.3),

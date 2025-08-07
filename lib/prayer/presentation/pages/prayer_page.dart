@@ -1,5 +1,6 @@
 import 'package:azkar/core/connectivity_service.dart';
 import 'package:azkar/core/offline_message.dart';
+import 'package:azkar/prayer/presentation/widgets/shimmers.dart';
 
 import '../../../constants.dart';
 
@@ -138,7 +139,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
           }
 
           if (state is PrayerTimesLoading) {
-            return _buildLoadingState();
+            return _buildLoadingStateWithShimmer();
           }
 
           if (state is PrayerTimesError) {
@@ -155,40 +156,9 @@ class _PrayerPageViewState extends State<PrayerPageView>
     );
   }
 
-  Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(color: primary, strokeWidth: 3),
-          SizedBox(height: 24.h),
-          Text(
-            'Getting your location...',
-            style: TextStyle(
-              color: textColor,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            'Fetching accurate prayer times',
-            style: TextStyle(
-              color: textColor.withOpacity(0.7),
-              fontSize: 14.sp,
-            ),
-          ),
-          Text(
-            'Please don\'t close this page till the times loaded',
-            style: TextStyle(
-              color: textColor.withOpacity(0.7),
-              fontSize: 12.sp,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
-      ),
-    );
+  // Updated loading state with shimmer
+  Widget _buildLoadingStateWithShimmer() {
+    return PrayerPageShimmers.fullPageLoadingShimmer();
   }
 
   Widget _buildErrorState(String message, BuildContext context) {

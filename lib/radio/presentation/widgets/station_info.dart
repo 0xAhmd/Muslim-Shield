@@ -19,8 +19,8 @@ class StationInfoCard extends StatelessWidget {
             cubit.currentStationIndex + 1; // 1-based index for display
 
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 24),
-          padding: const EdgeInsets.all(24),
+          // margin: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
             color: grey,
             borderRadius: BorderRadius.circular(16),

@@ -1,6 +1,6 @@
-// lib/radio/presentation/pages/radio_page.dart
 import 'package:azkar/core/connectivity_service.dart';
 import 'package:azkar/core/offline_message.dart';
+import 'package:azkar/radio/presentation/widgets/shimmers.dart';
 import 'package:azkar/radio/presentation/widgets/station_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,11 +22,23 @@ class RadioPage extends StatefulWidget {
 class _RadioPageState extends State<RadioPage> {
   final ConnectivityService _connectivityService = ConnectivityService();
   bool _isConnected = true;
+  bool _isInitializing = true;
 
   @override
   void initState() {
     super.initState();
     _initializeConnectivity();
+    _simulateInitialLoading();
+  }
+
+  void _simulateInitialLoading() {
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _isInitializing = false;
+        });
+      }
+    });
   }
 
   void _initializeConnectivity() {
@@ -47,81 +59,78 @@ class _RadioPageState extends State<RadioPage> {
       create: (context) => RadioCubit(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Islamic Radio',
-            style: TextStyle(
-              color: textColor,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          title: _isInitializing
+              ? RadioPageShimmers.connectionStatusShimmer()
+              : Container(
+                  margin: EdgeInsets.only(right: 16.w),
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: (_isConnected ? Colors.green : Colors.red)
+                        .withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _isConnected ? Icons.wifi : Icons.wifi_off,
+                        color: _isConnected ? Colors.green : Colors.red,
+                        size: 14.sp,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        _isConnected ? 'Online' : 'Offline',
+                        style: TextStyle(
+                          color: _isConnected ? Colors.green : Colors.red,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
           backgroundColor: scaffoldBackgroundColor,
           elevation: 0,
-          actions: [
-            // Connection status indicator in app bar
-            Container(
-              margin: EdgeInsets.only(right: 16.w),
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: (_isConnected ? Colors.green : Colors.red).withOpacity(
-                  0.2,
-                ),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    _isConnected ? Icons.wifi : Icons.wifi_off,
-                    color: _isConnected ? Colors.green : Colors.red,
-                    size: 14.sp,
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    _isConnected ? 'Online' : 'Offline',
-                    style: TextStyle(
-                      color: _isConnected ? Colors.green : Colors.red,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
-        body: !_isConnected
-            ? OfflineMessageWidget(
-                customMessage:
-                    'Islamic Radio requires internet connectivity for streaming.\nPlease make sure you have an internet connection.',
-                onRetry: () => _initializeConnectivity(),
-              )
-            : BlocBuilder<RadioCubit, RadioState>(
-                builder: (context, state) {
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.all(24.w),
-                    child: Column(
-                      children: [
-                        // Station Info Card
-                        const StationInfoCard(),
-
-                        SizedBox(height: 32.h),
-
-                        // Radio Controls
-                        const RadioControls(),
-
-                        SizedBox(height: 32.h),
-
-                        // Status Information
-                        _buildStatusInfo(state),
-
-                        SizedBox(height: 100.h), // Bottom padding for nav bar
-                      ],
-                    ),
-                  );
-                },
-              ),
+        body: _buildBody(),
       ),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_isInitializing) {
+      return RadioPageShimmers.fullPageLoadingShimmer();
+    }
+
+    if (!_isConnected) {
+      return OfflineMessageWidget(
+        customMessage:
+            'Islamic Radio requires internet connectivity for streaming.\nPlease make sure you have an internet connection.',
+        onRetry: () => _initializeConnectivity(),
+      );
+    }
+
+    return BlocBuilder<RadioCubit, RadioState>(
+      builder: (context, state) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            children: [
+              const SizedBox(height: 78),
+              const StationInfoCard(),
+
+              SizedBox(height: 32.h),
+
+              const RadioControls(),
+
+              SizedBox(height: 40.h),
+
+              _buildStatusInfo(state),
+              SizedBox(height: 30.h),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -135,9 +144,7 @@ class _RadioPageState extends State<RadioPage> {
       statusColor = textColor;
       statusIcon = Icons.radio;
     } else if (state is RadioLoading) {
-      statusText = 'Connecting to station...';
-      statusColor = Colors.orange;
-      statusIcon = Icons.connecting_airports;
+      return _buildConnectingShimmer();
     } else if (state is RadioBuffering) {
       statusText = 'Buffering...';
       statusColor = Colors.orange;
@@ -180,6 +187,40 @@ class _RadioPageState extends State<RadioPage> {
               statusText,
               style: GoogleFonts.poppins(
                 color: statusColor,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConnectingShimmer() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 20.w,
+            height: 20.w,
+            child: const CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Text(
+              'Connecting to station...',
+              style: GoogleFonts.poppins(
+                color: Colors.orange,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
               ),
