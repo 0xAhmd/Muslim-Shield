@@ -3,6 +3,8 @@
 # **بسم الله الرحمن الرحيم**
 
 </div>
+
+
 # 🛡️ Muslim Shield
 
 **Muslim Shield** is a comprehensive Islamic application built with **Flutter** using **clean architecture**. It offers essential tools for Muslims, including access to the full Quran with audio, prayer times, Qiblah direction, Duaa collections, live Quran radio, nearby masjid finder, Islamic calendar with reminders, and more — all packed in a beautifully designed and secure mobile experience.
