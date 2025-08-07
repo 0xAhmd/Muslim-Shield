@@ -254,13 +254,12 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
                     return;
                   }
 
+                  // Navigate to detail screen with separate cubit
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => JuzzDetailScreen(
-                        juzzNumber: juzz.number,
-                        juzzCubit: _juzzCubit,
-                      ),
+                      builder: (context) =>
+                          JuzzDetailScreen(juzzNumber: juzz.number),
                     ),
                   );
                 },

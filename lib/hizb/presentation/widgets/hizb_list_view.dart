@@ -1,5 +1,6 @@
 import '../../../constants.dart';
 import '../../data/models/hizb_summary.dart';
+import '../../data/repo/hizb_repo.dart';
 import '../cubit/hizb_cubit.dart';
 import '../pages/hizb_details_screen.dart';
 import 'hizb_item_card.dart';
@@ -131,10 +132,13 @@ class HizbListView extends StatelessWidget {
   }
 
   void _navigateToHizbDetails(BuildContext context, HizbSummary hizb) {
+    // Create a separate cubit instance for the detail screen
+    final detailCubit = HizbCubit(repository: HizbRepository());
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>
-            HizbDetailScreen(hizbNumber: hizb.number, hizbCubit: hizbCubit),
+            HizbDetailScreen(hizbNumber: hizb.number, hizbCubit: detailCubit),
       ),
     );
   }

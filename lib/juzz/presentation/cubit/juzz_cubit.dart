@@ -59,14 +59,6 @@ class JuzzCubit extends Cubit<JuzzState> {
 
   // Load specific Juzz details
   Future<void> loadJuzzDetails(int juzzNumber) async {
-    final currentState = state;
-    List<JuzzSummary> juzzSummaries = [];
-
-    // Preserve the summaries list for navigation
-    if (currentState is JuzzLoaded) {
-      juzzSummaries = currentState.juzzSummaries;
-    }
-
     try {
       if (isClosed) return;
 
@@ -80,7 +72,7 @@ class JuzzCubit extends Cubit<JuzzState> {
       );
       if (isClosed) return;
 
-      emit(JuzzDetailLoaded(juzz: juzz, juzzSummaries: juzzSummaries));
+      emit(JuzzDetailLoaded(juzz: juzz, juzzSummaries: []));
     } catch (e) {
       debugPrint('Error loading Juzz $juzzNumber: $e');
       if (isClosed) return;
@@ -88,30 +80,9 @@ class JuzzCubit extends Cubit<JuzzState> {
       emit(
         JuzzDetailError(
           message: 'Failed to load Juzz $juzzNumber: $e',
-          juzzSummaries: juzzSummaries,
+          juzzSummaries: [],
         ),
       );
-    }
-  }
-
-  // Go back to Juzz list from detail view
-  void backToJuzzList() {
-    final currentState = state;
-    List<JuzzSummary> juzzSummaries = [];
-
-    if (currentState is JuzzDetailLoaded) {
-      juzzSummaries = currentState.juzzSummaries;
-    } else if (currentState is JuzzDetailError) {
-      juzzSummaries = currentState.juzzSummaries;
-    }
-
-    if (juzzSummaries.isNotEmpty) {
-      emit(
-        JuzzLoaded(juzzSummaries: juzzSummaries, filteredJuzz: juzzSummaries),
-      );
-    } else {
-      // Fallback: reload summaries
-      loadJuzzSummaries();
     }
   }
 
@@ -131,8 +102,8 @@ class JuzzCubit extends Cubit<JuzzState> {
           return;
         }
       }
-      // Fallback to summaries
-      backToJuzzList();
+      // Fallback to loading initial state
+      emit(JuzzInitial());
     }
   }
 

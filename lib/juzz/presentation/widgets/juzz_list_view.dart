@@ -43,8 +43,7 @@ class JuzzListView extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            JuzzDetailScreen(juzzNumber: juzzNumber, juzzCubit: juzzCubit),
+        builder: (context) => JuzzDetailScreen(juzzNumber: juzzNumber),
       ),
     );
   }

@@ -35,6 +35,8 @@ class _HizbDetailScreenState extends State<HizbDetailScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    // Close the cubit to prevent memory leaks
+    widget.hizbCubit.close();
     super.dispose();
   }
 
