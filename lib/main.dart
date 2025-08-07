@@ -1,7 +1,6 @@
 import 'package:azkar/core/blocked.dart';
 import 'package:azkar/core/connectivity_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -16,7 +15,8 @@ import 'package:safe_device/safe_device.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
+
   await ConnectivityService().initialize();
 
   await Hive.initFlutter();
@@ -25,15 +25,15 @@ void main() async {
   await BookmarksService().init();
   await LocalAudioService().initialize();
 
-  // final isRooted = await SafeDevice.isJailBroken;
-  // final isRealDevice = await SafeDevice.isRealDevice;
+  final isRooted = await SafeDevice.isJailBroken;
+  final isRealDevice = await SafeDevice.isRealDevice;
 
-  // if (isRooted || isRealDevice) {
-  //   runApp(const BlockedDeviceApp());
-  // } else {
+  if (isRooted || isRealDevice) {
+    runApp(const BlockedDeviceApp());
+  } else {
   runApp(const MyApp());
 }
-
+}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

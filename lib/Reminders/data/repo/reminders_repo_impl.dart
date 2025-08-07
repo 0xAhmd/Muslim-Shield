@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../models/muslim_event.dart';
 import '../models/reminder_card.dart';
 import '../services/events_api_service.dart';
@@ -158,7 +160,7 @@ class RemindersRepositoryImpl implements RemindersRepository {
   Future<void> markReminderAsRead(String reminderId) async {
     // In a real app, this would update the reminder status in local storage
     // For now, we'll just print the action
-    print('Reminder marked as read: $reminderId');
+    debugPrint('Reminder marked as read: $reminderId');
   }
 
   DateTime _parseTime(String timeString) {

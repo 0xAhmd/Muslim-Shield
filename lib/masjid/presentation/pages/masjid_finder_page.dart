@@ -55,11 +55,11 @@ class _MasjidFinderViewState extends State<MasjidFinderView> {
           // Show snackbar when connection is lost
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Row(
+              content: const Row(
                 children: [
-                  const Icon(Icons.wifi_off, color: Colors.white, size: 16),
-                  const SizedBox(width: 8),
-                  const Text('Connection lost'),
+                  Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Connection lost'),
                 ],
               ),
               backgroundColor: Colors.red.withOpacity(0.9),

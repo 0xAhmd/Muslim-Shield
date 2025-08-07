@@ -245,8 +245,8 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
                   // Check connectivity before navigating
                   if (!_connectivityService.isConnected) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('No internet connection'),
+                      const SnackBar(
+                        content: Text('No internet connection'),
                         backgroundColor: Colors.red,
                         behavior: SnackBarBehavior.floating,
                       ),

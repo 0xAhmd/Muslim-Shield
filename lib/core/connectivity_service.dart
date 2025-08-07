@@ -8,7 +8,7 @@ class ConnectivityService {
   ConnectivityService._internal();
 
   final Connectivity _connectivity = Connectivity();
-  StreamController<bool> _connectionController =
+  final StreamController<bool> _connectionController =
       StreamController<bool>.broadcast();
   bool _isConnected = true;
 
@@ -17,6 +17,7 @@ class ConnectivityService {
   Future<void> initialize() async {
     // Check initial connectivity
     final result = await _connectivity.checkConnectivity();
+    // ignore: unrelated_type_equality_checks
     _isConnected = result != ConnectivityResult.none;
 
     // Listen to connectivity changes

@@ -278,7 +278,7 @@ class _DoaPageContentState extends State<DoaPageContent> {
                   onTap: () => _showDuaDetails(context, dua),
                 ),
               )
-              .toList(),
+              ,
         ],
       ),
     );
