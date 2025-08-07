@@ -98,26 +98,6 @@ class StationInfoCard extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  // Station switching hint (only show if multiple stations available)
-                  if (stationCount > 1)
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.swipe_left,
-                          color: textColor.withOpacity(0.5),
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Switch stations',
-                          style: TextStyle(
-                            color: textColor.withOpacity(0.5),
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
                 ],
               ),
             ],

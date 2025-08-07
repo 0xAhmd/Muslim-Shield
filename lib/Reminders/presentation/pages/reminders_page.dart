@@ -62,6 +62,12 @@ class _RemindersPageViewState extends State<_RemindersPageView>
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+        ),
         backgroundColor: background,
         elevation: 0,
         automaticallyImplyLeading: false,

@@ -75,23 +75,23 @@ class CustomDrawer extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 5.h),
-                  // Placeholder for future features
-                  _buildDrawerItem(
-                    context,
-                    iconWidget: Image.asset('assets/radio.png'),
-                    title: 'Quran Radio',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RadioPage(),
-                        ),
-                      );
-                    },
-                    isComingSoon: false,
-                  ),
 
+                  // Placeholder for future features
+                  // _buildDrawerItem(
+                  //   context,
+                  //   iconWidget: Image.asset('assets/radio.png'),
+                  //   title: 'Quran Radio',
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const RadioPage(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   isComingSoon: false,
+                  // ),
                   _buildDrawerItem(
                     context,
                     iconWidget: SvgPicture.asset('assets/svgs/lamp-icon.svg'),

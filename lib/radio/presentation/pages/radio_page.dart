@@ -117,7 +117,7 @@ class _RadioPageState extends State<RadioPage> {
           padding: EdgeInsets.all(24.w),
           child: Column(
             children: [
-              SizedBox(height: 36.h),
+              SizedBox(height: 12.h),
               const StationInfoCard(),
 
               SizedBox(height: 32.h),
