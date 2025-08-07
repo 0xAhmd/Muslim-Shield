@@ -131,7 +131,7 @@ class CustomDrawer extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(24.r),
               child: Text(
-                'Version 1.2.1',
+                'Version 1.2.2',
                 style: GoogleFonts.poppins(
                   fontSize: 12.sp,
                   color: textColor.withOpacity(0.7),
