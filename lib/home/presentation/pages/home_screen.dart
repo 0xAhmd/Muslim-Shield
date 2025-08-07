@@ -1,8 +1,9 @@
+// Alternative solution - Updated lib/home/presentation/pages/home_screen.dart
+import 'package:azkar/core/drawer.dart';
 import 'package:azkar/masjid/presentation/pages/masjid_finder_page.dart';
 import 'package:azkar/radio/presentation/pages/radio_page.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../Reminders/presentation/pages/reminders_page.dart';
 import '../../../core/app_updater.dart';
 import 'main_tab.dart';
 import '../widgets/custom_nav_bar.dart';
@@ -10,6 +11,9 @@ import '../../../prayer/presentation/pages/prayer_page.dart';
 import 'package:flutter/material.dart';
 import '../../../Doa/presentation/pages/doa_page.dart';
 import '../../../bookmarks/presentation/bookmarks_page.dart';
+
+// Global key for accessing scaffold from anywhere
+final GlobalKey<ScaffoldState> homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,14 +28,14 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController _animationController;
   late Animation<double> _animation;
 
+  // Reduced to core features only
   final List<Widget> _pages = const [
     MainTabScreen(), // 0 - Quran
     PrayerPage(), // 1 - Prayer
     DoaPage(), // 2 - Duas
-    RadioPage(), // 3 - Radio ✅
-    MasjidFinderPage(), // 4 - Masjid ✅
-    RemindersPage(), // 5
-    BookmarksPage(), // 6
+    RadioPage(), // 3 - Radio
+    MasjidFinderPage(), // 4 - Masjid
+    BookmarksPage(), // 5 - Bookmarks (moved reminders to drawer or combine)
   ];
 
   @override
@@ -81,7 +85,10 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: homeScaffoldKey, // Add this key
       extendBody: true,
+      // Add the drawer here
+      drawer: const CustomDrawer(),
       body: Stack(
         children: [
           // Wrap each page with NotificationListener to detect scroll

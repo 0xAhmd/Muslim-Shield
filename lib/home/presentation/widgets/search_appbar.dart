@@ -1,7 +1,9 @@
+// Alternative SearchAppBar - lib/home/presentation/widgets/search_appbar.dart
 import '../../../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../pages/home_screen.dart'; // Import to access the global key
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isSearching;
@@ -26,14 +28,20 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       automaticallyImplyLeading: false,
-      title: isSearching ? searchField() : normalTitle(),
+      title: isSearching ? searchField() : normalTitle(context),
     );
   }
 
-  Widget normalTitle() {
+  Widget normalTitle(BuildContext context) {
     return Row(
       children: [
-        const SizedBox(width: 8),
+        // Menu button to open drawer using global key
+        IconButton(
+          onPressed: () {
+            homeScaffoldKey.currentState?.openDrawer();
+          },
+          icon: const Icon(Icons.menu, color: textColor, size: 24),
+        ),
         Text(
           "Muslim Shield",
           style: GoogleFonts.poppins(

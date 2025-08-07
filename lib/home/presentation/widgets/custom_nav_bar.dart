@@ -1,3 +1,4 @@
+// Updated lib/home/presentation/widgets/custom_nav_bar.dart
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,9 +23,8 @@ class CustomBottomNav extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 16.w),
-    
           padding: EdgeInsets.symmetric(horizontal: 12.w),
-          height: 60.h, // Adjusted height
+          height: 60.h,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.08),
             borderRadius: BorderRadius.circular(30.r),
@@ -44,16 +44,8 @@ class CustomBottomNav extends StatelessWidget {
               _buildBounceIcon(icon: "assets/svgs/pray-icon.svg", index: 1),
               _buildBounceIcon(icon: "assets/svgs/doa-icon.svg", index: 2),
               _buildBounceIcon(icon: "assets/radio.png", index: 3),
-              _buildBounceIcon(
-                icon: 'assets/moslem-mosque.png',
-                index: 4,
-              ), 
-    
-              _buildBounceIcon(icon: "assets/svgs/lamp-icon.svg", index: 5),
-              _buildBounceIcon(
-                icon: "assets/svgs/bookmark-icon.svg",
-                index: 6,
-              ),
+              _buildBounceIcon(icon: 'assets/moslem-mosque.png', index: 4),
+              _buildBounceIcon(icon: "assets/svgs/bookmark-icon.svg", index: 5),
             ],
           ),
         ),
