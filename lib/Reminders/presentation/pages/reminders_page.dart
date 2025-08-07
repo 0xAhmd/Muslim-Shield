@@ -1,3 +1,5 @@
+import 'package:azkar/Reminders/presentation/widgets/shimmers.dart';
+
 import '../../data/models/reminder_card.dart';
 import 'package:azkar/Reminders/data/repo/reminders_repo_impl.dart';
 import 'package:azkar/Reminders/data/services/events_api_service.dart';
@@ -8,7 +10,6 @@ import 'package:azkar/Reminders/presentation/bloc/reminders_state.dart';
 import 'package:azkar/Reminders/presentation/widgets/calendar.dart';
 import 'package:azkar/Reminders/presentation/widgets/event_list.dart';
 import 'package:azkar/Reminders/presentation/widgets/reminder_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:azkar/constants.dart';
@@ -47,8 +48,6 @@ class _RemindersPageViewState extends State<_RemindersPageView>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
-    // Schedule notifications on app start
     context.read<RemindersBloc>().add(ScheduleNotifications());
   }
 
@@ -98,8 +97,9 @@ class _RemindersPageViewState extends State<_RemindersPageView>
       body: BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
           if (state is RemindersLoading) {
-            return const Center(
-              child: CupertinoActivityIndicator(color: primary),
+            return TabBarView(
+              controller: _tabController,
+              children: [buildCalendarShimmer(), buildTodayShimmer()],
             );
           }
 
@@ -197,7 +197,7 @@ class _RemindersPageViewState extends State<_RemindersPageView>
               ],
             ),
           ),
-          const SizedBox(height: 100), // Bottom padding
+          const SizedBox(height: 100),
         ],
       ),
     );
@@ -253,7 +253,7 @@ class _RemindersPageViewState extends State<_RemindersPageView>
                 ),
               ),
             ],
-            const SizedBox(height: 100), // Bottom padding
+            const SizedBox(height: 100),
           ],
         ),
       ),
@@ -261,18 +261,14 @@ class _RemindersPageViewState extends State<_RemindersPageView>
   }
 
   void _handleReminderTap(BuildContext context, reminder) {
-    // Handle reminder tap based on type
     switch (reminder.type) {
       case ReminderType.fridaySurah:
-        // Navigate to Quran page (Al-Kahf)
         _showSnackBar(context, 'Opening Surah Al-Kahf...');
         break;
       case ReminderType.prayerUpcoming:
-        // Navigate to prayer page
         _showSnackBar(context, 'Opening Prayer Times...');
         break;
       case ReminderType.eidGreeting:
-        // Show Eid greeting dialog
         _showEidGreetingDialog(context, reminder);
         break;
       default:
