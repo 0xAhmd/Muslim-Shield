@@ -2,6 +2,7 @@ import 'package:azkar/radio/presentation/cubit/radio_state.dart';
 import 'package:azkar/radio/presentation/widgets/wave_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubit/radio_cubit.dart';
 import '../widgets/radio_controls.dart';
 import '../widgets/station_info.dart';
@@ -25,77 +26,37 @@ class RadioPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(color: scaffoldBackgroundColor),
-          child: Column(
-            children: [
-              // Header
-              _buildHeader(),
-
-              // Main content
-              Expanded(
-                child: BlocBuilder<RadioCubit, RadioState>(
-                  builder: (context, state) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Station info
-                        const StationInfo(),
-
-                        const SizedBox(height: 20),
-
-                        // Waveform animation or Islamic pattern
-                        const WaveformAnimation(),
-
-                        const SizedBox(height: 50),
-
-                        // Radio controls
-                        const RadioControls(),
-
-                        const SizedBox(height: 35),
-
-                        // Status text
-                        _buildStatusText(state),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        backgroundColor: scaffoldBackgroundColor,
+        elevation: 0,
+        title: BlocBuilder<RadioCubit, RadioState>(
+          builder: (context, state) {
+            return _buildStatusText(state);
+          },
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: const Row(
-        children: [
-          Icon(Icons.radio, color: primary, size: 32),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Radio',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Live Quran broadcast',
-                  style: TextStyle(color: textColor, fontSize: 16),
-                ),
-              ],
+      body: Container(
+        decoration: const BoxDecoration(color: scaffoldBackgroundColor),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Station info
+                  const StationInfo(),
+                  SizedBox(height: 20.h),
+                  // Waveform animation or Islamic pattern
+                  const WaveformAnimation(),
+                  SizedBox(height: 50.h),
+                  // Radio controls
+                  const RadioControls(),
+                  SizedBox(height: 85.h),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -122,7 +83,7 @@ class RadioPageContent extends StatelessWidget {
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (state is RadioPlaying)
           Container(
@@ -138,7 +99,7 @@ class RadioPageContent extends StatelessWidget {
           statusText,
           style: TextStyle(
             color: statusColor,
-            fontSize: 14,
+            fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
