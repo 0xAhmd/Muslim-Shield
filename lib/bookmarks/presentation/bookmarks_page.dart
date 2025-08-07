@@ -493,52 +493,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                           ),
                         ),
 
-                        // Transliteration (for Duas)
-                        if (bookmark.transliteration != null) ...[
-                          const SizedBox(height: 20),
-                          Text(
-                            'Transliteration:',
-                            style: GoogleFonts.poppins(
-                              color: primary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            bookmark.transliteration!,
-                            style: GoogleFonts.poppins(
-                              color: textColor,
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                              height: 1.6,
-                            ),
-                          ),
-                        ],
-
-                        const SizedBox(height: 20),
-
-                        // Translation
-                        if (bookmark.translation != null) ...[
-                          Text(
-                            'Translation:',
-                            style: GoogleFonts.poppins(
-                              color: primary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            bookmark.translation!,
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 16,
-                              height: 1.6,
-                            ),
-                          ),
-                        ],
-                      ] else ...[
+                   
                         // Other content types
                         Text(
                           bookmark.content,
