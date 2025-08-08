@@ -93,7 +93,7 @@ class AppUpdater {
       showCancelBtn: true,
       cancelBtnText: 'Later',
       confirmBtnColor: Colors.white,
-
+      confirmBtnTextStyle: const TextStyle(color: Colors.black),
       onConfirmBtnTap: () {
         launchUrl(Uri.parse(url));
         Navigator.pop(context);

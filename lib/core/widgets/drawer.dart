@@ -127,7 +127,7 @@ class CustomDrawer extends StatelessWidget {
                     iconWidget: Image.asset(
                       'assets/images/muhammad.png',
                       color: Colors.white,
-                    ), 
+                    ),
                     title: 'Hadith Collection',
                     onTap: () {
                       Navigator.pop(context);
@@ -202,7 +202,7 @@ class CustomDrawer extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(24.r),
               child: Text(
-                'Version 1.2.2',
+                'Version 1.3.2+1',
                 style: GoogleFonts.poppins(
                   fontSize: 12.sp,
                   color: textColor.withOpacity(0.7),
