@@ -1,6 +1,6 @@
-import 'package:azkar/tasbih/data/data_source/tasbih_data_source.dart';
-import 'package:azkar/tasbih/data/repo/tasbih_repo.dart';
-import 'package:azkar/tasbih/presentation/widgets/counter_btn.dart';
+import '../../data/data_source/tasbih_data_source.dart';
+import '../../data/repo/tasbih_repo.dart';
+import '../widgets/counter_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

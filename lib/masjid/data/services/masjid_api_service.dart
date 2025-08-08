@@ -1,4 +1,4 @@
-import 'package:azkar/masjid/data/models/overpass_reponse.dart';
+import '../models/overpass_reponse.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 

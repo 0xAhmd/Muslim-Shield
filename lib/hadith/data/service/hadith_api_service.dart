@@ -1,5 +1,5 @@
-import 'package:azkar/hadith/data/models/book.dart';
-import 'package:azkar/hadith/data/models/hadith.dart';
+import '../models/book.dart';
+import '../models/hadith.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 

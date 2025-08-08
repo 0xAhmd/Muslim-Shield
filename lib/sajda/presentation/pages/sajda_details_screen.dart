@@ -1,4 +1,4 @@
-import 'package:azkar/sajda/data/repo/sajda_repo.dart';
+import '../../data/repo/sajda_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

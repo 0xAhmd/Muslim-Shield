@@ -1,4 +1,4 @@
-import 'package:azkar/sajda/data/services/sajda_service.dart';
+import '../services/sajda_service.dart';
 
 import '../models/sajda.dart';
 import '../models/sajda_ayah.dart';

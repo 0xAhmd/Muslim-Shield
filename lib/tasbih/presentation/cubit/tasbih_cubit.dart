@@ -1,4 +1,4 @@
-import 'package:azkar/tasbih/data/repo/tasbih_repo.dart';
+import '../../data/repo/tasbih_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 

@@ -1,5 +1,5 @@
-import 'package:azkar/hadith/data/models/hadith.dart';
-import 'package:azkar/hadith/data/repo/hadith_repo.dart';
+import '../../data/models/hadith.dart';
+import '../../data/repo/hadith_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 

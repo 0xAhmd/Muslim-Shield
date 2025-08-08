@@ -1,4 +1,4 @@
-import 'package:azkar/sajda/presentation/pages/sajda_details_screen.dart';
+import '../pages/sajda_details_screen.dart';
 
 import '../../../constants.dart';
 import '../../data/models/sajda_summary.dart';

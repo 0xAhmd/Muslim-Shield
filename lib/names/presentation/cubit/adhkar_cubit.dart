@@ -1,4 +1,4 @@
-import 'package:azkar/names/data/repo/adhkar_repo.dart';
+import '../../data/repo/adhkar_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../data/models/adhkar.dart';

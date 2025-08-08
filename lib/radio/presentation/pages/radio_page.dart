@@ -1,8 +1,8 @@
-import 'package:azkar/core/connectivity_service.dart';
-import 'package:azkar/core/widgets/offline_message.dart';
-import 'package:azkar/radio/presentation/widgets/shimmers.dart';
-import 'package:azkar/radio/presentation/widgets/station_info.dart';
-import 'package:azkar/radio/presentation/widgets/wave_form.dart';
+import '../../../core/connectivity_service.dart';
+import '../../../core/widgets/offline_message.dart';
+import '../widgets/shimmers.dart';
+import '../widgets/station_info.dart';
+import '../widgets/wave_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

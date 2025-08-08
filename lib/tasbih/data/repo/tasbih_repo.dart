@@ -1,6 +1,6 @@
 
-import 'package:azkar/tasbih/data/data_source/tasbih_data_source.dart';
-import 'package:azkar/tasbih/data/models/tasbih.dart';
+import '../data_source/tasbih_data_source.dart';
+import '../models/tasbih.dart';
 
 class TasbihRepository {
   final TasbihLocalDatasource _localDatasource;

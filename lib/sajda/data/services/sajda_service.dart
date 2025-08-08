@@ -1,4 +1,4 @@
-import 'package:azkar/sajda/data/models/sajda_reponse.dart';
+import '../models/sajda_reponse.dart';
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';

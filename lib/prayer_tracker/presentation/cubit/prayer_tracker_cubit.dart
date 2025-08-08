@@ -1,4 +1,4 @@
-import 'package:azkar/prayer_tracker/data/service/prayer_tracker_service.dart';
+import '../../data/service/prayer_tracker_service.dart';
 import 'package:bloc/bloc.dart';
 import '../../data/models/prayer_completion.dart';
 import 'prayer_tracker_state.dart';

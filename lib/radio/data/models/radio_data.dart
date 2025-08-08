@@ -1,4 +1,4 @@
-import 'package:azkar/radio/data/models/radio.dart';
+import 'radio.dart';
 
 class RadioData {
   static const List<RadioModel> stations = [

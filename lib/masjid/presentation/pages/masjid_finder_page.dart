@@ -1,6 +1,6 @@
-import 'package:azkar/core/connectivity_service.dart';
-import 'package:azkar/core/widgets/offline_message.dart';
-import 'package:azkar/masjid/presentation/widgets/loading_shimmer.dart';
+import '../../../core/connectivity_service.dart';
+import '../../../core/widgets/offline_message.dart';
+import '../widgets/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -1,15 +1,15 @@
-import 'package:azkar/Reminders/presentation/widgets/shimmers.dart';
-import 'package:azkar/Reminders/data/repo/reminders_repo_impl.dart';
-import 'package:azkar/Reminders/data/services/events_api_service.dart';
-import 'package:azkar/Reminders/data/services/notification_service.dart';
-import 'package:azkar/Reminders/presentation/bloc/reminders_bloc.dart';
-import 'package:azkar/Reminders/presentation/bloc/reminders_event.dart';
-import 'package:azkar/Reminders/presentation/bloc/reminders_state.dart';
-import 'package:azkar/Reminders/presentation/widgets/calendar.dart';
-import 'package:azkar/Reminders/presentation/widgets/event_list.dart';
+import '../widgets/shimmers.dart';
+import '../../data/repo/reminders_repo_impl.dart';
+import '../../data/services/events_api_service.dart';
+import '../../data/services/notification_service.dart';
+import '../bloc/reminders_bloc.dart';
+import '../bloc/reminders_event.dart';
+import '../bloc/reminders_state.dart';
+import '../widgets/calendar.dart';
+import '../widgets/event_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:azkar/constants.dart';
+import '../../../constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RemindersPage extends StatelessWidget {

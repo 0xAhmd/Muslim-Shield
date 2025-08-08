@@ -1,4 +1,4 @@
-import 'package:azkar/tasbih/data/models/tasbih.dart';
+import '../../data/models/tasbih.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class TasbihState extends Equatable {

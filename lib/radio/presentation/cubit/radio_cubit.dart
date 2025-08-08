@@ -1,8 +1,8 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:azkar/radio/data/models/radio.dart';
-import 'package:azkar/radio/data/models/radio_data.dart';
-import 'package:azkar/radio/data/services/background_service.dart';
-import 'package:azkar/radio/presentation/cubit/radio_state.dart';
+import '../../data/models/radio.dart';
+import '../../data/models/radio_data.dart';
+import '../../data/services/background_service.dart';
+import 'radio_state.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';

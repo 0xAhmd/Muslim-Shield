@@ -1,4 +1,4 @@
-import 'package:azkar/names/data/models/names.dart';
+import '../models/names.dart';
 
 class AllahNamesData {
   static const List<Map<String, dynamic>> names = [

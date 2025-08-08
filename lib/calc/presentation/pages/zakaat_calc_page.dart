@@ -1,5 +1,5 @@
-import 'package:azkar/calc/data/zakat.dart';
-import 'package:azkar/calc/data/zakat_service.dart';
+import '../../data/zakat.dart';
+import '../../data/zakat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

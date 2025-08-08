@@ -1,5 +1,5 @@
-import 'package:azkar/hadith/data/repo/hadith_repo.dart';
-import 'package:azkar/hadith/presentation/pages/hadith_page.dart';
+import '../../data/repo/hadith_repo.dart';
+import 'hadith_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

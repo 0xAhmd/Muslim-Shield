@@ -1,4 +1,4 @@
-import 'package:azkar/core/azan_service.dart';
+import '../../../core/azan_service.dart';
 
 import '../models/muslim_event.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

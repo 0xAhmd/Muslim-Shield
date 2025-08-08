@@ -1,4 +1,4 @@
-import 'package:azkar/prayer_tracker/presentation/pages/prayer_tracker_page.dart';
+import '../../prayer_tracker/presentation/pages/prayer_tracker_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constants.dart';

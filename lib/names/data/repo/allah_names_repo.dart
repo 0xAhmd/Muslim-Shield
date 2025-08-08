@@ -1,5 +1,5 @@
-import 'package:azkar/names/data/datasources/names_datasources.dart';
-import 'package:azkar/names/data/models/names.dart';
+import '../datasources/names_datasources.dart';
+import '../models/names.dart';
 
 
 class AllahNamesRepository {

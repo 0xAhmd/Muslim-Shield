@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:azkar/calc/data/nisab.dart';
-import 'package:azkar/calc/data/zakat.dart';
+import 'nisab.dart';
+import 'zakat.dart';
 
 class ZakatService {
   // Nisab thresholds (in grams)

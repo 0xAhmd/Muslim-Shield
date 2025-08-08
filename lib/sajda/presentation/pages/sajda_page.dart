@@ -1,9 +1,9 @@
-import 'package:azkar/sajda/data/repo/sajda_repo.dart';
-import 'package:azkar/sajda/presentation/cubit/sajda_cubit.dart';
-import 'package:azkar/sajda/presentation/cubit/sajda_state.dart';
-import 'package:azkar/sajda/presentation/widget/sajda_err_view.dart';
-import 'package:azkar/sajda/presentation/widget/sajda_list_view.dart';
-import 'package:azkar/sajda/presentation/widget/sajda_loading.dart';
+import '../../data/repo/sajda_repo.dart';
+import '../cubit/sajda_cubit.dart';
+import '../cubit/sajda_state.dart';
+import '../widget/sajda_err_view.dart';
+import '../widget/sajda_list_view.dart';
+import '../widget/sajda_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';

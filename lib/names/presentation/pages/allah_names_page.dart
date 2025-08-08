@@ -1,6 +1,6 @@
-import 'package:azkar/names/data/repo/allah_names_repo.dart';
-import 'package:azkar/names/presentation/widgets/allah_name_card.dart';
-import 'package:azkar/names/presentation/widgets/allah_names_search_field.dart';
+import '../../data/repo/allah_names_repo.dart';
+import '../widgets/allah_name_card.dart';
+import '../widgets/allah_names_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

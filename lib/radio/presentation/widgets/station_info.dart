@@ -1,4 +1,4 @@
-import 'package:azkar/radio/presentation/cubit/radio_state.dart';
+import '../cubit/radio_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/radio_cubit.dart';

@@ -1,4 +1,4 @@
-import 'package:azkar/radio/data/models/radio.dart';
+import '../../data/models/radio.dart';
 
 
 // States

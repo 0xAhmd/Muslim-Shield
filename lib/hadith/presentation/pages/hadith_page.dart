@@ -1,5 +1,5 @@
-import 'package:azkar/hadith/data/repo/hadith_repo.dart';
-import 'package:azkar/hadith/presentation/cubit/hadith_cubit.dart';
+import '../../data/repo/hadith_repo.dart';
+import '../cubit/hadith_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,7 +1,7 @@
-import 'package:azkar/masjid/data/models/masjid.dart';
-import 'package:azkar/masjid/data/repo/masjid_repo.dart';
-import 'package:azkar/masjid/data/services/url_launcher.dart';
-import 'package:azkar/masjid/presentation/cubit/masjid_state.dart';
+import '../../data/models/masjid.dart';
+import '../../data/repo/masjid_repo.dart';
+import '../../data/services/url_launcher.dart';
+import 'masjid_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MasjidStateCubit extends Cubit<MasjidState> {

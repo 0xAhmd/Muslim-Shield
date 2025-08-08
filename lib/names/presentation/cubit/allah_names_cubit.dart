@@ -1,5 +1,5 @@
-import 'package:azkar/names/data/models/names.dart';
-import 'package:azkar/names/data/repo/allah_names_repo.dart';
+import '../../data/models/names.dart';
+import '../../data/repo/allah_names_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 

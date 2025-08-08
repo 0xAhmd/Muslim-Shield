@@ -1,7 +1,7 @@
-import 'package:azkar/core/connectivity_service.dart';
-import 'package:azkar/core/widgets/azan_settings.dart';
-import 'package:azkar/core/widgets/offline_message.dart';
-import 'package:azkar/prayer/presentation/widgets/shimmers.dart';
+import '../../../core/connectivity_service.dart';
+import '../../../core/widgets/azan_settings.dart';
+import '../../../core/widgets/offline_message.dart';
+import '../widgets/shimmers.dart';
 
 import '../../../constants.dart';
 

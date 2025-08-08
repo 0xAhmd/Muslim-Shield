@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:audioplayers/audioplayers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class AdhanService {
   static final AdhanService _instance = AdhanService._internal();

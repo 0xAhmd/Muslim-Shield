@@ -1,4 +1,4 @@
-import 'package:azkar/names/data/datasources/adhkar_datasources.dart';
+import '../datasources/adhkar_datasources.dart';
 
 import '../models/adhkar.dart';
 

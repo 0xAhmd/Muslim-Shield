@@ -1,5 +1,5 @@
-import 'package:azkar/masjid/data/models/masjid.dart';
-import 'package:azkar/masjid/data/services/masjid_api_service.dart';
+import '../models/masjid.dart';
+import '../services/masjid_api_service.dart';
 
 import '../models/location_result.dart';
 import '../services/location_service.dart';

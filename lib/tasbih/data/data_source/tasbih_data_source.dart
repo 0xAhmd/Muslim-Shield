@@ -1,4 +1,4 @@
-import 'package:azkar/tasbih/data/models/tasbih.dart';
+import '../models/tasbih.dart';
 import 'package:hive/hive.dart';
 
 class TasbihLocalDatasource {

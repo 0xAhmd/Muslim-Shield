@@ -1,4 +1,4 @@
-import 'package:azkar/sajda/presentation/widget/sajda_tab.dart';
+import '../../../sajda/presentation/widget/sajda_tab.dart';
 
 import '../../../constants.dart';
 import '../../../hizb/presentation/widgets/hizb_tab.dart';

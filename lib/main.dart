@@ -1,9 +1,9 @@
-import 'package:azkar/Reminders/data/services/notification_service.dart';
-import 'package:azkar/core/widgets/blocked.dart';
-import 'package:azkar/core/connectivity_service.dart';
-import 'package:azkar/prayer_tracker/data/models/prayer_completion.dart';
-import 'package:azkar/prayer_tracker/data/service/prayer_tracker_service.dart';
-import 'package:azkar/tasbih/data/models/tasbih.dart';
+import 'Reminders/data/services/notification_service.dart';
+import 'core/widgets/blocked.dart';
+import 'core/connectivity_service.dart';
+import 'prayer_tracker/data/models/prayer_completion.dart';
+import 'prayer_tracker/data/service/prayer_tracker_service.dart';
+import 'tasbih/data/models/tasbih.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

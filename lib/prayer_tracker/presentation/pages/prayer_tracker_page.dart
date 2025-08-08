@@ -179,7 +179,7 @@ class PrayerTrackerView extends StatelessWidget {
                               .togglePrayerCompletion(prayer);
                         },
                       );
-                    }).toList(),
+                    }),
 
                     SizedBox(height: 24.h),
 

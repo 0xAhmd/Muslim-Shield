@@ -1,4 +1,4 @@
-import 'package:azkar/masjid/data/models/masjid.dart';
+import '../../data/models/masjid.dart';
 
 
 // States

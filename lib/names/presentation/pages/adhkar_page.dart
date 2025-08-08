@@ -1,5 +1,5 @@
-import 'package:azkar/names/data/repo/adhkar_repo.dart';
-import 'package:azkar/names/presentation/widgets/adhkar_tab_view.dart';
+import '../../data/repo/adhkar_repo.dart';
+import '../widgets/adhkar_tab_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
