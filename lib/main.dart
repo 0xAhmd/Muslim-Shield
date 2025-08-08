@@ -3,6 +3,7 @@ import 'package:azkar/core/widgets/blocked.dart';
 import 'package:azkar/core/connectivity_service.dart';
 import 'package:azkar/tasbih/data/models/tasbih.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -27,6 +28,7 @@ void main() async {
 
   await BookmarksService().init();
   await LocalAudioService().initialize();
+  await dotenv.load(fileName: ".env");
   final notificationService = NotificationService();
   await notificationService.initialize();
   final isRooted = await SafeDevice.isJailBroken;

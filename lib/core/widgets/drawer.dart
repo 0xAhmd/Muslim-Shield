@@ -1,6 +1,7 @@
 // Updated lib/core/widgets/drawer.dart
 import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
 import 'package:azkar/calc/presentation/pages/zakaat_calc_page.dart';
+import 'package:azkar/hadith/presentation/pages/books_page.dart';
 import 'package:azkar/names/presentation/pages/adhkar_page.dart';
 import 'package:azkar/names/presentation/pages/allah_names_page.dart';
 
@@ -67,24 +68,7 @@ class CustomDrawer extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 children: [
-                  _buildDrawerItem(
-                    context,
-                    iconWidget: Image.asset('assets/images/tasbih.png'),
-                    title: 'Digital Tasbih',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TasbihPage(),
-                        ),
-                      );
-                    },
-                  ),
-
-                  SizedBox(height: 5.h),
-
-                  // New: Names of Allah
+                  // Names of Allah
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/allah.png'),
@@ -102,7 +86,24 @@ class CustomDrawer extends StatelessWidget {
 
                   SizedBox(height: 5.h),
 
-                  // New: Morning & Evening Adhkar
+                  // Digital Tasbih
+                  _buildDrawerItem(
+                    context,
+                    iconWidget: Image.asset('assets/images/tasbih.png'),
+                    title: 'Digital Tasbih',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TasbihPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 5.h),
+
+                  // Morning & Evening Adhkar
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/dua.png'),
@@ -120,7 +121,28 @@ class CustomDrawer extends StatelessWidget {
 
                   SizedBox(height: 5.h),
 
-                  // New: Zakat Calculator
+                  // NEW: Hadith Browser
+                  _buildDrawerItem(
+                    context,
+                    iconWidget: Image.asset(
+                      'assets/images/muhammad.png',
+                      color: Colors.white,
+                    ), 
+                    title: 'Hadith Collection',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BooksPage(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: 5.h),
+
+                  // Zakat Calculator
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/zakat.png'),
@@ -136,6 +158,10 @@ class CustomDrawer extends StatelessWidget {
                       );
                     },
                   ),
+
+                  SizedBox(height: 5.h),
+
+                  // Reminders
                   _buildDrawerItem(
                     context,
                     iconWidget: SvgPicture.asset('assets/svgs/lamp-icon.svg'),
@@ -266,7 +292,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              '• Quran reading with audio\n• Prayer times\n• Duas collection\n• Radio stations\n• Masjid finder\n• Digital Tasbih\n• Names of Allah (99 Names)\n• Morning & Evening Adhkar\n• Zakat Calculator\n• And more...',
+              '• Quran reading with audio\n• Prayer times\n• Duas collection\n• Radio stations\n• Masjid finder\n• Digital Tasbih\n• Names of Allah (99 Names)\n• Morning & Evening Adhkar\n• Hadith Collection Browser\n• Zakat Calculator\n• And more...',
               style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
             ),
           ],
