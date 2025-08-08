@@ -5,120 +5,235 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../constants.dart';
 import '../../data/models/hadith.dart';
 
-class HadithCard extends StatelessWidget {
+class HadithCard extends StatefulWidget {
   final Hadith hadith;
 
   const HadithCard({super.key, required this.hadith});
 
   @override
+  State<HadithCard> createState() => _HadithCardState();
+}
+
+class _HadithCardState extends State<HadithCard>
+    with SingleTickerProviderStateMixin {
+  bool _showArabic = true;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleLanguage() {
+    _animationController.forward().then((_) {
+      setState(() {
+        _showArabic = !_showArabic;
+      });
+      _animationController.reverse();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        color: grey,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: primary.withOpacity(0.1)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Hadith Number Badge
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              'Hadith #${hadith.id}',
-              style: GoogleFonts.poppins(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: primary,
-              ),
-            ),
-          ),
-
-          SizedBox(height: 16.h),
-
-          // Hadith Text
-          Text(
-            hadith.hadith,
-            style: GoogleFonts.amiri(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-              height: 1.8,
-            ),
-            textAlign: TextAlign.justify,
-          ),
-
-          SizedBox(height: 16.h),
-
-          // Attribution
-          Container(
-            padding: EdgeInsets.all(12.r),
-            decoration: BoxDecoration(
-              color: scaffoldBackgroundColor,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Row(
+    return GestureDetector(
+      onTap: _toggleLanguage,
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16.h),
+        padding: EdgeInsets.all(20.r),
+        decoration: BoxDecoration(
+          color: grey,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: primary.withOpacity(0.1)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with Hadith Number Badge and Language Indicator
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.person, color: orange, size: 16.sp),
-                SizedBox(width: 8.w),
-                Expanded(
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
                   child: Text(
-                    hadith.attribution,
+                    'Hadith #${widget.hadith.id}',
                     style: GoogleFonts.poppins(
-                      fontSize: 13.sp,
-                      color: orange,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: primary,
                     ),
+                  ),
+                ),
+                // Language indicator
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: _showArabic
+                        ? orange.withOpacity(0.1)
+                        : Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _showArabic ? Icons.translate : Icons.language,
+                        size: 12.sp,
+                        color: _showArabic ? orange : Colors.blue,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        _showArabic ? 'العربية' : 'English',
+                        style: GoogleFonts.poppins(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w500,
+                          color: _showArabic ? orange : Colors.blue,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
 
-          if (hadith.grade != null) ...[
-            SizedBox(height: 12.h),
+            SizedBox(height: 16.h),
+
+            // Tap to translate hint
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: _getGradeColor(hadith.grade!).withOpacity(0.1),
+                color: scaffoldBackgroundColor.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(8.r),
               ),
-              child: Text(
-                'Grade: ${hadith.grade}',
-                style: GoogleFonts.poppins(
-                  fontSize: 12.sp,
-                  color: _getGradeColor(hadith.grade!),
-                  fontWeight: FontWeight.w500,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.touch_app,
+                    size: 12.sp,
+                    color: textColor.withOpacity(0.7),
+                  ),
+                  SizedBox(width: 4.w),
+                  Text(
+                    'Tap to ${_showArabic ? 'translate' : 'show Arabic'}',
+                    style: GoogleFonts.poppins(
+                      fontSize: 10.sp,
+                      color: textColor.withOpacity(0.7),
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 12.h),
+
+            // Hadith Text with Animation
+            FadeTransition(
+              opacity: _fadeAnimation,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: Text(
+                  _showArabic
+                      ? widget.hadith.hadithArabic!
+                      : widget.hadith.hadith,
+                  key: ValueKey(_showArabic),
+                  style: _showArabic
+                      ? GoogleFonts.amiri(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                          height: 1.8,
+                        )
+                      : GoogleFonts.poppins(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                          height: 1.6,
+                        ),
+                  textAlign: _showArabic ? TextAlign.right : TextAlign.justify,
                 ),
               ),
             ),
-          ],
 
-          SizedBox(height: 12.h),
+            SizedBox(height: 16.h),
 
-          // Action Buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
+            // Attribution
+            Container(
+              padding: EdgeInsets.all(12.r),
+              decoration: BoxDecoration(
+                color: scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.person, color: orange, size: 16.sp),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      widget.hadith.attribution,
+                      style: GoogleFonts.poppins(
+                        fontSize: 13.sp,
+                        color: orange,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            if (widget.hadith.grade != null) ...[
+              SizedBox(height: 12.h),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: _getGradeColor(widget.hadith.grade!).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  'Grade: ${widget.hadith.grade}',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12.sp,
+                    color: _getGradeColor(widget.hadith.grade!),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+
+            SizedBox(height: 12.h),
+
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
                 onPressed: () => _copyHadith(context),
                 icon: Icon(Icons.copy, color: textColor, size: 20.sp),
                 tooltip: 'Copy',
               ),
-              IconButton(
-                onPressed: () => _shareHadith(context),
-                icon: Icon(Icons.share, color: textColor, size: 20.sp),
-                tooltip: 'Share',
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -137,18 +252,23 @@ class HadithCard extends StatelessWidget {
   }
 
   void _copyHadith(BuildContext context) {
-    final text = '${hadith.hadith}\n\n- ${hadith.attribution}';
+    final arabicText = widget.hadith.hadithArabic ?? '';
+    final englishText = widget.hadith.hadith;
+    final attribution = widget.hadith.attribution;
+
+    final text =
+        '''$arabicText
+
+$englishText
+
+- $attribution''';
+
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Hadith copied to clipboard'),
         backgroundColor: primary,
       ),
     );
-  }
-
-  void _shareHadith(BuildContext context) {
-    //!TODO Implement share functionality if needed
-    // You can use share_plus package
   }
 }
