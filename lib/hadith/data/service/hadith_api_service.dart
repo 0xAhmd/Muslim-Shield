@@ -1,0 +1,21 @@
+import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
+import '../models/book.dart';
+import '../models/hadith.dart';
+
+part 'hadith_api_service.g.dart';
+
+@RestApi(baseUrl: "https://hadithapi.com/api/")
+abstract class HadithApiService {
+  factory HadithApiService(Dio dio, {String baseUrl}) = _HadithApiService;
+
+  @GET("books")
+  Future<BooksResponse> getBooks(@Query("apiKey") String apiKey);
+
+  @GET("hadiths/")
+  Future<HadithsResponse> getHadiths(
+    @Query("apiKey") String apiKey,
+    @Query("book") int bookId,
+    @Query("page") int page,
+  );
+}
