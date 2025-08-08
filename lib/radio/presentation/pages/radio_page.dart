@@ -1,5 +1,5 @@
 import 'package:azkar/core/connectivity_service.dart';
-import 'package:azkar/core/offline_message.dart';
+import 'package:azkar/core/widgets/offline_message.dart';
 import 'package:azkar/radio/presentation/widgets/shimmers.dart';
 import 'package:azkar/radio/presentation/widgets/station_info.dart';
 import 'package:azkar/radio/presentation/widgets/wave_form.dart';

@@ -1,8 +1,12 @@
+import 'package:azkar/core/azan_service.dart';
+
 import '../models/muslim_event.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/foundation.dart';
+
+
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -11,6 +15,7 @@ class NotificationService {
 
   final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
+  final AdhanService _adhanService = AdhanService();
 
   bool _isInitialized = false;
 
@@ -18,6 +23,9 @@ class NotificationService {
     if (_isInitialized) return;
 
     tz.initializeTimeZones();
+
+    // Initialize AdhanService first
+    await _adhanService.initialize();
 
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -44,23 +52,49 @@ class NotificationService {
   }
 
   Future<void> _requestPermissions() async {
-    await _notifications
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.requestNotificationsPermission();
+    try {
+      // Add delay to ensure context is available
+      await Future.delayed(const Duration(milliseconds: 500));
 
-    await _notifications
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >()
-        ?.requestPermissions(alert: true, badge: true, sound: true);
+      await _notifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.requestNotificationsPermission();
+
+      await _notifications
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
+    } catch (e) {
+      debugPrint('Error requesting notification permissions: $e');
+      // Don't throw error, just log it - permissions can be requested later
+    }
   }
 
   void _onNotificationTapped(NotificationResponse response) {
     debugPrint('Notification tapped: ${response.payload}');
   }
 
+  // New method to schedule Adhan notifications with prayer times
+  Future<void> scheduleAdhanNotifications({
+    required String fajrTime,
+    required String dhuhrTime,
+    required String asrTime,
+    required String maghribTime,
+    required String ishaTime,
+  }) async {
+    await _adhanService.scheduleAdhanNotifications(
+      fajrTime: fajrTime,
+      dhuhrTime: dhuhrTime,
+      asrTime: asrTime,
+      maghribTime: maghribTime,
+      ishaTime: ishaTime,
+    );
+  }
+
+  // Updated prayer reminder method (for regular reminders, not Adhan)
   Future<void> schedulePrayerReminder({
     required int id,
     required String prayerName,
@@ -73,7 +107,6 @@ class NotificationService {
           channelDescription: 'Notifications for prayer times',
           importance: Importance.high,
           priority: Priority.high,
-          // Remove icon parameter to use default system icon
         );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
@@ -108,7 +141,6 @@ class NotificationService {
           channelDescription: 'Notifications for Islamic events',
           importance: Importance.high,
           priority: Priority.high,
-          // Remove icon parameter to use default system icon
         );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
@@ -142,7 +174,6 @@ class NotificationService {
           channelDescription: 'Friday Surah Al-Kahf reminders',
           importance: Importance.high,
           priority: Priority.high,
-          // Remove icon parameter to use default system icon
         );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
@@ -175,11 +206,29 @@ class NotificationService {
     return tz.TZDateTime(tz.local, friday.year, friday.month, friday.day, 9, 0);
   }
 
+  // Adhan service methods exposed
+  Future<void> enableAdhanNotifications() async {
+    await _adhanService.enableAdhanNotifications();
+  }
+
+  Future<void> disableAdhanNotifications() async {
+    await _adhanService.disableAdhanNotifications();
+  }
+
+  Future<bool> isAdhanEnabled() async {
+    return await _adhanService.isAdhanEnabled();
+  }
+
+  Future<void> testAdhanNotification() async {
+    await _adhanService.testAdhanNotification();
+  }
+
   Future<void> cancelNotification(int id) async {
     await _notifications.cancel(id);
   }
 
   Future<void> cancelAllNotifications() async {
     await _notifications.cancelAll();
+    await _adhanService.cancelAllAdhanNotifications();
   }
 }

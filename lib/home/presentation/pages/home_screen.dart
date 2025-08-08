@@ -1,5 +1,5 @@
 // Alternative solution - Updated lib/home/presentation/pages/home_screen.dart
-import 'package:azkar/core/drawer.dart';
+import 'package:azkar/core/widgets/drawer.dart';
 import 'package:azkar/masjid/presentation/pages/masjid_finder_page.dart';
 import 'package:azkar/radio/presentation/pages/radio_page.dart';
 import 'package:flutter/rendering.dart';

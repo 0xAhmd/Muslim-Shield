@@ -1,4 +1,5 @@
-import 'package:azkar/core/blocked.dart';
+import 'package:azkar/Reminders/data/services/notification_service.dart';
+import 'package:azkar/core/widgets/blocked.dart';
 import 'package:azkar/core/connectivity_service.dart';
 import 'package:azkar/tasbih/data/models/tasbih.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,8 @@ void main() async {
 
   await BookmarksService().init();
   await LocalAudioService().initialize();
-
+  final notificationService = NotificationService();
+  await notificationService.initialize();
   final isRooted = await SafeDevice.isJailBroken;
   final isRealDevice = await SafeDevice.isRealDevice;
 

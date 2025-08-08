@@ -76,6 +76,7 @@ flutter:
     - assets/svgs/
     - assets/
     - assets/images/
+    - assets/sounds/
   fonts:
     - family: Amiri
       fonts:

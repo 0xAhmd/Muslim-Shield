@@ -1,5 +1,6 @@
 import 'package:azkar/core/connectivity_service.dart';
-import 'package:azkar/core/offline_message.dart';
+import 'package:azkar/core/widgets/azan_settings.dart';
+import 'package:azkar/core/widgets/offline_message.dart';
 import 'package:azkar/prayer/presentation/widgets/shimmers.dart';
 
 import '../../../constants.dart';
@@ -46,7 +47,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this); // Updated to 4 tabs
     _initializeConnectivity();
   }
 
@@ -60,7 +61,6 @@ class _PrayerPageViewState extends State<PrayerPageView>
         });
 
         if (!connected) {
-          // Show snackbar when connection is lost
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Row(
@@ -129,7 +129,6 @@ class _PrayerPageViewState extends State<PrayerPageView>
       ),
       body: BlocBuilder<PrayerTimesCubit, PrayerTimesState>(
         builder: (context, state) {
-          // Only show offline message for initial load, not when already loaded
           if (!_isConnected && state is! PrayerTimesLoaded) {
             return OfflineMessageWidget(
               customMessage:
@@ -156,7 +155,6 @@ class _PrayerPageViewState extends State<PrayerPageView>
     );
   }
 
-  // Updated loading state with shimmer
   Widget _buildLoadingStateWithShimmer() {
     return PrayerPageShimmers.fullPageLoadingShimmer();
   }
@@ -269,7 +267,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
   Widget _buildLoadedState(PrayerTimesLoaded state) {
     return Column(
       children: [
-        // Connection status indicator (only show when offline with loaded data)
+        // Connection status indicator
         if (!_isConnected)
           Container(
             width: double.infinity,
@@ -293,10 +291,10 @@ class _PrayerPageViewState extends State<PrayerPageView>
             ),
           ),
 
-        // Next Prayer Card (always visible)
+        // Next Prayer Card
         NextPrayerCard(nextPrayer: state.nextPrayer, location: state.location),
 
-        // Tab Bar
+        // Tab Bar - Updated with 4 tabs
         Container(
           margin: EdgeInsets.symmetric(horizontal: 24.w),
           decoration: BoxDecoration(
@@ -313,22 +311,24 @@ class _PrayerPageViewState extends State<PrayerPageView>
             ),
             indicatorSize: TabBarIndicatorSize.tab,
             dividerColor: Colors.transparent,
-            labelStyle: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+            labelStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
             unselectedLabelStyle: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
             ),
+            // Remove isScrollable to center the tabs properly
             tabs: const [
               Tab(text: 'Prayer Times'),
               Tab(text: 'Qiblah'),
               Tab(text: 'Sunnah'),
+              Tab(text: 'Adhan'),
             ],
           ),
         ),
 
         SizedBox(height: 16.h),
 
-        // Tab View Content
+        // Tab View Content - Removed Center wrapper and fixed alignment
         Expanded(
           child: TabBarView(
             controller: _tabController,
@@ -343,7 +343,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 ),
               ),
 
-              // Qiblah Tab - Works offline with device compass
+              // Qiblah Tab
               SingleChildScrollView(
                 child: Column(
                   children: [
@@ -380,12 +380,12 @@ class _PrayerPageViewState extends State<PrayerPageView>
                         ),
                       ),
                     const QiblahCompass(),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
                   ],
                 ),
               ),
 
-              // Sunnah Prayers Tab - Works offline
+              // Sunnah Prayers Tab
               SingleChildScrollView(
                 child: Column(
                   children: [
@@ -422,7 +422,27 @@ class _PrayerPageViewState extends State<PrayerPageView>
                         ),
                       ),
                     const SunnahPrayersList(),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
+                  ],
+                ),
+              ),
+
+              // Adhan Settings Tab
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    BlocListener<PrayerTimesCubit, PrayerTimesState>(
+                      listener: (context, cubitState) {
+                        // Update Adhan settings when prayer times change
+                        if (cubitState is PrayerTimesLoaded) {
+                          context
+                              .read<PrayerTimesCubit>()
+                              .updateAdhanSettings();
+                        }
+                      },
+                      child: const AdhanSettingsWidget(),
+                    ),
+                    SizedBox(height: 24.h),
                   ],
                 ),
               ),

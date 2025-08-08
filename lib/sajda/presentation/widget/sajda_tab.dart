@@ -1,5 +1,5 @@
 import 'package:azkar/core/connectivity_service.dart';
-import 'package:azkar/core/offline_message.dart';
+import 'package:azkar/core/widgets/offline_message.dart';
 import 'package:azkar/sajda/data/repo/sajda_repo.dart';
 import 'package:azkar/sajda/presentation/cubit/sajda_cubit.dart';
 import 'package:azkar/sajda/presentation/cubit/sajda_state.dart';
