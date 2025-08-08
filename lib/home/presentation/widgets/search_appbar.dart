@@ -1,9 +1,7 @@
-// Alternative SearchAppBar - lib/home/presentation/widgets/search_appbar.dart
 import '../../../constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../pages/home_screen.dart'; // Import to access the global key
+import '../pages/home_screen.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isSearching;
@@ -53,10 +51,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         const Spacer(),
         IconButton(
           onPressed: canSearch ? onToggleSearch : null,
-          icon: SvgPicture.asset(
-            'assets/svgs/search-icon.svg',
-            color: canSearch ? null : textColor.withOpacity(0.5),
-          ),
+          icon: const Icon(Icons.search, color: textColor),
         ),
       ],
     );

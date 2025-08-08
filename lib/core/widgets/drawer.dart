@@ -1,4 +1,8 @@
+
 import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
+import 'package:azkar/names/presentation/pages/adhkar_page.dart';
+import 'package:azkar/names/presentation/pages/allah_names_page.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -91,22 +95,42 @@ class CustomDrawer extends StatelessWidget {
                     },
                   ),
 
-                  // Placeholder for future features
-                  // _buildDrawerItem(
-                  //   context,
-                  //   iconWidget: Image.asset('assets/images/radio.png'),
-                  //   title: 'Quran Radio',
-                  //   onTap: () {
-                  //     Navigator.pop(context);
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => const RadioPage(),
-                  //       ),
-                  //     );
-                  //   },
-                  //   isComingSoon: false,
-                  // ),
+                  SizedBox(height: 5.h),
+
+                  // New: Names of Allah
+                  _buildDrawerItem(
+                    context,
+                    iconWidget: Image.asset('assets/images/allah.png'),
+                    title: 'Names of Allah',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AllahNamesPage(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: 5.h),
+
+                  // New: Morning & Evening Adhkar
+                  _buildDrawerItem(
+                    context,
+                    iconWidget: Image.asset('assets/images/dua.png'),
+                    title: 'Morning & Evening Adhkar',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AdhkarPage(),
+                        ),
+                      );
+                    },
+                  ),
+
                   Divider(
                     color: grey,
                     thickness: 1,
@@ -221,7 +245,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              '• Quran reading with audio\n• Prayer times\n• Duas collection\n• Radio stations\n• Masjid finder\n• Digital Tasbih\n• And more...',
+              '• Quran reading with audio\n• Prayer times\n• Duas collection\n• Radio stations\n• Masjid finder\n• Digital Tasbih\n• Names of Allah (99 Names)\n• Morning & Evening Adhkar\n• And more...',
               style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
             ),
           ],

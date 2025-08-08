@@ -106,7 +106,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
         
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Permission required. Please allow notifications in system settings.'),
+            content: const Text('Permission required. Please allow notifications in system settings.'),
             backgroundColor: Colors.orange.withOpacity(0.9),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 3),
@@ -248,9 +248,9 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
                     ? SizedBox(
                         width: 20.w,
                         height: 20.w,
-                        child: CircularProgressIndicator(
+                        child: const CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(primary),
+                          valueColor:  AlwaysStoppedAnimation<Color>(primary),
                         ),
                       )
                     : Switch(
