@@ -69,23 +69,6 @@ class CustomDrawer extends StatelessWidget {
                 children: [
                   _buildDrawerItem(
                     context,
-                    iconWidget: SvgPicture.asset('assets/svgs/lamp-icon.svg'),
-                    title: 'Reminders',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RemindersPage(),
-                        ),
-                      );
-                    },
-                    isComingSoon: false,
-                  ),
-                  SizedBox(height: 5.h),
-
-                  _buildDrawerItem(
-                    context,
                     iconWidget: Image.asset('assets/images/tasbih.png'),
                     title: 'Digital Tasbih',
                     onTap: () {
@@ -140,7 +123,7 @@ class CustomDrawer extends StatelessWidget {
                   // New: Zakat Calculator
                   _buildDrawerItem(
                     context,
-                    icon: Icons.calculate_outlined,
+                    iconWidget: Image.asset('assets/images/zakat.png'),
                     title: 'Zakat Calculator',
                     onTap: () {
                       Navigator.pop(context);
@@ -153,7 +136,22 @@ class CustomDrawer extends StatelessWidget {
                       );
                     },
                   ),
-
+                  _buildDrawerItem(
+                    context,
+                    iconWidget: SvgPicture.asset('assets/svgs/lamp-icon.svg'),
+                    title: 'Reminders',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RemindersPage(),
+                        ),
+                      );
+                    },
+                    isComingSoon: false,
+                  ),
+                  SizedBox(height: 5.h),
                   Divider(
                     color: grey,
                     thickness: 1,
