@@ -29,12 +29,13 @@ class _HadithsPageState extends State<HadithsPage> {
     _hadithsCubit = HadithsCubit(HadithRepository());
     _scrollController = ScrollController();
 
-    _hadithsCubit.loadHadiths(widget.book.id);
+    // Use book slug instead of book id
+    _hadithsCubit.loadHadiths(widget.book.bookSlug);
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        _hadithsCubit.loadMore(widget.book.id);
+        _hadithsCubit.loadMore(widget.book.bookSlug);
       }
     });
   }
@@ -75,18 +76,21 @@ class _HadithsPageState extends State<HadithsPage> {
                   children: [
                     Icon(Icons.error, color: Colors.red, size: 48.sp),
                     SizedBox(height: 16.h),
-                    Text(
-                      'Error: ${state.message}',
-                      style: GoogleFonts.poppins(
-                        color: Colors.red,
-                        fontSize: 16.sp,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 32.w),
+                      child: Text(
+                        state.message,
+                        style: GoogleFonts.poppins(
+                          color: Colors.red,
+                          fontSize: 16.sp,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 16.h),
                     ElevatedButton(
                       onPressed: () =>
-                          _hadithsCubit.loadHadiths(widget.book.id),
+                          _hadithsCubit.loadHadiths(widget.book.bookSlug),
                       style: ElevatedButton.styleFrom(backgroundColor: primary),
                       child: Text(
                         'Retry',
@@ -109,11 +113,21 @@ class _HadithsPageState extends State<HadithsPage> {
                       Icon(Icons.book_outlined, color: textColor, size: 48.sp),
                       SizedBox(height: 16.h),
                       Text(
-                        'No hadiths found',
+                        'No hadiths found for this book',
                         style: GoogleFonts.poppins(
                           color: textColor,
                           fontSize: 16.sp,
                         ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'This book might not be available or might not have hadiths yet.',
+                        style: GoogleFonts.poppins(
+                          color: textColor.withOpacity(0.7),
+                          fontSize: 14.sp,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),

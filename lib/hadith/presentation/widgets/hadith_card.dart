@@ -8,10 +8,7 @@ import '../../data/models/hadith.dart';
 class HadithCard extends StatelessWidget {
   final Hadith hadith;
 
-  const HadithCard({
-    super.key,
-    required this.hadith,
-  });
+  const HadithCard({super.key, required this.hadith});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +39,7 @@ class HadithCard extends StatelessWidget {
               ),
             ),
           ),
-          
+
           SizedBox(height: 16.h),
 
           // Hadith Text

@@ -59,14 +59,14 @@ class _HadithApiService implements HadithApiService {
   @override
   Future<HadithsResponse> getHadiths(
     String apiKey,
-    int bookId,
-    int page,
+    String bookSlug,
+    int paginate,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'apiKey': apiKey,
-      r'book': bookId,
-      r'page': page,
+      r'book': bookSlug,
+      r'paginate': paginate,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

@@ -3,7 +3,6 @@ import 'package:azkar/hadith/data/repo/hadith_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-
 part 'hadith_state.dart';
 
 class HadithsCubit extends Cubit<HadithsState> {
@@ -11,48 +10,66 @@ class HadithsCubit extends Cubit<HadithsState> {
 
   HadithsCubit(this._repository) : super(HadithsInitial());
 
-  Future<void> loadHadiths(int bookId, {int page = 1}) async {
-    if (page == 1) {
-      emit(HadithsLoading());
-    } else {
-      emit(HadithsLoadingMore((state as HadithsLoaded).hadiths));
-    }
+  Future<void> loadHadiths(String bookSlug, {int paginate = 25}) async {
+    emit(HadithsLoading());
 
     try {
-      final response = await _repository.getHadiths(bookId, page);
-      
-      if (page == 1) {
-        emit(HadithsLoaded(
-          hadiths: response.hadiths,
-          hasMore: response.hadiths.length < response.total,
-          currentPage: page,
-          total: response.total,
-        ));
-      } else {
-        final currentState = state as HadithsLoaded;
-        final allHadiths = [...currentState.hadiths, ...response.hadiths];
-        emit(HadithsLoaded(
-          hadiths: allHadiths,
-          hasMore: allHadiths.length < response.total,
-          currentPage: page,
-          total: response.total,
-        ));
-      }
+      final response = await _repository.getHadiths(bookSlug, paginate);
+
+      emit(
+        HadithsLoaded(
+          hadiths: response.hadithsList,
+          hasMore: false, // API doesn't seem to support traditional pagination
+          currentPage: 1,
+          total: response.hadithsList.length,
+        ),
+      );
     } catch (e) {
-      if (page == 1) {
-        emit(HadithsError(e.toString()));
-      } else {
-        emit(HadithsLoadMoreError((state as HadithsLoaded).hadiths, e.toString()));
-      }
+      emit(HadithsError(e.toString()));
     }
   }
 
-  void loadMore(int bookId) {
+  void loadMore(String bookSlug) {
+    // Since the API uses paginate parameter rather than page-based pagination,
+    // we'll load more hadiths by increasing the paginate count
     if (state is HadithsLoaded) {
       final currentState = state as HadithsLoaded;
-      if (currentState.hasMore) {
-        loadHadiths(bookId, page: currentState.currentPage + 1);
-      }
+      final newPaginate = currentState.total + 25;
+
+      emit(HadithsLoadingMore(currentState.hadiths));
+
+      _loadMoreHadiths(bookSlug, newPaginate, currentState.hadiths);
+    }
+  }
+
+  Future<void> _loadMoreHadiths(
+    String bookSlug,
+    int paginate,
+    List<Hadith> currentHadiths,
+  ) async {
+    try {
+      final response = await _repository.getHadiths(bookSlug, paginate);
+
+      // Only add new hadiths that we don't already have
+      final newHadiths = response.hadithsList
+          .where(
+            (hadith) =>
+                !currentHadiths.any((existing) => existing.id == hadith.id),
+          )
+          .toList();
+
+      final allHadiths = [...currentHadiths, ...newHadiths];
+
+      emit(
+        HadithsLoaded(
+          hadiths: allHadiths,
+          hasMore: newHadiths.isNotEmpty,
+          currentPage: 1,
+          total: allHadiths.length,
+        ),
+      );
+    } catch (e) {
+      emit(HadithsLoadMoreError(currentHadiths, e.toString()));
     }
   }
 }
