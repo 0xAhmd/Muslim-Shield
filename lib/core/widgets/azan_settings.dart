@@ -1,3 +1,4 @@
+import 'package:azkar/prayer_tracker/presentation/pages/prayer_tracker_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constants.dart';
@@ -25,7 +26,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
     try {
       // Initialize the service first
       await _notificationService.initialize();
-      
+
       final isEnabled = await _notificationService.isAdhanEnabled();
       if (mounted) {
         setState(() {
@@ -38,7 +39,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
         setState(() {
           _isLoading = false;
         });
-        
+
         // Show a less intrusive error message
         debugPrint('Could not load Adhan status: $e');
       }
@@ -53,7 +54,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
     try {
       // Ensure service is initialized
       await _notificationService.initialize();
-      
+
       if (enabled) {
         await _notificationService.enableAdhanNotifications();
         if (mounted) {
@@ -103,10 +104,12 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
         setState(() {
           _isLoading = false;
         });
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Permission required. Please allow notifications in system settings.'),
+            content: const Text(
+              'Permission required. Please allow notifications in system settings.',
+            ),
             backgroundColor: Colors.orange.withOpacity(0.9),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 3),
@@ -159,7 +162,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(24.w),
+      margin: EdgeInsets.symmetric(horizontal: 24.w),
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: grey,
@@ -177,11 +180,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
                   color: primary.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: Icon(
-                  Icons.volume_up,
-                  color: primary,
-                  size: 20.sp,
-                ),
+                child: Icon(Icons.volume_up, color: primary, size: 20.sp),
               ),
               SizedBox(width: 12.w),
               Text(
@@ -216,7 +215,9 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
               color: scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
-                color: _isAdhanEnabled ? primary.withOpacity(0.3) : Colors.transparent,
+                color: _isAdhanEnabled
+                    ? primary.withOpacity(0.3)
+                    : Colors.transparent,
               ),
             ),
             child: Row(
@@ -237,7 +238,9 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
                     Text(
                       _isAdhanEnabled ? 'Active' : 'Disabled',
                       style: TextStyle(
-                        color: _isAdhanEnabled ? Colors.green : textColor.withOpacity(0.7),
+                        color: _isAdhanEnabled
+                            ? Colors.green
+                            : textColor.withOpacity(0.7),
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
                       ),
@@ -250,7 +253,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
                         height: 20.w,
                         child: const CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:  AlwaysStoppedAnimation<Color>(primary),
+                          valueColor: AlwaysStoppedAnimation<Color>(primary),
                         ),
                       )
                     : Switch(
@@ -271,25 +274,32 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: _isAdhanEnabled ? _testAdhan : null,
+              onPressed: () {
+                _isAdhanEnabled ? _testAdhan : null;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PrayerTrackerPage(),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isAdhanEnabled 
+                backgroundColor: _isAdhanEnabled
                     ? primary.withOpacity(0.9)
                     : textColor.withOpacity(0.1),
-                foregroundColor: _isAdhanEnabled ? Colors.white : textColor.withOpacity(0.5),
+                foregroundColor: _isAdhanEnabled
+                    ? Colors.white
+                    : textColor.withOpacity(0.5),
                 padding: EdgeInsets.symmetric(vertical: 14.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 elevation: 0,
               ),
-              icon: Icon(Icons.play_arrow, size: 18.sp),
+              icon: Image.asset('assets/images/fire.png', width: 24.sp),
               label: Text(
-                'Test Adhan Sound',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                ),
+                'Keep Your Streak',
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -302,18 +312,12 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
             decoration: BoxDecoration(
               color: Colors.blue.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(
-                color: Colors.blue.withOpacity(0.2),
-              ),
+              border: Border.all(color: Colors.blue.withOpacity(0.2)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.info_outline,
-                  color: Colors.blue,
-                  size: 16.sp,
-                ),
+                Icon(Icons.info_outline, color: Colors.blue, size: 16.sp),
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
