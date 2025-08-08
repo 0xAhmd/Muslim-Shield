@@ -20,7 +20,7 @@ class NextPrayerCard extends StatelessWidget {
           Positioned(
             bottom: -6.h,
             right: 0.w,
-            child: Image.asset("assets/masjid.png", width: 130),
+            child: Image.asset("assets/images/masjid.png", width: 130),
           ),
           // Main container
           Container(

@@ -37,7 +37,7 @@ class CustomDrawer extends StatelessWidget {
                           color: primary.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12.r),
                         ),
-                        child: Image.asset('assets/al-quran.png', width: 28.sp),
+                        child: Image.asset('assets/images/al-quran.png', width: 28.sp),
                       ),
                       SizedBox(width: 12.w),
                       Text(
@@ -78,7 +78,7 @@ class CustomDrawer extends StatelessWidget {
 
                   _buildDrawerItem(
                     context,
-                    iconWidget: Image.asset('assets/tasbih.png'),
+                    iconWidget: Image.asset('assets/images/tasbih.png'),
                     title: 'Digital Tasbih',
                     onTap: () {
                       Navigator.pop(context);
@@ -94,7 +94,7 @@ class CustomDrawer extends StatelessWidget {
                   // Placeholder for future features
                   // _buildDrawerItem(
                   //   context,
-                  //   iconWidget: Image.asset('assets/radio.png'),
+                  //   iconWidget: Image.asset('assets/images/radio.png'),
                   //   title: 'Quran Radio',
                   //   onTap: () {
                   //     Navigator.pop(context);

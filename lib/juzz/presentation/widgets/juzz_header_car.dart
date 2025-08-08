@@ -80,7 +80,7 @@ class JuzzHeaderCard extends StatelessWidget {
             right: 0.w,
             child: Opacity(
               opacity: 0.29,
-              child: Image.asset('assets/quran.png', width: 80.w, height: 80.h),
+              child: Image.asset('assets/images/quran.png', width: 80.w, height: 80.h),
             ),
           ),
         ],
