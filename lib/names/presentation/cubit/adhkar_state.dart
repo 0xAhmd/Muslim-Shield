@@ -1,6 +1,5 @@
 
 
-// lib/adhkar/presentation/cubit/adhkar_state.dart (part of above file)
 part of 'adhkar_cubit.dart';
 
 abstract class AdhkarState extends Equatable {

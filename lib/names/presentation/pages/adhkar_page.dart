@@ -1,4 +1,3 @@
-// lib/adhkar/presentation/pages/adhkar_page.dart
 import 'package:azkar/names/data/repo/adhkar_repo.dart';
 import 'package:azkar/names/presentation/widgets/adhkar_tab_view.dart';
 import 'package:flutter/material.dart';
