@@ -1,5 +1,6 @@
 import 'package:azkar/prayer/data/repo/prayer_repo.dart';
 import 'package:azkar/prayer/presentation/cubit/prayer_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../Reminders/data/services/notification_service.dart';
 
@@ -18,7 +19,7 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
       try {
         await _notificationService.initialize();
       } catch (e) {
-        print('Warning: Could not initialize notification service: $e');
+        debugPrint('Warning: Could not initialize notification service: $e');
         // Continue without notifications rather than failing completely
       }
 
@@ -79,7 +80,7 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
       }
     } catch (e) {
       // Don't fail the whole operation if Adhan scheduling fails
-      print('Error scheduling Adhan notifications: $e');
+      debugPrint('Error scheduling Adhan notifications: $e');
     }
   }
 

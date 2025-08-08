@@ -71,7 +71,7 @@ class _BooksPageState extends State<BooksPage> {
                   hintText: 'Search books...',
                   hintStyle: GoogleFonts.poppins(color: textColor),
                   border: InputBorder.none,
-                  prefixIcon: Icon(Icons.search, color: primary),
+                  prefixIcon: const Icon(Icons.search, color: primary),
                 ),
               ),
             ),

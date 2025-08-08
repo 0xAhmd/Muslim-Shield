@@ -40,7 +40,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
         });
         
         // Show a less intrusive error message
-        print('Could not load Adhan status: $e');
+        debugPrint('Could not load Adhan status: $e');
       }
     }
   }
@@ -115,7 +115,7 @@ class _AdhanSettingsWidgetState extends State<AdhanSettingsWidget> {
               textColor: Colors.white,
               onPressed: () {
                 // This would ideally open app settings
-                print('Open app settings for notifications');
+                debugPrint('Open app settings for notifications');
               },
             ),
           ),

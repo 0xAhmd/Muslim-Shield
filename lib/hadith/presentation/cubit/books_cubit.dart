@@ -1,6 +1,7 @@
 import 'package:azkar/hadith/data/repo/hadith_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import '../../data/models/book.dart';
 
 part 'books_state.dart';
@@ -53,7 +54,7 @@ class BooksCubit extends Cubit<BooksState> {
         }
       } catch (e) {
         // If there's an error loading hadiths, skip this book
-        print('Skipping book ${book.name} due to error: $e');
+        debugPrint('Skipping book ${book.name} due to error: $e');
         continue;
       }
     }
