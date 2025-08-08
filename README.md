@@ -110,7 +110,7 @@
 - Reset functionality
 - Track your daily dhikr progress
 
-### 🕊️ Names of Allah (Asma ul Husna)
+###  Names of Allah (Asma ul Husna)
 - Complete collection of **99 Beautiful Names of Allah**
 - Each name includes:
   - **Arabic calligraphy** (الرَّحْمٰنُ, الرَّحِيمُ, الْمَلِكُ)
