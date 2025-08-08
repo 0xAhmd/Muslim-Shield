@@ -16,7 +16,7 @@ class LoadingShimmer extends StatelessWidget {
         itemBuilder: (context, index) {
           return Container(
             height: 120.h,
-            margin: EdgeInsets.only(bottom: 16.h),
+            margin: EdgeInsets.only(bottom: 16.h, right: 16.h, left: 16.h),
             decoration: BoxDecoration(
               color: grey,
               borderRadius: BorderRadius.circular(16.r),
