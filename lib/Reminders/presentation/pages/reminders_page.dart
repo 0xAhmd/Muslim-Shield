@@ -1,6 +1,4 @@
 import 'package:azkar/Reminders/presentation/widgets/shimmers.dart';
-
-import '../../data/models/reminder_card.dart';
 import 'package:azkar/Reminders/data/repo/reminders_repo_impl.dart';
 import 'package:azkar/Reminders/data/services/events_api_service.dart';
 import 'package:azkar/Reminders/data/services/notification_service.dart';
@@ -9,7 +7,6 @@ import 'package:azkar/Reminders/presentation/bloc/reminders_event.dart';
 import 'package:azkar/Reminders/presentation/bloc/reminders_state.dart';
 import 'package:azkar/Reminders/presentation/widgets/calendar.dart';
 import 'package:azkar/Reminders/presentation/widgets/event_list.dart';
-import 'package:azkar/Reminders/presentation/widgets/reminder_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:azkar/constants.dart';
@@ -47,7 +44,7 @@ class _RemindersPageViewState extends State<_RemindersPageView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
     context.read<RemindersBloc>().add(ScheduleNotifications());
   }
 
@@ -63,9 +60,7 @@ class _RemindersPageViewState extends State<_RemindersPageView>
       backgroundColor: background,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
         backgroundColor: background,
@@ -94,10 +89,7 @@ class _RemindersPageViewState extends State<_RemindersPageView>
           unselectedLabelColor: textColor,
           indicatorColor: primary,
           labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-          tabs: const [
-            Tab(text: 'Calendar'),
-            Tab(text: 'Today'),
-          ],
+          tabs: const [Tab(text: 'Calendar')],
         ),
       ),
       body: BlocBuilder<RemindersBloc, RemindersState>(
@@ -105,7 +97,7 @@ class _RemindersPageViewState extends State<_RemindersPageView>
           if (state is RemindersLoading) {
             return TabBarView(
               controller: _tabController,
-              children: [buildCalendarShimmer(), buildTodayShimmer()],
+              children: [buildCalendarShimmer()],
             );
           }
 
@@ -156,7 +148,7 @@ class _RemindersPageViewState extends State<_RemindersPageView>
           if (state is RemindersLoaded) {
             return TabBarView(
               controller: _tabController,
-              children: [_buildCalendarTab(state), _buildTodayTab(state)],
+              children: [_buildCalendarTab(state)],
             );
           }
 
@@ -204,118 +196,6 @@ class _RemindersPageViewState extends State<_RemindersPageView>
             ),
           ),
           const SizedBox(height: 100),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTodayTab(RemindersLoaded state) {
-    final todayReminders = state.reminders.where((reminder) {
-      final today = DateTime.now();
-      return reminder.createdAt.year == today.year &&
-          reminder.createdAt.month == today.month &&
-          reminder.createdAt.day == today.day;
-    }).toList();
-
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            if (todayReminders.isEmpty) ...[
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.notifications_none,
-                        size: 64,
-                        color: textColor.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No reminders for today',
-                        style: GoogleFonts.poppins(
-                          color: textColor,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ] else ...[
-              ...todayReminders.map(
-                (reminder) => ReminderCardWidget(
-                  reminder: reminder,
-                  onTap: () => _handleReminderTap(context, reminder),
-                  onMarkAsRead: () => context.read<RemindersBloc>().add(
-                    MarkReminderAsRead(reminder.id),
-                  ),
-                ),
-              ),
-            ],
-            const SizedBox(height: 100),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _handleReminderTap(BuildContext context, reminder) {
-    switch (reminder.type) {
-      case ReminderType.fridaySurah:
-        _showSnackBar(context, 'Opening Surah Al-Kahf...');
-        break;
-      case ReminderType.prayerUpcoming:
-        _showSnackBar(context, 'Opening Prayer Times...');
-        break;
-      case ReminderType.eidGreeting:
-        _showEidGreetingDialog(context, reminder);
-        break;
-      default:
-        _showSnackBar(context, 'Reminder opened');
-    }
-  }
-
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: primary));
-  }
-
-  void _showEidGreetingDialog(BuildContext context, reminder) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          '🌙 ${reminder.title}',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Text(
-          'Eid Mubarak! May this blessed day bring joy, peace, and prosperity to you and your family.',
-          style: GoogleFonts.poppins(color: textColor),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Ameen',
-              style: GoogleFonts.poppins(
-                color: primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
         ],
       ),
     );
