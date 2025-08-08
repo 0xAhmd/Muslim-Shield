@@ -4,6 +4,7 @@ import 'package:azkar/calc/presentation/pages/zakaat_calc_page.dart';
 import 'package:azkar/hadith/presentation/pages/books_page.dart';
 import 'package:azkar/names/presentation/pages/adhkar_page.dart';
 import 'package:azkar/names/presentation/pages/allah_names_page.dart';
+import 'package:azkar/prayer_tracker/presentation/pages/prayer_tracker_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -158,13 +159,34 @@ class CustomDrawer extends StatelessWidget {
                       );
                     },
                   ),
+                  SizedBox(height: 5.h),
 
+                  _buildDrawerItem(
+                    context,
+                    iconWidget: Image.asset(
+                      'assets/images/fire.png',
+                      width: 38,
+                    ),
+                    title: 'Prayer Tracker',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PrayerTrackerPage(),
+                        ),
+                      );
+                    },
+                  ),
                   SizedBox(height: 5.h),
 
                   // Reminders
                   _buildDrawerItem(
                     context,
-                    iconWidget: SvgPicture.asset('assets/svgs/lamp-icon.svg'),
+                    iconWidget: SvgPicture.asset(
+                      'assets/svgs/lamp-icon.svg',
+                      width: 40,
+                    ),
                     title: 'Reminders',
                     onTap: () {
                       Navigator.pop(context);
@@ -188,6 +210,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     icon: Icons.info_outline,
+
                     title: 'About',
                     onTap: () {
                       Navigator.pop(context);
@@ -239,7 +262,7 @@ class CustomDrawer extends StatelessWidget {
             Icon(
               icon,
               color: isComingSoon ? textColor.withOpacity(0.5) : primary,
-              size: 20.sp,
+              size: 28.sp,
             ),
       ),
       title: Text(
