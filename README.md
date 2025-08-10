@@ -110,16 +110,6 @@
 - Reset functionality
 - Track your daily dhikr progress
 
-###  Names of Allah (Asma ul Husna)
-- Complete collection of **99 Beautiful Names of Allah**
-- Each name includes:
-  - **Arabic calligraphy** (الرَّحْمٰنُ, الرَّحِيمُ, الْمَلِكُ)
-  - **Transliteration** (Ar-Rahman, Ar-Raheem, Al-Malik)
-  - **Detailed meanings** and explanations
-  - **Benefits and significance** of each name
-- Beautiful card-based interface
-- Tap for detailed information
-- Perfect for learning and reflection
 
 ### 📅 Islamic Reminders & Calendar
 - Interactive **Islamic calendar** with event markers
@@ -242,7 +232,6 @@ The Muslim Shield app provides a complete Islamic companion with:
 - **💰 Zakat Calculator** for accurate charitable giving
 - **📚 Hadith Collections** from authentic sources
 - **📿 Digital Tasbih** for dhikr counting
-- ** 99 Names of Allah** with detailed explanations
 - **📻 Live Quran Radio** streaming
 - **🕌 Masjid Finder** with location services
 - **📅 Islamic Calendar** with automatic reminders
