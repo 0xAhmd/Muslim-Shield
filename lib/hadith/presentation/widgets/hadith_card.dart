@@ -325,7 +325,7 @@ class _HadithCardState extends State<HadithCard>
                         ? SizedBox(
                             width: 20.sp,
                             height: 20.sp,
-                            child: CircularProgressIndicator(
+                            child: const CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 primary,

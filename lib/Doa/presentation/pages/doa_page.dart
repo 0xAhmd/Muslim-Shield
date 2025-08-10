@@ -1,15 +1,16 @@
-import '../widgets/category_filter.dart';
-import '../widgets/duaa_card.dart';
-import '../../../bookmarks/presentation/cubit/bookmark_cubit.dart';
-import '../../../bookmarks/presentation/cubit/bookmark_state.dart';
-import '../../../bookmarks/service/bookmark_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/dua_model.dart';
-import '../cubit/dua_state.dart';
-import '../cubit/dua_cubit.dart';
+
+import '../../../bookmarks/presentation/cubit/bookmark_cubit.dart';
+import '../../../bookmarks/presentation/cubit/bookmark_state.dart';
+import '../../../bookmarks/service/bookmark_service.dart';
 import '../../../constants.dart';
+import '../../data/dua_model.dart';
+import '../cubit/dua_cubit.dart';
+import '../cubit/dua_state.dart';
+import '../widgets/category_filter.dart';
+import '../widgets/duaa_card.dart';
 
 class DoaPage extends StatelessWidget {
   const DoaPage({super.key});

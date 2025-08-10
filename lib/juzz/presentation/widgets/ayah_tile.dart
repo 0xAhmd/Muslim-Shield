@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../../../constants.dart';
 import '../../../surah/data/service/last_read.dart';
 import '../../data/models/juzz_ayah.dart';
 import 'meta_data_chip.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AyahTile extends StatelessWidget {
   final JuzzAyah ayah;

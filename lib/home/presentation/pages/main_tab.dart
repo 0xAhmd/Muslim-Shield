@@ -1,13 +1,13 @@
-import '../../../sajda/presentation/widget/sajda_tab.dart';
+import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
 import '../../../hizb/presentation/widgets/hizb_tab.dart';
+import '../../../juzz/presentation/widgets/juz_tab.dart';
+import '../../../sajda/presentation/widget/sajda_tab.dart';
 import '../../../surah/widgets/custom_tab_bar.dart';
+import '../../../surah/widgets/surah_tab.dart';
 import '../widgets/greeting_section.dart';
 import '../widgets/search_appbar.dart';
-import '../../../juzz/presentation/widgets/juz_tab.dart';
-import '../../../surah/widgets/surah_tab.dart';
-import 'package:flutter/material.dart';
 
 class MainTabScreen extends StatefulWidget {
   const MainTabScreen({super.key});

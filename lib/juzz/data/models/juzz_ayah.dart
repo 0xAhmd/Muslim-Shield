@@ -1,5 +1,6 @@
-import '../../../surah/data/models/surah.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../../../surah/data/models/surah.dart';
 
 part 'juzz_ayah.g.dart';
 

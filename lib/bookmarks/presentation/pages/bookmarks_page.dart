@@ -492,7 +492,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.book, color: orange, size: 16),
+                              const Icon(Icons.book, color: orange, size: 16),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
@@ -759,7 +759,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
     } else {
       final difference = today.difference(bookmarkDate).inDays;
       if (difference < 7) {
-        return '${difference} days ago';
+        return '$difference days ago';
       } else if (difference < 30) {
         return '${(difference / 7).floor()} weeks ago';
       } else {

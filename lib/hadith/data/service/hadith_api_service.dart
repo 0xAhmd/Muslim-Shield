@@ -1,8 +1,8 @@
-import '../models/book.dart';
-import '../models/hadith.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../models/book.dart';
+import '../models/hadith.dart';
 
 part 'hadith_api_service.g.dart';
 

@@ -1,5 +1,7 @@
-import 'hijri_month.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'hijri_month.dart';
+
 part 'prayer_hijri.g.dart';
 
 @JsonSerializable()

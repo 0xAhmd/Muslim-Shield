@@ -1,9 +1,10 @@
-import 'adhkar_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../../constants.dart';
 import '../../data/models/adhkar.dart';
+import 'adhkar_card.dart';
 
 class AdhkarTabView extends StatelessWidget {
   final List<Adhkar> adhkar;

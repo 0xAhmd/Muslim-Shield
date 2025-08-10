@@ -1,22 +1,21 @@
-import 'Reminders/data/services/notification_service.dart';
-import 'core/widgets/blocked.dart';
-import 'core/connectivity_service.dart';
-import 'prayer_tracker/data/models/prayer_completion.dart';
-import 'prayer_tracker/data/service/prayer_tracker_service.dart';
-import 'tasbih/data/models/tasbih.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:safe_device/safe_device.dart';
 
+import 'Reminders/data/services/notification_service.dart';
 import 'bookmarks/model/bookmark.dart';
 import 'bookmarks/service/bookmark_service.dart';
 import 'constants.dart';
-import 'surah/audio/audio_state.dart';
+import 'core/connectivity_service.dart';
+import 'core/widgets/blocked.dart';
 import 'home/presentation/pages/home_screen.dart';
-
-import 'package:safe_device/safe_device.dart';
+import 'prayer_tracker/data/models/prayer_completion.dart';
+import 'prayer_tracker/data/service/prayer_tracker_service.dart';
+import 'surah/audio/audio_state.dart';
+import 'tasbih/data/models/tasbih.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
