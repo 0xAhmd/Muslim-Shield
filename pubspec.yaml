@@ -84,7 +84,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/sounds/
-    - asset/translations/
+    - assets/translations/
     - .env
   fonts:
     - family: Amiri
