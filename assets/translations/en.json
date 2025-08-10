@@ -1,0 +1,68 @@
+{
+  "app_name": "Muslim Shield",
+  "greeting": {
+    "assalamu_alaikum": "Assalamu Alaikum",
+    "bless_muhammad": "Bless Muhammad"
+  },
+  "navigation": {
+    "quran": "Quran",
+    "prayer": "Prayer",
+    "duas": "Duas",
+    "radio": "Radio",
+    "masjid": "Masjid",
+    "bookmarks": "Bookmarks"
+  },
+  "search": {
+    "search_surahs": "Search Surahs...",
+    "search_juzz": "Search Juzz...",
+    "search_hizb": "Search Hizb sections...",
+    "search_sajdas": "Search Sajdas...",
+    "search": "Search..."
+  },
+  "drawer": {
+    "names_of_allah": "Names of Allah",
+    "digital_tasbih": "Digital Tasbih",
+    "morning_evening_adhkar": "Morning & Evening Adhkar",
+    "hadith_collection": "Hadith Collection",
+    "zakat_calculator": "Zakat Calculator",
+    "prayer_tracker": "Prayer Tracker",
+    "reminders": "Reminders",
+    "about": "About",
+    "version": "Version"
+  },
+  "adhan_settings": {
+    "title": "Adhan Notifications",
+    "description": "Get notified with Adhan call at each prayer time. The app will play the Adhan sound when prayer time arrives.",
+    "enable_adhan": "Enable Adhan",
+    "active": "Active",
+    "disabled": "Disabled",
+    "keep_streak": "Keep Your Streak",
+    "enabled_message": "Adhan notifications enabled",
+    "disabled_message": "Adhan notifications disabled",
+    "test_message": "Test Adhan notification sent",
+    "permission_required": "Permission required. Please allow notifications in system settings.",
+    "settings": "Settings",
+    "info_note": "Adhan will play automatically at prayer times even when the app is closed. Make sure your device allows notifications."
+  },
+  "offline": {
+    "title": "No Internet Connection",
+    "message": "This content needs internet connectivity.\\nPlease make sure you have an internet connection."
+  },
+  "about_dialog": {
+    "title": "About Muslim Shield",
+    "description": "A comprehensive Islamic app designed to help Muslims in their daily spiritual journey.",
+    "features": "Features:",
+    "feature_list": "• Quran reading with audio\\n• Prayer times\\n• Duas collection\\n• Radio stations\\n• Masjid finder\\n• Digital Tasbih\\n• Names of Allah (99 Names)\\n• Morning & Evening Adhkar\\n• Hadith Collection Browser\\n• Zakat Calculator\\n• And more...",
+    "close": "Close"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "back": "Back"
+  }
+}
