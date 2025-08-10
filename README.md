@@ -208,7 +208,7 @@ To run this project locally:
 git clone https://github.com/0xAhmd/muslim-shield.git
 cd muslim-shield
 flutter pub get
-flutter run
+flutter run -- debug
 ```
 
 ### 📋 Prerequisites
@@ -242,7 +242,7 @@ The Muslim Shield app provides a complete Islamic companion with:
 - **💰 Zakat Calculator** for accurate charitable giving
 - **📚 Hadith Collections** from authentic sources
 - **📿 Digital Tasbih** for dhikr counting
-- **🕊️ 99 Names of Allah** with detailed explanations
+- ** 99 Names of Allah** with detailed explanations
 - **📻 Live Quran Radio** streaming
 - **🕌 Masjid Finder** with location services
 - **📅 Islamic Calendar** with automatic reminders
