@@ -1,4 +1,3 @@
-// lib/prayer_tracker/data/models/prayer_completion.dart
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -112,7 +111,6 @@ enum PrayerType {
   }
 }
 
-// lib/prayer_tracker/data/models/prayer_streak.dart
 @HiveType(typeId: 12)
 @JsonSerializable()
 class PrayerStreak extends HiveObject {
