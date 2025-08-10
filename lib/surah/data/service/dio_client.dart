@@ -13,12 +13,19 @@ class DioClient {
   factory DioClient() => _instance;
 
   DioClient._internal() {
-    // Original API dio instance
+    // Original API dio instance with fixed headers
     _dio = Dio();
     _dio.options = BaseOptions(
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
-      headers: {'Content-Type': 'application/json'},
+      // Use browser-like headers that work with the API
+      headers: {
+        'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      },
+      // Remove Content-Type from default headers since it's causing issues
     );
 
     // Audio API dio instance
@@ -27,7 +34,11 @@ class DioClient {
       baseUrl: 'https://quranapi.pages.dev/api',
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': '*/*',
+      },
     );
 
     // Add interceptors for logging
@@ -47,11 +58,41 @@ class DioClient {
       ),
     );
 
+    // Add request interceptor to ensure headers are applied correctly
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          debugPrint('🚀 [MAIN API REQUEST] ${options.method} ${options.uri}');
+          debugPrint('   Headers: ${options.headers}');
+          handler.next(options);
+        },
+        onResponse: (response, handler) {
+          debugPrint(
+            '✅ [MAIN API SUCCESS] ${response.requestOptions.method} ${response.requestOptions.uri}',
+          );
+          debugPrint('   Status: ${response.statusCode}');
+          handler.next(response);
+        },
+        onError: (error, handler) {
+          debugPrint(
+            '❌ [MAIN API ERROR] ${error.requestOptions.method} ${error.requestOptions.uri}',
+          );
+          debugPrint('   Type: ${error.type}');
+          debugPrint('   Status: ${error.response?.statusCode}');
+          debugPrint('   Message: ${error.message}');
+          if (error.response?.data != null) {
+            debugPrint('   Error Response: ${error.response?.data}');
+          }
+          handler.next(error);
+        },
+      ),
+    );
+
     _apiService = ApiService(_dio);
     _audioApiService = AudioApiService(_audioDio);
   }
 
   ApiService get apiService => _apiService;
   AudioApiService get audioApiService => _audioApiService;
-  Dio get audioDio => _audioDio; // Add this getter
+  Dio get audioDio => _audioDio;
 }
