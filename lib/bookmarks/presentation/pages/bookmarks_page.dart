@@ -176,7 +176,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                       child: IconButton(
                         onPressed: _showClearAllDialog,
                         icon: Icon(
-                          Icons.delete_sweep,
+                          Icons.remove_circle_outline,
                           color: Colors.red.withOpacity(0.8),
                           size: 24,
                         ),
@@ -550,8 +550,15 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
       ),
     );
   }
+  // Update the _buildHadithContent method in BookmarksPage
+  // Replace the existing method in lib/bookmarks/presentation/pages/bookmarks_page.dart
 
   Widget _buildHadithContent(BookmarkModel bookmark) {
+    // Get Arabic and English text from the bookmark
+    final arabicText = bookmark.arabicText ?? bookmark.metadata?['arabicText'];
+    final englishText =
+        bookmark.englishText ?? bookmark.metadata?['text'] ?? bookmark.content;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -578,17 +585,72 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
             ],
           ),
           const SizedBox(height: 12),
-          Text(
-            bookmark.content,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 16,
-              height: 1.6,
+
+          // Show Arabic text if available
+          if (arabicText != null && arabicText.isNotEmpty) ...[
+            Text(
+              arabicText,
+              style: GoogleFonts.amiri(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                height: 1.8,
+              ),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              textAlign: TextAlign.right,
+              textDirection: TextDirection.rtl,
             ),
-            softWrap: true,
-            overflow: TextOverflow.visible,
-            textAlign: TextAlign.justify,
-          ),
+            const SizedBox(height: 16),
+
+            // Show English translation below Arabic
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: scaffoldBackgroundColor.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Translation:',
+                    style: GoogleFonts.poppins(
+                      color: Colors.green.withOpacity(0.8),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    englishText,
+                    style: GoogleFonts.poppins(
+                      color: textColor,
+                      fontSize: 14,
+                      height: 1.5,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
+              ),
+            ),
+          ] else ...[
+            // Fallback to English text only if no Arabic text
+            Text(
+              englishText,
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 16,
+                height: 1.6,
+              ),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              textAlign: TextAlign.justify,
+            ),
+          ],
         ],
       ),
     );

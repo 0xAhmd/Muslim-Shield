@@ -45,7 +45,9 @@ class _HadithCardState extends State<HadithCard>
 
   Future<void> _checkBookmarkStatus() async {
     try {
-      final isBookmarked = await _bookmarksService.isHadithBookmarked(widget.hadith.id.toString());
+      final isBookmarked = await _bookmarksService.isHadithBookmarked(
+        widget.hadith.id.toString(),
+      );
       if (mounted) {
         setState(() {
           _isBookmarked = isBookmarked;
@@ -56,6 +58,9 @@ class _HadithCardState extends State<HadithCard>
     }
   }
 
+  // Update the _toggleBookmark method in HadithCard
+  // In lib/hadith/presentation/widgets/hadith_card.dart
+
   Future<void> _toggleBookmark() async {
     if (_isBookmarkLoading) return;
 
@@ -65,7 +70,9 @@ class _HadithCardState extends State<HadithCard>
 
     try {
       if (_isBookmarked) {
-        await _bookmarksService.removeHadithBookmark(widget.hadith.id.toString());
+        await _bookmarksService.removeHadithBookmark(
+          widget.hadith.id.toString(),
+        );
         if (mounted) {
           setState(() {
             _isBookmarked = false;
@@ -74,15 +81,17 @@ class _HadithCardState extends State<HadithCard>
           _showSnackBar('Hadith removed from bookmarks', Colors.orange);
         }
       } else {
-        // Create hadith bookmark
+        // Create hadith bookmark with both Arabic and English text
         await _bookmarksService.bookmarkHadith(
           hadithId: widget.hadith.id.toString(),
           title: 'Hadith #${widget.hadith.hadithNumber}',
-          text: widget.hadith.hadithEnglish,
-          reference: '${widget.hadith.book.name} - ${widget.hadith.attribution}',
+          text: widget.hadith.hadith, // English text
+          arabicText: widget.hadith.hadithArabic, // Arabic text (can be null)
+          reference:
+              '${widget.hadith.book.name} - ${widget.hadith.attribution}',
           category: widget.hadith.book.name,
         );
-        
+
         if (mounted) {
           setState(() {
             _isBookmarked = true;
@@ -305,8 +314,8 @@ class _HadithCardState extends State<HadithCard>
                 // Bookmark button
                 Container(
                   decoration: BoxDecoration(
-                    color: _isBookmarked 
-                        ? primary.withOpacity(0.1) 
+                    color: _isBookmarked
+                        ? primary.withOpacity(0.1)
                         : scaffoldBackgroundColor,
                     borderRadius: BorderRadius.circular(8.r),
                   ),
@@ -318,11 +327,15 @@ class _HadithCardState extends State<HadithCard>
                             height: 20.sp,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(primary),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                primary,
+                              ),
                             ),
                           )
                         : Icon(
-                            _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                            _isBookmarked
+                                ? Icons.bookmark
+                                : Icons.bookmark_border,
                             color: _isBookmarked ? primary : textColor,
                             size: 20.sp,
                           ),
@@ -369,7 +382,8 @@ class _HadithCardState extends State<HadithCard>
     final attribution = widget.hadith.attribution;
     final bookName = widget.hadith.book.name;
 
-    final text = '''${arabicText.isNotEmpty ? '$arabicText\n\n' : ''}$englishText
+    final text =
+        '''${arabicText.isNotEmpty ? '$arabicText\n\n' : ''}$englishText
 
 - $attribution
 Source: $bookName''';

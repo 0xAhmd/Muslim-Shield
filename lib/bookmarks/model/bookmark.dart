@@ -104,10 +104,14 @@ class BookmarkModel extends HiveObject {
     );
   }
 
+  // Update the BookmarkModel.fromHadith factory constructor
+  // In lib/bookmarks/model/bookmark.dart
+
   factory BookmarkModel.fromHadith({
     required String hadithId,
     required String title,
     required String text,
+    String? arabicText, // Add Arabic text parameter
     required String reference,
     String? category,
   }) {
@@ -116,16 +120,25 @@ class BookmarkModel extends HiveObject {
     return BookmarkModel(
       id: 'hadith_$hadithId',
       title: title,
-      content: text,
+      content:
+          arabicText ??
+          text, // Store Arabic text in content, fallback to English
       snippet: snippet,
       type: BookmarkType.hadith,
       reference: reference,
       category: category,
       createdAt: DateTime.now(),
-      metadata: {'text': text, 'reference': reference},
+      metadata: {
+        'text': text, // Store English text in metadata
+        'arabicText': arabicText, // Store Arabic text in metadata
+        'reference': reference,
+      },
     );
   }
 
+  // Add getter for English text
+  String? get englishText => metadata?['text'];
+  String? get arabicText => metadata?['arabicText'];
   // Getters for easy access to metadata
   String? get translation => metadata?['translation'];
   String? get transliteration => metadata?['transliteration'];

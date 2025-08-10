@@ -151,10 +151,15 @@ class BookmarksService {
   }
 
   // Bookmark a Hadith
+  // Update the bookmarkHadith method in BookmarksService
+  // In lib/bookmarks/service/bookmark_service.dart
+
+  // Bookmark a Hadith
   Future<void> bookmarkHadith({
     required String hadithId,
     required String title,
     required String text,
+    String? arabicText, // Add Arabic text parameter
     required String reference,
     String? category,
   }) async {
@@ -162,6 +167,7 @@ class BookmarksService {
       hadithId: hadithId,
       title: title,
       text: text,
+      arabicText: arabicText, // Pass Arabic text
       reference: reference,
       category: category,
     );
