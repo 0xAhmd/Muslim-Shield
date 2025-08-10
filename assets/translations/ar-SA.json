@@ -11,6 +11,12 @@
     "radio": "الراديو",
     "masjid": "المسجد",
     "bookmarks": "المحفوظات"
+  },  
+  "tabBar": {
+    "surah": "سور",
+    "Juzz'": "اجزاء",
+    "Hizb": "احزاب",
+    "Sajda": "سجدات"
   },
   "search": {
     "search_surahs": "البحث في السور...",
