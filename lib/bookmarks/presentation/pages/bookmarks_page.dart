@@ -543,6 +543,55 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                             ),
                           ),
                         ],
+                      ] else if (bookmark.type == BookmarkType.hadith) ...[
+                        // Hadith content - English text in a styled container
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: background,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.green.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Hadith text label
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.format_quote,
+                                    color: Colors.green,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Hadith Text:',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.green,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              // Hadith content
+                              Text(
+                                bookmark.content,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  height: 1.6,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                            ],
+                          ),
+                        ),
                       ] else ...[
                         // Other content types
                         Text(
@@ -566,20 +615,50 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.book, color: orange, size: 16),
+                              Icon(Icons.book, color: orange, size: 16),
                               const SizedBox(width: 8),
-                              Text(
-                                'Reference: ${bookmark.reference}',
-                                style: GoogleFonts.poppins(
-                                  color: textColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                              Expanded(
+                                child: Text(
+                                  'Reference: ${bookmark.reference}',
+                                  style: GoogleFonts.poppins(
+                                    color: textColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ],
+
+                      // Date added
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: scaffoldBackgroundColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              color: textColor.withOpacity(0.7),
+                              size: 14,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Bookmarked ${_formatDate(bookmark.createdAt)}',
+                              style: GoogleFonts.poppins(
+                                color: textColor.withOpacity(0.7),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
                       const SizedBox(height: 24),
                     ],
@@ -591,6 +670,28 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
         ),
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final bookmarkDate = DateTime(date.year, date.month, date.day);
+
+    if (bookmarkDate == today) {
+      return 'today';
+    } else if (bookmarkDate == yesterday) {
+      return 'yesterday';
+    } else {
+      final difference = today.difference(bookmarkDate).inDays;
+      if (difference < 7) {
+        return '${difference} days ago';
+      } else if (difference < 30) {
+        return '${(difference / 7).floor()} weeks ago';
+      } else {
+        return 'on ${date.day}/${date.month}/${date.year}';
+      }
+    }
   }
 
   Color _getTypeColor(BookmarkType type) {

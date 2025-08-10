@@ -150,6 +150,24 @@ class BookmarksService {
     await _localSource.addBookmark(bookmark);
   }
 
+  // Bookmark a Hadith
+  Future<void> bookmarkHadith({
+    required String hadithId,
+    required String title,
+    required String text,
+    required String reference,
+    String? category,
+  }) async {
+    final bookmark = BookmarkModel.fromHadith(
+      hadithId: hadithId,
+      title: title,
+      text: text,
+      reference: reference,
+      category: category,
+    );
+    await _localSource.addBookmark(bookmark);
+  }
+
   // Check if Ayah is bookmarked
   Future<bool> isAyahBookmarked(int surahNumber, int ayahNumber) async {
     final id = 'ayah_${surahNumber}_$ayahNumber';
@@ -162,6 +180,12 @@ class BookmarksService {
     return await _localSource.isBookmarked(id);
   }
 
+  // Check if Hadith is bookmarked
+  Future<bool> isHadithBookmarked(String hadithId) async {
+    final id = 'hadith_$hadithId';
+    return await _localSource.isBookmarked(id);
+  }
+
   // Remove Ayah bookmark
   Future<void> removeAyahBookmark(int surahNumber, int ayahNumber) async {
     final id = 'ayah_${surahNumber}_$ayahNumber';
@@ -171,6 +195,12 @@ class BookmarksService {
   // Remove Dua bookmark
   Future<void> removeDuaBookmark(String duaId) async {
     final id = 'dua_$duaId';
+    await _localSource.removeBookmark(id);
+  }
+
+  // Remove Hadith bookmark
+  Future<void> removeHadithBookmark(String hadithId) async {
+    final id = 'hadith_$hadithId';
     await _localSource.removeBookmark(id);
   }
 
@@ -189,6 +219,11 @@ class BookmarksService {
     return await _localSource.getBookmarksByType(type);
   }
 
+  // Get all Hadith bookmarks
+  Future<List<BookmarkModel>> getHadithBookmarks() async {
+    return await _localSource.getBookmarksByType(BookmarkType.hadith);
+  }
+
   // Search bookmarks
   Future<List<BookmarkModel>> searchBookmarks(String query) async {
     return await _localSource.searchBookmarks(query);
@@ -202,5 +237,10 @@ class BookmarksService {
   // Get bookmarks count
   Future<int> getBookmarksCount() async {
     return await _localSource.getBookmarksCount();
+  }
+
+  // Get recent bookmarks
+  Future<List<BookmarkModel>> getRecentBookmarks({int limit = 10}) async {
+    return await _localSource.getRecentBookmarks(limit: limit);
   }
 }

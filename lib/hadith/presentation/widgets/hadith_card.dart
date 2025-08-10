@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../constants.dart';
+import '../../../bookmarks/service/bookmark_service.dart';
 import '../../data/models/hadith.dart';
 
 class HadithCard extends StatefulWidget {
@@ -17,8 +18,11 @@ class HadithCard extends StatefulWidget {
 class _HadithCardState extends State<HadithCard>
     with SingleTickerProviderStateMixin {
   bool _showArabic = true;
+  bool _isBookmarked = false;
+  bool _isBookmarkLoading = false;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  final BookmarksService _bookmarksService = BookmarksService();
 
   @override
   void initState() {
@@ -30,12 +34,82 @@ class _HadithCardState extends State<HadithCard>
     _fadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
+    _checkBookmarkStatus();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _checkBookmarkStatus() async {
+    try {
+      final isBookmarked = await _bookmarksService.isHadithBookmarked(widget.hadith.id.toString());
+      if (mounted) {
+        setState(() {
+          _isBookmarked = isBookmarked;
+        });
+      }
+    } catch (e) {
+      // Handle error silently or show a snackbar
+    }
+  }
+
+  Future<void> _toggleBookmark() async {
+    if (_isBookmarkLoading) return;
+
+    setState(() {
+      _isBookmarkLoading = true;
+    });
+
+    try {
+      if (_isBookmarked) {
+        await _bookmarksService.removeHadithBookmark(widget.hadith.id.toString());
+        if (mounted) {
+          setState(() {
+            _isBookmarked = false;
+            _isBookmarkLoading = false;
+          });
+          _showSnackBar('Hadith removed from bookmarks', Colors.orange);
+        }
+      } else {
+        // Create hadith bookmark
+        await _bookmarksService.bookmarkHadith(
+          hadithId: widget.hadith.id.toString(),
+          title: 'Hadith #${widget.hadith.hadithNumber}',
+          text: widget.hadith.hadithEnglish,
+          reference: '${widget.hadith.book.name} - ${widget.hadith.attribution}',
+          category: widget.hadith.book.name,
+        );
+        
+        if (mounted) {
+          setState(() {
+            _isBookmarked = true;
+            _isBookmarkLoading = false;
+          });
+          _showSnackBar('Hadith bookmarked successfully', Colors.green);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isBookmarkLoading = false;
+        });
+        _showSnackBar('Error: ${e.toString()}', Colors.red);
+      }
+    }
+  }
+
+  void _showSnackBar(String message, Color backgroundColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+      ),
+    );
   }
 
   void _toggleLanguage() {
@@ -76,7 +150,7 @@ class _HadithCardState extends State<HadithCard>
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
-                    'Hadith #${widget.hadith.id}',
+                    'Hadith #${widget.hadith.hadithNumber}',
                     style: GoogleFonts.poppins(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
@@ -155,7 +229,7 @@ class _HadithCardState extends State<HadithCard>
                 duration: const Duration(milliseconds: 300),
                 child: Text(
                   _showArabic
-                      ? widget.hadith.hadithArabic!
+                      ? (widget.hadith.hadithArabic ?? widget.hadith.hadith)
                       : widget.hadith.hadith,
                   key: ValueKey(_showArabic),
                   style: _showArabic
@@ -224,13 +298,51 @@ class _HadithCardState extends State<HadithCard>
 
             SizedBox(height: 12.h),
 
-            Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                onPressed: () => _copyHadith(context),
-                icon: Icon(Icons.copy, color: textColor, size: 20.sp),
-                tooltip: 'Copy',
-              ),
+            // Action buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // Bookmark button
+                Container(
+                  decoration: BoxDecoration(
+                    color: _isBookmarked 
+                        ? primary.withOpacity(0.1) 
+                        : scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: IconButton(
+                    onPressed: _isBookmarkLoading ? null : _toggleBookmark,
+                    icon: _isBookmarkLoading
+                        ? SizedBox(
+                            width: 20.sp,
+                            height: 20.sp,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(primary),
+                            ),
+                          )
+                        : Icon(
+                            _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                            color: _isBookmarked ? primary : textColor,
+                            size: 20.sp,
+                          ),
+                    tooltip: _isBookmarked ? 'Remove bookmark' : 'Add bookmark',
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                // Copy button
+                Container(
+                  decoration: BoxDecoration(
+                    color: scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: IconButton(
+                    onPressed: () => _copyHadith(context),
+                    icon: Icon(Icons.copy, color: textColor, size: 20.sp),
+                    tooltip: 'Copy hadith',
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -255,20 +367,14 @@ class _HadithCardState extends State<HadithCard>
     final arabicText = widget.hadith.hadithArabic ?? '';
     final englishText = widget.hadith.hadith;
     final attribution = widget.hadith.attribution;
+    final bookName = widget.hadith.book.name;
 
-    final text =
-        '''$arabicText
+    final text = '''${arabicText.isNotEmpty ? '$arabicText\n\n' : ''}$englishText
 
-$englishText
-
-- $attribution''';
+- $attribution
+Source: $bookName''';
 
     Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Hadith copied to clipboard'),
-        backgroundColor: primary,
-      ),
-    );
+    _showSnackBar('Hadith copied to clipboard', primary);
   }
 }
