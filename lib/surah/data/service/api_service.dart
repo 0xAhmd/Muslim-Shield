@@ -5,7 +5,8 @@ import 'package:retrofit/retrofit.dart';
 
 part 'api_service.g.dart';
 
-@RestApi(baseUrl: 'http://api.alquran.cloud/v1/')
+// Use HTTPS instead of HTTP to avoid ISP interception
+@RestApi(baseUrl: 'https://api.alquran.cloud/v1/')
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
@@ -17,6 +18,7 @@ abstract class ApiService {
 
   @GET('/surah/{number}/ar.alafasy')
   Future<SurahDetailResponse> getSurahWithAudio(@Path('number') int number);
- @GET('/juz/{number}')
+  
+  @GET('/juz/{number}')
   Future<JuzzResponse> getJuzz(@Path('number') int number);
 }
