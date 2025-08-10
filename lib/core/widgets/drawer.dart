@@ -1,7 +1,6 @@
 // Updated lib/core/widgets/drawer.dart
 import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
 import 'package:azkar/calc/presentation/pages/zakaat_calc_page.dart';
-import 'package:azkar/hadith/presentation/pages/books_page.dart';
 import 'package:azkar/names/presentation/pages/adhkar_page.dart';
 import 'package:azkar/names/presentation/pages/allah_names_page.dart';
 import 'package:azkar/prayer_tracker/presentation/pages/prayer_tracker_page.dart';
@@ -10,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../constants.dart';
 import '../../../../tasbih/presentation/pages/tasbih_page.dart';
 
@@ -51,7 +51,7 @@ class CustomDrawer extends StatelessWidget {
                       ),
                       SizedBox(width: 12.w),
                       Text(
-                        'Muslim Shield',
+                        'app_name'.tr(),
                         style: GoogleFonts.poppins(
                           fontSize: 19.sp,
                           fontWeight: FontWeight.bold,
@@ -73,7 +73,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/allah.png'),
-                    title: 'Names of Allah',
+                    title: 'drawer.names_of_allah'.tr(),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -91,7 +91,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/tasbih.png'),
-                    title: 'Digital Tasbih',
+                    title: 'drawer.digital_tasbih'.tr(),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -108,7 +108,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/dua.png'),
-                    title: 'Morning & Evening Adhkar',
+                    title: 'drawer.morning_evening_adhkar'.tr(),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -122,32 +122,13 @@ class CustomDrawer extends StatelessWidget {
 
                   SizedBox(height: 5.h),
 
-                  // NEW: Hadith Browser
-                  _buildDrawerItem(
-                    context,
-                    iconWidget: Image.asset(
-                      'assets/images/muhammad.png',
-                      color: Colors.white,
-                    ),
-                    title: 'Hadith Collection',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BooksPage(),
-                        ),
-                      );
-                    },
-                  ),
-
-                  SizedBox(height: 5.h),
+            
 
                   // Zakat Calculator
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/zakat.png'),
-                    title: 'Zakat Calculator',
+                    title: 'drawer.zakat_calculator'.tr(),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -167,7 +148,7 @@ class CustomDrawer extends StatelessWidget {
                       'assets/images/fire.png',
                       width: 38,
                     ),
-                    title: 'Prayer Tracker',
+                    title: 'drawer.prayer_tracker'.tr(),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -187,7 +168,7 @@ class CustomDrawer extends StatelessWidget {
                       'assets/svgs/lamp-icon.svg',
                       width: 40,
                     ),
-                    title: 'Reminders',
+                    title: 'drawer.reminders'.tr(),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -200,6 +181,7 @@ class CustomDrawer extends StatelessWidget {
                     isComingSoon: false,
                   ),
                   SizedBox(height: 5.h),
+
                   Divider(
                     color: grey,
                     thickness: 1,
@@ -207,11 +189,25 @@ class CustomDrawer extends StatelessWidget {
                     endIndent: 24.w,
                   ),
 
+                  // Language Selection
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.language,
+                    title: 'Language',
+                    subtitle: context.locale.languageCode == 'ar'
+                        ? 'العربية'
+                        : 'English',
+                    onTap: () {
+                      _showLanguageDialog(context);
+                    },
+                  ),
+
+                  SizedBox(height: 5.h),
+
                   _buildDrawerItem(
                     context,
                     icon: Icons.info_outline,
-
-                    title: 'About',
+                    title: 'drawer.about'.tr(),
                     onTap: () {
                       Navigator.pop(context);
                       _showAboutDialog(context);
@@ -225,7 +221,7 @@ class CustomDrawer extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(24.r),
               child: Text(
-                'Version 1.3.2+1',
+                '${'drawer.version'.tr()} 1.3.2+1',
                 style: GoogleFonts.poppins(
                   fontSize: 12.sp,
                   color: textColor.withOpacity(0.7),
@@ -244,6 +240,7 @@ class CustomDrawer extends StatelessWidget {
     IconData? icon,
     Widget? iconWidget, // SVG or custom widget
     required String title,
+    String? subtitle,
     required VoidCallback onTap,
     bool isComingSoon = false,
   }) {
@@ -273,10 +270,93 @@ class CustomDrawer extends StatelessWidget {
           color: isComingSoon ? textColor.withOpacity(0.5) : Colors.white,
         ),
       ),
-
+      subtitle: subtitle != null
+          ? Text(
+              subtitle,
+              style: GoogleFonts.poppins(
+                fontSize: 12.sp,
+                color: textColor.withOpacity(0.7),
+              ),
+            )
+          : null,
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       hoverColor: primary.withOpacity(0.05),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: grey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Text(
+          'Select Language',
+          style: GoogleFonts.poppins(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // English Option
+            RadioListTile<String>(
+              value: 'en',
+              groupValue: context.locale.languageCode,
+              title: Text(
+                'English',
+                style: GoogleFonts.poppins(
+                  fontSize: 16.sp,
+                  color: Colors.white,
+                ),
+              ),
+              activeColor: primary,
+              onChanged: (value) async {
+                if (value != null) {
+                  await context.setLocale(const Locale('en', 'US'));
+                  Navigator.pop(context);
+                }
+              },
+            ),
+            // Arabic Option
+            RadioListTile<String>(
+              value: 'ar',
+              groupValue: context.locale.languageCode,
+              title: Text(
+                'العربية',
+                style: GoogleFonts.poppins(
+                  fontSize: 16.sp,
+                  color: Colors.white,
+                ),
+              ),
+              activeColor: primary,
+              onChanged: (value) async {
+                if (value != null) {
+                  await context.setLocale(const Locale('ar', 'SA'));
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'common.cancel'.tr(),
+              style: GoogleFonts.poppins(
+                color: primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -289,7 +369,7 @@ class CustomDrawer extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
         ),
         title: Text(
-          'About Muslim Shield',
+          'about_dialog.title'.tr(),
           style: GoogleFonts.poppins(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -301,12 +381,12 @@ class CustomDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'A comprehensive Islamic app designed to help Muslims in their daily spiritual journey.',
+              'about_dialog.description'.tr(),
               style: GoogleFonts.poppins(fontSize: 14.sp, color: textColor),
             ),
             SizedBox(height: 16.h),
             Text(
-              'Features:',
+              'about_dialog.features'.tr(),
               style: GoogleFonts.poppins(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
@@ -315,7 +395,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              '• Quran reading with audio\n• Prayer times\n• Duas collection\n• Radio stations\n• Masjid finder\n• Digital Tasbih\n• Names of Allah (99 Names)\n• Morning & Evening Adhkar\n• Hadith Collection Browser\n• Zakat Calculator\n• And more...',
+              'about_dialog.feature_list'.tr(),
               style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
             ),
           ],
@@ -324,7 +404,7 @@ class CustomDrawer extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Close',
+              'about_dialog.close'.tr(),
               style: GoogleFonts.poppins(
                 color: primary,
                 fontWeight: FontWeight.w600,

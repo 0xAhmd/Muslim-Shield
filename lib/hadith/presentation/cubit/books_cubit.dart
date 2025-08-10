@@ -23,6 +23,7 @@ class BooksCubit extends Cubit<BooksState> {
 
       emit(BooksLoaded(_validBooks));
     } catch (e) {
+      if (isClosed) return;
       emit(BooksError(e.toString()));
     }
   }
