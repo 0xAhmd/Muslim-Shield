@@ -1,4 +1,5 @@
 // Alternative solution - Updated lib/home/presentation/pages/home_screen.dart
+import 'package:azkar/bookmarks/presentation/pages/bookmarks_page.dart';
 import 'package:azkar/core/widgets/drawer.dart';
 import 'package:azkar/masjid/presentation/pages/masjid_finder_page.dart';
 import 'package:azkar/radio/presentation/pages/radio_page.dart';
@@ -10,7 +11,6 @@ import '../widgets/custom_nav_bar.dart';
 import '../../../prayer/presentation/pages/prayer_page.dart';
 import 'package:flutter/material.dart';
 import '../../../Doa/presentation/pages/doa_page.dart';
-import '../../../bookmarks/presentation/bookmarks_page.dart';
 
 // Global key for accessing scaffold from anywhere
 final GlobalKey<ScaffoldState> homeScaffoldKey = GlobalKey<ScaffoldState>();

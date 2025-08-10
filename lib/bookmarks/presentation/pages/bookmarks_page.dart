@@ -399,7 +399,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header with type and title
+                      // Header with type and category
                       Row(
                         children: [
                           Container(
@@ -471,140 +471,16 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                       const SizedBox(height: 24),
 
                       // Content based on type
-                      if (bookmark.type == BookmarkType.ayah ||
+                      if (bookmark.type == BookmarkType.hadith) ...[
+                        _buildHadithContent(bookmark),
+                      ] else if (bookmark.type == BookmarkType.ayah ||
                           bookmark.type == BookmarkType.dua) ...[
-                        // Arabic text
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: background,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: primary.withOpacity(0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: Text(
-                            bookmark.content,
-                            style: GoogleFonts.amiri(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                              height: 2.0,
-                            ),
-                            textAlign: TextAlign.right,
-                            textDirection: TextDirection.rtl,
-                          ),
-                        ),
-
-                        // Transliteration (for Duas)
-                        if (bookmark.transliteration != null) ...[
-                          const SizedBox(height: 20),
-                          Text(
-                            'Transliteration:',
-                            style: GoogleFonts.poppins(
-                              color: primary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            bookmark.transliteration!,
-                            style: GoogleFonts.poppins(
-                              color: textColor,
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                              height: 1.6,
-                            ),
-                          ),
-                        ],
-
-                        const SizedBox(height: 20),
-
-                        // Translation
-                        if (bookmark.translation != null) ...[
-                          Text(
-                            'Translation:',
-                            style: GoogleFonts.poppins(
-                              color: primary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            bookmark.translation!,
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 16,
-                              height: 1.6,
-                            ),
-                          ),
-                        ],
-                      ] else if (bookmark.type == BookmarkType.hadith) ...[
-                        // Hadith content - English text in a styled container
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: background,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.green.withOpacity(0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Hadith text label
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.format_quote,
-                                    color: Colors.green,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Hadith Text:',
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.green,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              // Hadith content
-                              Text(
-                                bookmark.content,
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  height: 1.6,
-                                ),
-                                textAlign: TextAlign.justify,
-                              ),
-                            ],
-                          ),
-                        ),
+                        _buildAyahOrDuaContent(bookmark),
                       ] else ...[
-                        // Other content types
-                        Text(
-                          bookmark.content,
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 16,
-                            height: 1.6,
-                          ),
-                        ),
+                        _buildOtherContent(bookmark),
                       ],
 
-                      // Reference
+                      // Reference (if exists)
                       if (bookmark.reference != null) ...[
                         const SizedBox(height: 20),
                         Container(
@@ -614,6 +490,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(Icons.book, color: orange, size: 16),
                               const SizedBox(width: 8),
@@ -625,6 +502,8 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
                                 ),
                               ),
                             ],
@@ -669,6 +548,139 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildHadithContent(BookmarkModel bookmark) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.green.withOpacity(0.3), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.format_quote, color: Colors.green, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Hadith Text:',
+                style: GoogleFonts.poppins(
+                  color: Colors.green,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            bookmark.content,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 16,
+              height: 1.6,
+            ),
+            softWrap: true,
+            overflow: TextOverflow.visible,
+            textAlign: TextAlign.justify,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAyahOrDuaContent(BookmarkModel bookmark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: primary.withOpacity(0.3), width: 1),
+          ),
+          child: Text(
+            bookmark.content,
+            style: GoogleFonts.amiri(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+              height: 2.0,
+            ),
+            textAlign: TextAlign.right,
+            textDirection: TextDirection.rtl,
+            softWrap: true,
+            overflow: TextOverflow.visible,
+          ),
+        ),
+
+        if (bookmark.transliteration != null) ...[
+          const SizedBox(height: 20),
+          Text(
+            'Transliteration:',
+            style: GoogleFonts.poppins(
+              color: primary,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            bookmark.transliteration!,
+            style: GoogleFonts.poppins(
+              color: textColor,
+              fontSize: 16,
+              fontStyle: FontStyle.italic,
+              height: 1.6,
+            ),
+            softWrap: true,
+            overflow: TextOverflow.visible,
+          ),
+        ],
+
+        if (bookmark.translation != null) ...[
+          const SizedBox(height: 20),
+          Text(
+            'Translation:',
+            style: GoogleFonts.poppins(
+              color: primary,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            bookmark.translation!,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 16,
+              height: 1.6,
+            ),
+            softWrap: true,
+            overflow: TextOverflow.visible,
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildOtherContent(BookmarkModel bookmark) {
+    return Text(
+      bookmark.content,
+      style: GoogleFonts.poppins(
+        color: Colors.white,
+        fontSize: 16,
+        height: 1.6,
+      ),
+      softWrap: true,
+      overflow: TextOverflow.visible,
     );
   }
 
