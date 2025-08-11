@@ -30,12 +30,12 @@ class _HomeScreenState extends State<HomeScreen>
 
   // Reduced to core features only
   final List<Widget> _pages = const [
-    MainTabScreen(), // 0 - Quran
-    PrayerPage(), // 1 - Prayer
-    DoaPage(), // 2 - Duas
-    RadioPage(), // 3 - Radio
-    MasjidFinderPage(), // 4 - Masjid
-    BookmarksPage(), // 5 - Bookmarks (moved reminders to drawer or combine)
+    MainTabScreen(),
+    PrayerPage(),
+    DoaPage(),
+    RadioPage(),
+    MasjidFinderPage(),
+    BookmarksPage(),
   ];
 
   @override

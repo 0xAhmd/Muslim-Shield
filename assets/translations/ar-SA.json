@@ -11,12 +11,6 @@
     "radio": "الراديو",
     "masjid": "المسجد",
     "bookmarks": "المحفوظات"
-  },  
-  "tabBar": {
-    "surah": "سور",
-    "Juzz'": "اجزاء",
-    "Hizb": "احزاب",
-    "Sajda": "سجدات"
   },
   "search": {
     "search_surahs": "البحث في السور...",
@@ -61,6 +55,64 @@
     "feature_list": "• قراءة القرآن مع الصوت\\n• أوقات الصلاة\\n• مجموعة الأدعية\\n• محطات الراديو\\n• باحث المساجد\\n• السبحة الرقمية\\n• أسماء الله الحسنى\\n• أذكار الصباح والمساء\\n• متصفح مجموعة الأحاديث\\n• حاسبة الزكاة\\n• والمزيد...",
     "close": "إغلاق"
   },
+  "language": {
+    "title": "اختيار اللغة",
+    "english": "English",
+    "arabic": "العربية"
+  },
+
+  "last_read": {
+    "title": "آخر قراءة",
+    "start_reading": "ابدأ القراءة",
+    "start_thawab_streak": "ابدأ سلسلة الثواب",
+    "refreshed": "تم التحديث",
+    "ayah": "آية",
+    "juzz": "جزء"
+  },
+  "tabs": {
+    "surah": "سور",
+    "juzz": "أجزاء", 
+    "hizb": "أحزاب",
+    "sajda": "سجدات"
+  },
+  "search_results": {
+    "results_for": "نتائج البحث عن",
+    "result": "نتيجة",
+    "results": "نتائج",
+    "no_results_found": "لم يتم العثور على نتائج",
+    "try_different_keywords": "جرب كلمات مفتاحية مختلفة",
+    "no_surahs_found": "لا توجد سور",
+    "search_reciters": "البحث في القراء...",
+    "reciters_found": "قارئ موجود",
+    "reciter_found": "قارئ موجود",
+    "no_reciters_available": "لا يوجد قراء متاحون",
+    "no_reciters_found_for": "لم يتم العثور على قراء لـ",
+    "clear_search": "مسح البحث"
+  },
+  "reciter": {
+    "select_reciter": "اختيار القارئ",
+    "select": "اختيار",
+    "tajweed": "تجويد",
+    "close": "إغلاق"
+  },
+  "surah_details": {
+    "ayahs": "آيات",
+    "ayah": "آية",
+    "english_name": "الاسم الإنجليزي",
+    "arabic_name": "الاسم العربي",
+    "translation": "الترجمة",
+    "number_of_ayahs": "عدد الآيات"
+  },
+  "connectivity": {
+    "no_internet_connection": "لا يوجد اتصال بالإنترنت",
+    "content_needs_internet": "يحتاج هذا المحتوى إلى اتصال بالإنترنت.\\nيرجى التأكد من وجود اتصال بالإنترنت.",
+    "surahs_need_internet": "محتوى السور يحتاج إلى اتصال بالإنترنت.\\nيرجى التأكد من وجود اتصال بالإنترنت.",
+    "retry": "إعادة المحاولة"
+  },
+  "errors": {
+    "error_loading_surahs": "خطأ في تحميل السور",
+    "no_internet_connection": "لا يوجد اتصال بالإنترنت"
+  },
   "common": {
     "ok": "موافق",
     "cancel": "إلغاء",
@@ -69,6 +121,8 @@
     "loading": "جاري التحميل...",
     "error": "خطأ",
     "retry": "إعادة المحاولة",
-    "back": "رجوع"
+    "back": "رجوع",
+    "close": "إغلاق",
+    "select": "اختيار"
   }
 }

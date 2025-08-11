@@ -12,6 +12,12 @@
     "masjid": "Masjid",
     "bookmarks": "Bookmarks"
   },
+  "tabBar": {
+    "surah": "Surah",
+    "juzz": "Juzz'",
+    "hizb": "Hizb", 
+    "sajda": "Sajda"
+  },
   "search": {
     "search_surahs": "Search Surahs...",
     "search_juzz": "Search Juzz...",
@@ -55,6 +61,64 @@
     "feature_list": "• Quran reading with audio\\n• Prayer times\\n• Duas collection\\n• Radio stations\\n• Masjid finder\\n• Digital Tasbih\\n• Names of Allah (99 Names)\\n• Morning & Evening Adhkar\\n• Hadith Collection Browser\\n• Zakat Calculator\\n• And more...",
     "close": "Close"
   },
+  "language": {
+    "title": "Select Language",
+    "english": "English",
+    "arabic": "العربية"
+  },
+
+  "last_read": {
+    "title": "Last Read",
+    "start_reading": "Start Reading",
+    "start_thawab_streak": "Start Thawab Streak",
+    "refreshed": "Refreshed",
+    "ayah": "Ayah",
+    "juzz": "Juzz"
+  },
+  "tabs": {
+    "surah": "Surah",
+    "juzz": "Juzz'",
+    "hizb": "Hizb",
+    "sajda": "Sajda"
+  },
+  "search_results": {
+    "results_for": "results for",
+    "result": "result",
+    "results": "results",
+    "no_results_found": "No results found",
+    "try_different_keywords": "Try searching with different keywords",
+    "no_surahs_found": "No surahs found",
+    "search_reciters": "Search reciters...",
+    "reciters_found": "reciters found",
+    "reciter_found": "reciter found",
+    "no_reciters_available": "No reciters available",
+    "no_reciters_found_for": "No reciters found for",
+    "clear_search": "Clear search"
+  },
+  "reciter": {
+    "select_reciter": "Select Reciter",
+    "select": "Select",
+    "tajweed": "Tajweed",
+    "close": "Close"
+  },
+  "surah_details": {
+    "ayahs": "Ayahs",
+    "ayah": "Ayah",
+    "english_name": "English Name",
+    "arabic_name": "Arabic Name", 
+    "translation": "Translation",
+    "number_of_ayahs": "Number of Ayahs"
+  },
+  "connectivity": {
+    "no_internet_connection": "No Internet Connection",
+    "content_needs_internet": "This content needs internet connectivity.\\nPlease make sure you have an internet connection.",
+    "surahs_need_internet": "Surahs content needs internet connectivity.\\nPlease make sure you have an internet connection.",
+    "retry": "Retry"
+  },
+  "errors": {
+    "error_loading_surahs": "Error loading surahs",
+    "no_internet_connection": "No internet connection"
+  },
   "common": {
     "ok": "OK",
     "cancel": "Cancel",
@@ -63,6 +127,8 @@
     "loading": "Loading...",
     "error": "Error",
     "retry": "Retry",
-    "back": "Back"
+    "back": "Back",
+    "close": "Close",
+    "select": "Select"
   }
 }
