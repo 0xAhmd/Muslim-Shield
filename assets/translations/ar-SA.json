@@ -96,12 +96,16 @@
     "close": "إغلاق"
   },
   "surah_details": {
-    "ayahs": "آيات",
-    "ayah": "آية",
-    "english_name": "الاسم الإنجليزي",
-    "arabic_name": "الاسم العربي",
-    "translation": "الترجمة",
-    "number_of_ayahs": "عدد الآيات"
+    "read": "قراءة",
+    "listen": "استماع",
+    "save_reading_progress": "حفظ تقدم القراءة",
+    "select_current_ayah": "اختر الآية التي تقرأها حاليًا:",
+    "progress": "التقدم",
+    "progress_saved": "تم حفظ التقدم",
+    "now_playing": "يتم التشغيل الآن",
+    "of": "من",
+    "loading_audio": "جاري تحميل الصوت...",
+    "ayah": "آية"
   },
   "connectivity": {
     "no_internet_connection": "لا يوجد اتصال بالإنترنت",
@@ -109,9 +113,15 @@
     "surahs_need_internet": "محتوى السور يحتاج إلى اتصال بالإنترنت.\\nيرجى التأكد من وجود اتصال بالإنترنت.",
     "retry": "إعادة المحاولة"
   },
-  "errors": {
-    "error_loading_surahs": "خطأ في تحميل السور",
-    "no_internet_connection": "لا يوجد اتصال بالإنترنت"
+ "errors": {
+    "error_loading_surah": "خطأ في تحميل السورة",
+    "failed_load_reciters": "فشل في تحميل القراء",
+    "failed_load_audio": "فشل في تحميل الصوت",
+    "audio_playback_error": "خطأ في تشغيل الصوت",
+    "failed_play_ayah": "فشل في تشغيل الآية"
+  },  "bookmarks": {
+    "bookmark_removed": "تم إزالة المرجعية",
+    "ayah_bookmarked": "تم حفظ الآية في المرجعية"
   },
   "common": {
     "ok": "موافق",
@@ -123,6 +133,7 @@
     "retry": "إعادة المحاولة",
     "back": "رجوع",
     "close": "إغلاق",
-    "select": "اختيار"
+    "select": "اختيار",    "save": "حفظ",
+    "change": "تغيير"
   }
 }
