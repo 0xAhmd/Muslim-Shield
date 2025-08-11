@@ -1,4 +1,3 @@
-// Updated lib/core/widgets/drawer.dart
 import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
 import 'package:azkar/calc/presentation/pages/zakaat_calc_page.dart';
 import 'package:azkar/names/presentation/pages/adhkar_page.dart';
@@ -122,8 +121,6 @@ class CustomDrawer extends StatelessWidget {
 
                   SizedBox(height: 5.h),
 
-            
-
                   // Zakat Calculator
                   _buildDrawerItem(
                     context,
@@ -188,21 +185,6 @@ class CustomDrawer extends StatelessWidget {
                     indent: 24.w,
                     endIndent: 24.w,
                   ),
-
-                  // Language Selection
-                  _buildDrawerItem(
-                    context,
-                    icon: Icons.language,
-                    title: 'Language',
-                    subtitle: context.locale.languageCode == 'ar'
-                        ? 'العربية'
-                        : 'English',
-                    onTap: () {
-                      _showLanguageDialog(context);
-                    },
-                  ),
-
-                  SizedBox(height: 5.h),
 
                   _buildDrawerItem(
                     context,
@@ -282,81 +264,6 @@ class CustomDrawer extends StatelessWidget {
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       hoverColor: primary.withOpacity(0.05),
-    );
-  }
-
-  void _showLanguageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: grey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        title: Text(
-          'Select Language',
-          style: GoogleFonts.poppins(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // English Option
-            RadioListTile<String>(
-              value: 'en',
-              groupValue: context.locale.languageCode,
-              title: Text(
-                'English',
-                style: GoogleFonts.poppins(
-                  fontSize: 16.sp,
-                  color: Colors.white,
-                ),
-              ),
-              activeColor: primary,
-              onChanged: (value) async {
-                if (value != null) {
-                  await context.setLocale(const Locale('en', 'US'));
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            // Arabic Option
-            RadioListTile<String>(
-              value: 'ar',
-              groupValue: context.locale.languageCode,
-              title: Text(
-                'العربية',
-                style: GoogleFonts.poppins(
-                  fontSize: 16.sp,
-                  color: Colors.white,
-                ),
-              ),
-              activeColor: primary,
-              onChanged: (value) async {
-                if (value != null) {
-                  await context.setLocale(const Locale('ar', 'SA'));
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'common.cancel'.tr(),
-              style: GoogleFonts.poppins(
-                color: primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
