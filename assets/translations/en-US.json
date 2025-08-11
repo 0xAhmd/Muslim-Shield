@@ -15,12 +15,13 @@
   "tabBar": {
     "surah": "Surah",
     "juzz": "Juzz'",
-    "hizb": "Hizb", 
+    "hizb": "Hizb",
     "sajda": "Sajda"
-  },  "bookmarks": {
+  },
+  "bookmarks": {
     "bookmark_removed": "Bookmark removed",
-    "ayah_bookmarked": "Ayah bookmarked",    "bookmark_saved": "Bookmark saved"
-
+    "ayah_bookmarked": "Ayah bookmarked",
+    "bookmark_saved": "Bookmark saved"
   },
   "search": {
     "search_surahs": "Search Surahs...",
@@ -70,7 +71,6 @@
     "english": "English",
     "arabic": "العربية"
   },
-
   "last_read": {
     "title": "Last Read",
     "start_reading": "Start Reading",
@@ -106,7 +106,7 @@
     "close": "Close"
   },
   "surah_details": {
-     "read": "Read",
+    "read": "Read",
     "listen": "Listen",
     "save_reading_progress": "Save Reading Progress",
     "select_current_ayah": "Select the ayah you're currently reading:",
@@ -121,12 +121,9 @@
     "no_internet_connection": "No Internet Connection",
     "content_needs_internet": "This content needs internet connectivity.\\nPlease make sure you have an internet connection.",
     "surahs_need_internet": "Surahs content needs internet connectivity.\\nPlease make sure you have an internet connection.",
-    "retry": "Retry", 
-    
-      "sajda_need_internet": "Sajda content needs internet connectivity.\nPlease make sure you have an internet connection."
-,
+    "retry": "Retry",
+    "sajda_need_internet": "Sajda content needs internet connectivity.\nPlease make sure you have an internet connection.",
     "juzz_need_internet": "Juzz content needs internet connectivity.\nPlease make sure you have an internet connection."
-
   },
   "errors": {
     "error_loading_surahs": "Error loading surahs",
@@ -139,9 +136,7 @@
     "error_loading_juzz_sections": "Error loading Juzz sections",
     "error_loading_juzz": "Error Loading Juzz"
   },
-
-
-   "juzz": {
+  "juzz": {
     "juzz": "Juzz",
     "loading_juzz_sections": "Loading Juzz sections...",
     "no_juzz_found": "No Juzz found",
@@ -154,31 +149,34 @@
     "page": "Page",
     "ruku": "Ruku",
     "sajda": "Sajda"
-  },"hizb": {
-  "holy_quran": "Holy Quran",
-  "ayahs": "Ayahs", 
-  "surahs": "Surahs",
-  "surah": "Surah",
-  "juzz": "Juzz",
-  "last_read": "Last Read",
-  "ayah_number": "Ayah {number}",
-  "sajdah": "Sajdah",
-  "ayah_options": "Ayah {number} Options",
-  "mark_last_read": "Mark as Last Read",
-  "copy_arabic": "Copy Arabic Text", 
-  "share_ayah": "Share Ayah",
-  "something_wrong": "Something went wrong",
-  "try_again": "Try Again",
-  "found_results": "Found {count} result{plural} for \"{query}\"",
-  "no_hizb_found": "No Hizb sections found",
-  "no_hizb_description": "Try searching with different keywords like Hizb number, Juzz, or Surah name",
-  "no_hizb_available": "No Hizb sections available", 
-  "no_hizb_available_description": "Please check your internet connection and try again",
-  "loading_hizb_number": "Loading Hizb {number}...",
-  "loading_hizb_sections": "Loading Hizb sections...",
-  "loading_fetch_data": "Please wait while we fetch the data"
-}, "sajda": {  "sajda_type_obligatory": "Obligatory",
-  "sajda_type_recommended": "Recommended",
+  },
+  "hizb": {
+    "holy_quran": "Holy Quran",
+    "ayahs": "Ayahs",
+    "surahs": "Surahs",
+    "surah": "Surah",
+    "juzz": "Juzz",
+    "last_read": "Last Read",
+    "ayah_number": "Ayah {number}",
+    "sajdah": "Sajdah",
+    "ayah_options": "Ayah {number} Options",
+    "mark_last_read": "Mark as Last Read",
+    "copy_arabic": "Copy Arabic Text",
+    "share_ayah": "Share Ayah",
+    "something_wrong": "Something went wrong",
+    "try_again": "Try Again",
+    "found_results": "Found {count} result{plural} for \"{query}\"",
+    "no_hizb_found": "No Hizb sections found",
+    "no_hizb_description": "Try searching with different keywords like Hizb number, Juzz, or Surah name",
+    "no_hizb_available": "No Hizb sections available",
+    "no_hizb_available_description": "Please check your internet connection and try again",
+    "loading_hizb_number": "Loading Hizb {number}...",
+    "loading_hizb_sections": "Loading Hizb sections...",
+    "loading_fetch_data": "Please wait while we fetch the data"
+  },
+  "sajda": {
+    "sajda_type_obligatory": "Obligatory",
+    "sajda_type_recommended": "Recommended",
     "sajda": "Sajda",
     "sajdas": "Sajdas",
     "sajda_number": "Sajda {number}",
@@ -209,6 +207,41 @@
     "no_sajdas_available": "No sajdas available",
     "check_internet_connection": "Please check your internet connection and try again"
   },
+  "prayer": {
+    "notification_warning": "Warning: Could not initialize notification service: {error}",
+    "adhan_scheduling_error": "Error scheduling Adhan notifications: {error}",
+    "connection_lost": "Connection lost - Prayer times may be outdated",
+    "prayer_times": "Prayer Times",
+    "no_internet": "No internet connection",
+    "internet_required": "Prayer times need internet connectivity to fetch accurate times based on your location.\nPlease make sure you have an internet connection.",
+    "something_wrong": "Something went wrong",
+    "try_again": "Try Again",
+    "no_connection": "No Connection",
+    "welcome": "Welcome to Prayer Times",
+    "get_started": "Tap the button below to get started",
+    "get_prayer_times": "Get Prayer Times",
+    "offline_cached": "Offline - Showing cached prayer times",
+    "qiblah": "Qiblah",
+    "sunnah": "Sunnah",
+    "adhan": "Adhan",
+    "compass_offline": "Qiblah compass works offline using device sensors",
+    "sunnah_offline": "Sunnah prayers information is available offline",
+    "qiblah_direction": "Qiblah Direction",
+    "loading_compass": "Loading compass...",
+    "device_not_supported": "Device Not Supported",
+    "device_no_compass": "Your device doesn't support compass functionality",
+    "compass_error": "Compass Error",
+    "check_sensors": "Please check your device sensors",
+    "direction": "Direction",
+    "next_prayer": "Next Prayer",
+    "loading_next_prayer": "Loading next prayer...",
+    "todays_prayers": "Today's Prayers",
+    "sunnah_prayers": "Sunnah Prayers",
+    "rakah": "Rak'ah",
+    "short": "Short",
+    "medium": "Medium",
+    "long": "Long"
+  },
   "common": {
     "ok": "OK",
     "cancel": "Cancel",
@@ -219,8 +252,10 @@
     "retry": "Retry",
     "back": "Back",
     "close": "Close",
-    "select": "Select", "save": "Save",
-    "change": "Change",  "initializing": "Initializing...",
+    "select": "Select",
+    "save": "Save",
+    "change": "Change",
+    "initializing": "Initializing...",
     "go_back": "Go Back"
   }
 }

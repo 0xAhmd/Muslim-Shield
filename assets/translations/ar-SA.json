@@ -60,7 +60,6 @@
     "english": "English",
     "arabic": "العربية"
   },
-
   "last_read": {
     "title": "آخر قراءة",
     "start_reading": "ابدأ القراءة",
@@ -71,7 +70,7 @@
   },
   "tabs": {
     "surah": "سور",
-    "juzz": "أجزاء", 
+    "juzz": "أجزاء",
     "hizb": "أحزاب",
     "sajda": "سجدات"
   },
@@ -107,38 +106,76 @@
     "loading_audio": "جاري تحميل الصوت...",
     "ayah": "آية"
   },
-  "connectivity": {  "sajda_need_internet": "محتوى السجدات يحتاج إلى اتصال بالإنترنت.\nيرجى التأكد من وجود اتصال بالإنترنت."
-,
+  "connectivity": {
+    "sajda_need_internet": "محتوى السجدات يحتاج إلى اتصال بالإنترنت.\nيرجى التأكد من وجود اتصال بالإنترنت.",
     "no_internet_connection": "لا يوجد اتصال بالإنترنت",
     "content_needs_internet": "يحتاج هذا المحتوى إلى اتصال بالإنترنت.\\nيرجى التأكد من وجود اتصال بالإنترنت.",
     "surahs_need_internet": "محتوى السور يحتاج إلى اتصال بالإنترنت.\\nيرجى التأكد من وجود اتصال بالإنترنت.",
-    "retry": "إعادة المحاولة",  "juzz_need_internet": "محتوى الأجزاء يحتاج إلى اتصال بالإنترنت.\nيرجى التأكد من وجود اتصال بالإنترنت."
-
-  },"hizb": {
-  "holy_quran": "القرآن الكريم",
-  "ayahs": "آيات",
-  "surahs": "سور", 
-  "surah": "سورة",
-  "juzz": "جزء",
-  "last_read": "آخر قراءة",
-  "ayah_number": "آية {number}",
-  "sajdah": "سجدة",
-  "ayah_options": "خيارات الآية {number}",
-  "mark_last_read": "تحديد كآخر قراءة",
-  "copy_arabic": "نسخ النص العربي",
-  "share_ayah": "مشاركة الآية", 
-  "something_wrong": "حدث خطأ ما",
-  "try_again": "المحاولة مرة أخرى",
-  "found_results": "تم العثور على {count} نتيجة لـ \"{query}\"",
-  "no_hizb_found": "لم يتم العثور على أحزاب",
-  "no_hizb_description": "جرب البحث بكلمات مختلفة مثل رقم الحزب أو الجزء أو اسم السورة",
-  "no_hizb_available": "لا توجد أحزاب متاحة",
-  "no_hizb_available_description": "يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى", 
-  "loading_hizb_number": "جاري تحميل الحزب {number}...",
-  "loading_hizb_sections": "جاري تحميل الأحزاب...",
-  "loading_fetch_data": "يرجى الانتظار بينما نجلب البيانات"
-}, "sajda": { "sajda_type_obligatory": "واجبة",
-  "sajda_type_recommended": "مستحبة",
+    "retry": "إعادة المحاولة",
+    "juzz_need_internet": "محتوى الأجزاء يحتاج إلى اتصال بالإنترنت.\nيرجى التأكد من وجود اتصال بالإنترنت."
+  },
+  "hizb": {
+    "holy_quran": "القرآن الكريم",
+    "ayahs": "آيات",
+    "surahs": "سور",
+    "surah": "سورة",
+    "juzz": "جزء",
+    "last_read": "آخر قراءة",
+    "ayah_number": "آية {number}",
+    "sajdah": "سجدة",
+    "ayah_options": "خيارات الآية {number}",
+    "mark_last_read": "تحديد كآخر قراءة",
+    "copy_arabic": "نسخ النص العربي",
+    "share_ayah": "مشاركة الآية",
+    "something_wrong": "حدث خطأ ما",
+    "try_again": "المحاولة مرة أخرى",
+    "found_results": "تم العثور على {count} نتيجة لـ \"{query}\"",
+    "no_hizb_found": "لم يتم العثور على أحزاب",
+    "no_hizb_description": "جرب البحث بكلمات مختلفة مثل رقم الحزب أو الجزء أو اسم السورة",
+    "no_hizb_available": "لا توجد أحزاب متاحة",
+    "no_hizb_available_description": "يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى",
+    "loading_hizb_number": "جاري تحميل الحزب {number}...",
+    "loading_hizb_sections": "جاري تحميل الأحزاب...",
+    "loading_fetch_data": "يرجى الانتظار بينما نجلب البيانات"
+  },
+  "sajda": {
+    "sajda_type_obligatory": "واجبة",
+    "sajda_type_recommended": "مستحبة",
+    "prayer": {
+      "notification_warning": "تحذير: لا يمكن تهيئة خدمة الإشعارات: {error}",
+      "adhan_scheduling_error": "خطأ في جدولة إشعارات الأذان: {error}",
+      "connection_lost": "انقطع الاتصال - قد تكون أوقات الصلاة قديمة",
+      "prayer_times": "أوقات الصلاة",
+      "no_internet": "لا يوجد اتصال بالإنترنت",
+      "internet_required": "تحتاج أوقات الصلاة إلى اتصال بالإنترنت للحصول على أوقات دقيقة بناءً على موقعك.\nيرجى التأكد من وجود اتصال بالإنترنت.",
+      "something_wrong": "حدث خطأ ما",
+      "try_again": "حاول مرة أخرى",
+      "no_connection": "لا يوجد اتصال",
+      "welcome": "مرحباً بك في أوقات الصلاة",
+      "get_started": "اضغط على الزر أدناه للبدء",
+      "get_prayer_times": "الحصول على أوقات الصلاة",
+      "offline_cached": "غير متصل - عرض أوقات الصلاة المحفوظة",
+      "qiblah": "القبلة",
+      "sunnah": "السنة",
+      "adhan": "الأذان",
+      "compass_offline": "بوصلة القبلة تعمل بدون إنترنت باستخدام حساسات الجهاز",
+      "sunnah_offline": "معلومات صلوات السنة متاحة بدون إنترنت",
+      "qiblah_direction": "اتجاه القبلة",
+      "loading_compass": "جاري تحميل البوصلة...",
+      "device_not_supported": "الجهاز غير مدعوم",
+      "device_no_compass": "جهازك لا يدعم وظيفة البوصلة",
+      "compass_error": "خطأ في البوصلة",
+      "check_sensors": "يرجى فحص حساسات الجهاز",
+      "direction": "الاتجاه",
+      "next_prayer": "الصلاة القادمة",
+      "loading_next_prayer": "جاري تحميل الصلاة القادمة...",
+      "todays_prayers": "صلوات اليوم",
+      "sunnah_prayers": "صلوات السنة",
+      "rakah": "ركعة",
+      "short": "قصيرة",
+      "medium": "متوسطة",
+      "long": "طويلة"
+    },
     "sajda": "سجدة",
     "sajdas": "السجدات",
     "sajda_number": "سجدة {number}",
@@ -169,18 +206,21 @@
     "no_sajdas_available": "لا توجد سجدات متاحة",
     "check_internet_connection": "يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى"
   },
- "errors": {
+  "errors": {
     "error_loading_surah": "خطأ في تحميل السورة",
     "failed_load_reciters": "فشل في تحميل القراء",
     "failed_load_audio": "فشل في تحميل الصوت",
-    "audio_playback_error": "خطأ في تشغيل الصوت",  "error_loading_juzz_sections": "خطأ في تحميل أجزاء القرآن",
+    "audio_playback_error": "خطأ في تشغيل الصوت",
+    "error_loading_juzz_sections": "خطأ في تحميل أجزاء القرآن",
     "error_loading_juzz": "خطأ في تحميل الجزء",
     "failed_play_ayah": "فشل في تشغيل الآية"
-  },  "bookmarks": {
+  },
+  "bookmarks": {
     "bookmark_removed": "تم إزالة المرجعية",
-    "ayah_bookmarked": "تم حفظ الآية في المرجعية",    "bookmark_saved": "تم حفظ المرجعية"
-
-  },  "juzz": {
+    "ayah_bookmarked": "تم حفظ الآية في المرجعية",
+    "bookmark_saved": "تم حفظ المرجعية"
+  },
+  "juzz": {
     "juzz": "جزء",
     "loading_juzz_sections": "جاري تحميل أجزاء القرآن...",
     "no_juzz_found": "لم يتم العثور على أجزاء",
@@ -194,7 +234,6 @@
     "ruku": "ركوع",
     "sajda": "سجدة"
   },
-
   "common": {
     "ok": "موافق",
     "cancel": "إلغاء",
@@ -205,9 +244,10 @@
     "retry": "إعادة المحاولة",
     "back": "رجوع",
     "close": "إغلاق",
-    "select": "اختيار",    "save": "حفظ",
-    "change": "تغيير",    "initializing": "جاري التهيئة...",
+    "select": "اختيار",
+    "save": "حفظ",
+    "change": "تغيير",
+    "initializing": "جاري التهيئة...",
     "go_back": "العودة"
-
   }
 }
