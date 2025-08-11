@@ -1,7 +1,7 @@
 import '../../data/models/juzz.dart';
 import '../../data/models/juzz_ayah.dart';
 import 'ayah_tile.dart';
-import 'juzz_header_car.dart';
+import 'juzz_header_card.dart';
 import 'surah_header_car.dart';
 import 'package:flutter/material.dart';
 

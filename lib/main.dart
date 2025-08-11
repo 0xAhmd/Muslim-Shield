@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:safe_device/safe_device.dart';
 
@@ -45,10 +44,7 @@ void main() async {
   if (isRooted || isRealDevice) {
     runApp(
       EasyLocalization(
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('ar', 'SA'),
-        ],
+        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'SA')],
         path: 'assets/translations',
         fallbackLocale: const Locale('en', 'US'),
         child: const BlockedDeviceApp(),
@@ -57,10 +53,7 @@ void main() async {
   } else {
     runApp(
       EasyLocalization(
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('ar', 'SA'),
-        ],
+        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'SA')],
         path: 'assets/translations',
         fallbackLocale: const Locale('en', 'US'),
         child: const MyApp(),
@@ -79,21 +72,16 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            scaffoldBackgroundColor: scaffoldBackgroundColor,
-            appBarTheme: const AppBarTheme(
-              backgroundColor: scaffoldBackgroundColor,
-            ),
-
-            fontFamily: GoogleFonts.poppins().fontFamily,
+        return Builder(
+          builder: (context) => MaterialApp(
+            navigatorKey: NavigationService.navigatorKey,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            debugShowCheckedModeBanner: false,
+            theme: AppThemes.getTheme(context), // One line change!
+            home: const HomeScreen(),
           ),
-          home: const HomeScreen(),
         );
       },
     );

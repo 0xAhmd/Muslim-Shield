@@ -19,7 +19,8 @@
     "sajda": "Sajda"
   },  "bookmarks": {
     "bookmark_removed": "Bookmark removed",
-    "ayah_bookmarked": "Ayah bookmarked"
+    "ayah_bookmarked": "Ayah bookmarked",    "bookmark_saved": "Bookmark saved"
+
   },
   "search": {
     "search_surahs": "Search Surahs...",
@@ -120,7 +121,8 @@
     "no_internet_connection": "No Internet Connection",
     "content_needs_internet": "This content needs internet connectivity.\\nPlease make sure you have an internet connection.",
     "surahs_need_internet": "Surahs content needs internet connectivity.\\nPlease make sure you have an internet connection.",
-    "retry": "Retry"
+    "retry": "Retry",  "juzz_need_internet": "Juzz content needs internet connectivity.\nPlease make sure you have an internet connection."
+
   },
   "errors": {
     "error_loading_surahs": "Error loading surahs",
@@ -129,11 +131,26 @@
     "failed_load_reciters": "Failed to load reciters",
     "failed_load_audio": "Failed to load audio",
     "audio_playback_error": "Audio playback error",
-    "failed_play_ayah": "Failed to play ayah"
+    "failed_play_ayah": "Failed to play ayah",
+    "error_loading_juzz_sections": "Error loading Juzz sections",
+    "error_loading_juzz": "Error Loading Juzz"
   },
 
 
-  
+   "juzz": {
+    "juzz": "Juzz",
+    "loading_juzz_sections": "Loading Juzz sections...",
+    "no_juzz_found": "No Juzz found",
+    "loading_juzz": "Loading Juzz",
+    "loading_verses_message": "Please wait while we fetch the verses",
+    "ayahs": "Ayahs",
+    "surahs": "Surahs",
+    "surah": "Surah",
+    "last_read": "Last Read",
+    "page": "Page",
+    "ruku": "Ruku",
+    "sajda": "Sajda"
+  },
   "common": {
     "ok": "OK",
     "cancel": "Cancel",
@@ -145,6 +162,7 @@
     "back": "Back",
     "close": "Close",
     "select": "Select", "save": "Save",
-    "change": "Change"
+    "change": "Change",  "initializing": "Initializing...",
+    "go_back": "Go Back"
   }
 }

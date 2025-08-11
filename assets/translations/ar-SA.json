@@ -111,18 +111,35 @@
     "no_internet_connection": "لا يوجد اتصال بالإنترنت",
     "content_needs_internet": "يحتاج هذا المحتوى إلى اتصال بالإنترنت.\\nيرجى التأكد من وجود اتصال بالإنترنت.",
     "surahs_need_internet": "محتوى السور يحتاج إلى اتصال بالإنترنت.\\nيرجى التأكد من وجود اتصال بالإنترنت.",
-    "retry": "إعادة المحاولة"
+    "retry": "إعادة المحاولة",  "juzz_need_internet": "محتوى الأجزاء يحتاج إلى اتصال بالإنترنت.\nيرجى التأكد من وجود اتصال بالإنترنت."
+
   },
  "errors": {
     "error_loading_surah": "خطأ في تحميل السورة",
     "failed_load_reciters": "فشل في تحميل القراء",
     "failed_load_audio": "فشل في تحميل الصوت",
-    "audio_playback_error": "خطأ في تشغيل الصوت",
+    "audio_playback_error": "خطأ في تشغيل الصوت",  "error_loading_juzz_sections": "خطأ في تحميل أجزاء القرآن",
+    "error_loading_juzz": "خطأ في تحميل الجزء",
     "failed_play_ayah": "فشل في تشغيل الآية"
   },  "bookmarks": {
     "bookmark_removed": "تم إزالة المرجعية",
-    "ayah_bookmarked": "تم حفظ الآية في المرجعية"
+    "ayah_bookmarked": "تم حفظ الآية في المرجعية",    "bookmark_saved": "تم حفظ المرجعية"
+
+  },  "juzz": {
+    "juzz": "جزء",
+    "loading_juzz_sections": "جاري تحميل أجزاء القرآن...",
+    "no_juzz_found": "لم يتم العثور على أجزاء",
+    "loading_juzz": "جاري تحميل الجزء",
+    "loading_verses_message": "يرجى الانتظار بينما نحمل الآيات",
+    "ayahs": "آيات",
+    "surahs": "سور",
+    "surah": "سورة",
+    "last_read": "آخر قراءة",
+    "page": "صفحة",
+    "ruku": "ركوع",
+    "sajda": "سجدة"
   },
+
   "common": {
     "ok": "موافق",
     "cancel": "إلغاء",
@@ -134,6 +151,8 @@
     "back": "رجوع",
     "close": "إغلاق",
     "select": "اختيار",    "save": "حفظ",
-    "change": "تغيير"
+    "change": "تغيير",    "initializing": "جاري التهيئة...",
+    "go_back": "العودة"
+
   }
 }

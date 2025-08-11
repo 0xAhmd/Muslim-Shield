@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../../constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,12 +18,12 @@ class JuzzLoadingView extends StatelessWidget {
           const CupertinoActivityIndicator(color: primary),
           const SizedBox(height: 24),
           Text(
-            'Loading Juzz $juzzNumber...',
+            '${'juzz.loading_juzz'.tr()} $juzzNumber...',
             style: GoogleFonts.poppins(color: textColor, fontSize: 16),
           ),
           const SizedBox(height: 8),
           Text(
-            'Please wait while we fetch the verses',
+            'juzz.loading_verses_message'.tr(),
             style: GoogleFonts.poppins(
               color: textColor.withOpacity(0.7),
               fontSize: 12,
