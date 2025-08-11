@@ -208,12 +208,9 @@
     "check_internet_connection": "Please check your internet connection and try again"
   },
   "prayer": {
-    "notification_warning": "Warning: Could not initialize notification service: {error}",
-    "adhan_scheduling_error": "Error scheduling Adhan notifications: {error}",
-    "connection_lost": "Connection lost - Prayer times may be outdated",
     "prayer_times": "Prayer Times",
+    "connection_lost": "Connection lost - Prayer times may be outdated",
     "no_internet": "No internet connection",
-    "internet_required": "Prayer times need internet connectivity to fetch accurate times based on your location.\nPlease make sure you have an internet connection.",
     "something_wrong": "Something went wrong",
     "try_again": "Try Again",
     "no_connection": "No Connection",

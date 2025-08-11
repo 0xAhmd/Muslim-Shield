@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../data/constants/sunnah_prayer_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +26,7 @@ class SunnahPrayersList extends StatelessWidget {
                 Icon(Icons.auto_awesome, color: orange, size: 24.sp),
                 SizedBox(width: 12.w),
                 Text(
-                  'Sunnah Prayers',
+                  'prayer.sunnah_prayers'.tr(),
                   style: TextStyle(
                     color: textColor,
                     fontSize: 18.sp,
@@ -170,7 +172,7 @@ class _SunnahPrayerItem extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  'Rak\'ah',
+                  'prayer.rakah'.tr(),
                   style: TextStyle(
                     color: textColor.withOpacity(0.5),
                     fontSize: 10.sp,
@@ -218,11 +220,11 @@ class _SunnahPrayerItem extends StatelessWidget {
 
   String _getRakaatLabel(int rakaat) {
     if (rakaat <= 4) {
-      return 'Short';
+      return 'prayer.short'.tr();
     } else if (rakaat <= 6) {
-      return 'Medium';
+      return 'prayer.medium'.tr();
     } else {
-      return 'Long';
+      return 'prayer.long'.tr();
     }
   }
 }

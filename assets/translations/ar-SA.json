@@ -142,12 +142,9 @@
     "sajda_type_obligatory": "واجبة",
     "sajda_type_recommended": "مستحبة",
     "prayer": {
-      "notification_warning": "تحذير: لا يمكن تهيئة خدمة الإشعارات: {error}",
-      "adhan_scheduling_error": "خطأ في جدولة إشعارات الأذان: {error}",
-      "connection_lost": "انقطع الاتصال - قد تكون أوقات الصلاة قديمة",
       "prayer_times": "أوقات الصلاة",
+      "connection_lost": "انقطع الاتصال - قد تكون أوقات الصلاة قديمة",
       "no_internet": "لا يوجد اتصال بالإنترنت",
-      "internet_required": "تحتاج أوقات الصلاة إلى اتصال بالإنترنت للحصول على أوقات دقيقة بناءً على موقعك.\nيرجى التأكد من وجود اتصال بالإنترنت.",
       "something_wrong": "حدث خطأ ما",
       "try_again": "حاول مرة أخرى",
       "no_connection": "لا يوجد اتصال",
@@ -174,7 +171,9 @@
       "rakah": "ركعة",
       "short": "قصيرة",
       "medium": "متوسطة",
-      "long": "طويلة"
+      "long": "طويلة",
+      "notification_warning": "تحذير: لا يمكن تهيئة خدمة الإشعارات: {error}",
+      "adhan_scheduling_error": "خطأ في جدولة إشعارات الأذان: {error}"
     },
     "sajda": "سجدة",
     "sajdas": "السجدات",

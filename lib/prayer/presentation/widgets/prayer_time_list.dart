@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,7 +24,7 @@ class PrayerTimesList extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(20.w),
             child: Text(
-              'Today\'s Prayers',
+              'prayer.todays_prayers'.tr(),
               style: TextStyle(
                 color: textColor,
                 fontSize: 18.sp,
