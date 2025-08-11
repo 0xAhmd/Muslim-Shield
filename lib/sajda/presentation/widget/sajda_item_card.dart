@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../../constants.dart';
 import '../../data/models/sajda_summary.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +134,9 @@ class SajdaItemCard extends StatelessWidget {
         ),
       ),
       child: Text(
-        sajda.sajdaType,
+        sajda.isObligatory
+            ? 'sajda.sajda_type_obligatory'.tr()
+            : 'sajda.sajda_type_recommended'.tr(),
         style: GoogleFonts.poppins(
           color: sajda.isObligatory ? Colors.red : orange,
           fontSize: 11,
@@ -150,17 +154,21 @@ class SajdaItemCard extends StatelessWidget {
       children: [
         _buildInfoChip(
           icon: Icons.format_list_numbered,
-          text: 'Ayah ${sajda.ayahNumber}',
+          text: 'sajda.ayah_number'.tr(
+            namedArgs: {'number': '${sajda.ayahNumber}'},
+          ),
           color: Colors.cyan,
         ),
         _buildInfoChip(
           icon: Icons.book_outlined,
-          text: 'Surah ${sajda.surahNumber}',
+          text: 'sajda.surah_number'.tr(
+            namedArgs: {'number': '${sajda.surahNumber}'},
+          ),
           color: Colors.blue,
         ),
         _buildInfoChip(
           icon: Icons.bookmark_outline,
-          text: 'Juz ${sajda.juz}',
+          text: 'sajda.juz_number'.tr(namedArgs: {'number': '${sajda.juz}'}),
           color: Colors.green,
         ),
       ],
@@ -218,7 +226,7 @@ class SajdaItemCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Ayah Text',
+                'sajda.ayah_text'.tr(),
                 style: GoogleFonts.poppins(
                   color: primary.withOpacity(0.9),
                   fontSize: 12,
@@ -261,7 +269,7 @@ class SajdaItemCard extends StatelessWidget {
               const Icon(Icons.location_on, size: 14, color: orange),
               const SizedBox(width: 6),
               Text(
-                'Page ${sajda.page}',
+                'sajda.page_number'.tr(namedArgs: {'number': '${sajda.page}'}),
                 style: GoogleFonts.poppins(
                   color: orange,
                   fontSize: 12,

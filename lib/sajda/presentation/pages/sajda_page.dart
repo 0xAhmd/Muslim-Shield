@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../data/repo/sajda_repo.dart';
 import '../cubit/sajda_cubit.dart';
 import '../cubit/sajda_state.dart';
@@ -8,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../constants.dart';
-
 
 class SajdaPage extends StatefulWidget {
   const SajdaPage({super.key});
@@ -79,7 +80,7 @@ class _SajdaPageState extends State<SajdaPage> {
       title: _isSearching
           ? null
           : Text(
-              'Sajdas',
+              'sajda.sajdas'.tr(),
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -96,7 +97,7 @@ class _SajdaPageState extends State<SajdaPage> {
                   children: [
                     _buildFilterButton(
                       icon: Icons.priority_high,
-                      label: 'Obligatory',
+                      label: 'sajda.obligatory'.tr(),
                       isActive: state.showObligatory,
                       color: Colors.red,
                       onPressed: () => _sajdaCubit.toggleObligatory(),
@@ -104,7 +105,7 @@ class _SajdaPageState extends State<SajdaPage> {
                     const SizedBox(width: 8),
                     _buildFilterButton(
                       icon: Icons.star_outline,
-                      label: 'Recommended',
+                      label: 'sajda.recommended'.tr(),
                       isActive: state.showRecommended,
                       color: orange,
                       onPressed: () => _sajdaCubit.toggleRecommended(),
@@ -143,7 +144,9 @@ class _SajdaPageState extends State<SajdaPage> {
           color: isActive ? color.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-            color: isActive ? color.withOpacity(0.3) : textColor.withOpacity(0.2),
+            color: isActive
+                ? color.withOpacity(0.3)
+                : textColor.withOpacity(0.2),
             width: 1,
           ),
         ),
@@ -183,7 +186,7 @@ class _SajdaPageState extends State<SajdaPage> {
         onChanged: _onSearchChanged,
         style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
         decoration: InputDecoration(
-          hintText: 'Search sajdas, surah names, ayah numbers...',
+          hintText: 'sajda.search_placeholder'.tr(),
           hintStyle: GoogleFonts.poppins(
             color: textColor.withOpacity(0.6),
             fontSize: 14,
@@ -222,7 +225,9 @@ class _SajdaPageState extends State<SajdaPage> {
       return SajdaListView(
         sajdaSummaries: state.filteredSajdas,
         isSearching: _isSearching || state.searchQuery.isNotEmpty,
-        searchQuery: state.searchQuery.isEmpty ? _searchController.text : state.searchQuery,
+        searchQuery: state.searchQuery.isEmpty
+            ? _searchController.text
+            : state.searchQuery,
         sajdaCubit: _sajdaCubit,
         showObligatory: state.showObligatory,
         showRecommended: state.showRecommended,

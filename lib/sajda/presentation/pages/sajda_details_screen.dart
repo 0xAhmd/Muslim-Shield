@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../data/repo/sajda_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,7 +69,7 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
         icon: const Icon(Icons.arrow_back, color: textColor),
       ),
       title: Text(
-        'Sajda ${widget.sajdaId}',
+        'sajda.sajda_number'.tr(namedArgs: {'number': '${widget.sajdaId}'}),
         style: GoogleFonts.poppins(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -181,7 +183,9 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
               ),
             ),
             child: Text(
-              sajda.sajdaType,
+              isObligatory
+                  ? 'sajda.sajda_type_obligatory'.tr()
+                  : 'sajda.sajda_type_recommended'.tr(),
               style: GoogleFonts.poppins(
                 color: isObligatory ? Colors.red : orange,
                 fontSize: 16,
@@ -209,7 +213,7 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Surah Information',
+            'sajda.surah_information'.tr(),
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -283,7 +287,9 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
               const Icon(Icons.menu_book, color: primary, size: 24),
               const SizedBox(width: 12),
               Text(
-                'Ayah ${sajda.numberInSurah}',
+                'sajda.ayah_number'.tr(
+                  namedArgs: {'number': '${sajda.numberInSurah}'},
+                ),
                 style: GoogleFonts.poppins(
                   color: primary,
                   fontSize: 18,
@@ -322,7 +328,7 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Additional Information',
+          'sajda.additional_information'.tr(),
           style: GoogleFonts.poppins(
             color: textColor,
             fontSize: 18,
@@ -333,37 +339,37 @@ class _SajdaDetailScreenState extends State<SajdaDetailScreen> {
         _buildInfoGrid([
           _InfoItem(
             icon: Icons.bookmark_outline,
-            label: 'Juz',
+            label: 'sajda.juz'.tr(),
             value: '${sajda.juz}',
             color: primary,
           ),
           _InfoItem(
             icon: Icons.article_outlined,
-            label: 'Page',
+            label: 'sajda.page'.tr(),
             value: '${sajda.page}',
             color: orange,
           ),
           _InfoItem(
             icon: Icons.location_on_outlined,
-            label: 'Manzil',
+            label: 'sajda.manzil'.tr(),
             value: '${sajda.manzil}',
             color: Colors.blue,
           ),
           _InfoItem(
             icon: Icons.auto_stories_outlined,
-            label: 'Ruku',
+            label: 'sajda.ruku'.tr(),
             value: '${sajda.ruku}',
             color: Colors.green,
           ),
           _InfoItem(
             icon: Icons.fiber_manual_record_outlined,
-            label: 'Hizb Quarter',
+            label: 'sajda.hizb_quarter'.tr(),
             value: '${sajda.hizbQuarter}',
             color: Colors.purple,
           ),
           _InfoItem(
             icon: Icons.format_list_numbered,
-            label: 'Ayah Number',
+            label: 'sajda.ayah_number_label'.tr(),
             value: '${sajda.number}',
             color: Colors.cyan,
           ),
