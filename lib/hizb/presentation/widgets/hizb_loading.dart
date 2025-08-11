@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,8 +24,10 @@ class HizbLoadingView extends StatelessWidget {
             const SizedBox(height: 24),
             Text(
               hizbNumber != null
-                  ? 'Loading Hizb $hizbNumber...'
-                  : 'Loading Hizb sections...',
+                  ? 'hizb.loading_hizb_number'.tr(
+                      namedArgs: {'number': '$hizbNumber'},
+                    )
+                  : 'hizb.loading_hizb_sections'.tr(),
               style: GoogleFonts.poppins(
                 color: textColor,
                 fontSize: 16,
@@ -34,7 +37,7 @@ class HizbLoadingView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Please wait while we fetch the data',
+              'hizb.loading_fetch_data'.tr(),
               style: GoogleFonts.poppins(
                 color: textColor.withOpacity(0.7),
                 fontSize: 14,

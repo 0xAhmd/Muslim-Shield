@@ -113,7 +113,30 @@
     "surahs_need_internet": "محتوى السور يحتاج إلى اتصال بالإنترنت.\\nيرجى التأكد من وجود اتصال بالإنترنت.",
     "retry": "إعادة المحاولة",  "juzz_need_internet": "محتوى الأجزاء يحتاج إلى اتصال بالإنترنت.\nيرجى التأكد من وجود اتصال بالإنترنت."
 
-  },
+  },"hizb": {
+  "holy_quran": "القرآن الكريم",
+  "ayahs": "آيات",
+  "surahs": "سور", 
+  "surah": "سورة",
+  "juzz": "جزء",
+  "last_read": "آخر قراءة",
+  "ayah_number": "آية {number}",
+  "sajdah": "سجدة",
+  "ayah_options": "خيارات الآية {number}",
+  "mark_last_read": "تحديد كآخر قراءة",
+  "copy_arabic": "نسخ النص العربي",
+  "share_ayah": "مشاركة الآية", 
+  "something_wrong": "حدث خطأ ما",
+  "try_again": "المحاولة مرة أخرى",
+  "found_results": "تم العثور على {count} نتيجة لـ \"{query}\"",
+  "no_hizb_found": "لم يتم العثور على أحزاب",
+  "no_hizb_description": "جرب البحث بكلمات مختلفة مثل رقم الحزب أو الجزء أو اسم السورة",
+  "no_hizb_available": "لا توجد أحزاب متاحة",
+  "no_hizb_available_description": "يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى", 
+  "loading_hizb_number": "جاري تحميل الحزب {number}...",
+  "loading_hizb_sections": "جاري تحميل الأحزاب...",
+  "loading_fetch_data": "يرجى الانتظار بينما نجلب البيانات"
+},
  "errors": {
     "error_loading_surah": "خطأ في تحميل السورة",
     "failed_load_reciters": "فشل في تحميل القراء",

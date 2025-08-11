@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../../constants.dart';
 import '../../data/models/hizb_summary.dart';
 import '../../data/repo/hizb_repo.dart';
@@ -57,7 +59,13 @@ class HizbListView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Text(
-        'Found ${hizbSummaries.length} result${hizbSummaries.length == 1 ? '' : 's'} for "$searchQuery"',
+        'hizb.found_results'.tr(
+          namedArgs: {
+            'count': '${hizbSummaries.length}',
+            'plural': hizbSummaries.length == 1 ? '' : 's',
+            'query': searchQuery,
+          },
+        ),
         style: GoogleFonts.poppins(
           color: textColor.withOpacity(0.8),
           fontSize: 14,
@@ -76,7 +84,7 @@ class HizbListView extends StatelessWidget {
           Icon(Icons.search_off, size: 64, color: textColor.withOpacity(0.5)),
           const SizedBox(height: 24),
           Text(
-            'No Hizb sections found',
+            'hizb.no_hizb_found'.tr(),
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -85,7 +93,7 @@ class HizbListView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Try searching with different keywords like Hizb number, Juzz, or Surah name',
+            'hizb.no_hizb_description'.tr(),
             style: GoogleFonts.poppins(
               color: textColor.withOpacity(0.7),
               fontSize: 14,
@@ -110,7 +118,7 @@ class HizbListView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'No Hizb sections available',
+            'hizb.no_hizb_available'.tr(),
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -118,14 +126,14 @@ class HizbListView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            'Please check your internet connection and try again',
-            style: GoogleFonts.poppins(
-              color: textColor.withOpacity(0.7),
-              fontSize: 14,
-            ),
-            textAlign: TextAlign.center,
-          ),
+         Text(
+  'hizb.no_hizb_available_description'.tr(),
+  style: GoogleFonts.poppins(
+    color: textColor.withOpacity(0.7),
+    fontSize: 14,
+  ),
+  textAlign: TextAlign.center,
+),
         ],
       ),
     );
