@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../surah/widgets/last_read_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +18,7 @@ class GreetingSection extends StatelessWidget {
           isRepeatingAnimation: false,
           animatedTexts: [
             TypewriterAnimatedText(
-              'Assalamu Alaikum',
+              'greeting.assalamu_alaikum'.tr(),
               textAlign: TextAlign.left,
               textStyle: GoogleFonts.poppins(
                 fontSize: 18,
@@ -33,7 +34,7 @@ class GreetingSection extends StatelessWidget {
           isRepeatingAnimation: false,
           animatedTexts: [
             TypewriterAnimatedText(
-              'Bless Muhammad',
+              'greeting.bless_muhammad'.tr(),
               textAlign: TextAlign.left,
               textStyle: GoogleFonts.poppins(
                 fontSize: 24,

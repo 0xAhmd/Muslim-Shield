@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import '../../constants.dart';
 import '../data/service/last_read.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,10 @@ class _LastReadCardState extends State<LastReadCard> {
           children: [
             Icon(Icons.refresh, color: Colors.white, size: 14.sp),
             SizedBox(width: 6.w),
-            Text('Refreshed', style: GoogleFonts.poppins(fontSize: 11.sp)),
+            Text(
+              'last_read.refreshed'.tr(),
+              style: GoogleFonts.poppins(fontSize: 11.sp),
+            ),
           ],
         ),
         duration: const Duration(seconds: 1),
@@ -56,18 +60,21 @@ class _LastReadCardState extends State<LastReadCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _GradientBackground(),
-        _QuranIllustration(),
-        _RefreshButton(
-          onRefresh: () {
-            _loadLastRead();
-            _showRefreshMessage();
-          },
-        ),
-        _CardContent(isLoading: isLoading, lastReadData: lastReadData),
-      ],
+    return Directionality(
+      textDirection: Directionality.of(context),
+      child: Stack(
+        children: [
+          _GradientBackground(),
+          _QuranIllustration(),
+          _RefreshButton(
+            onRefresh: () {
+              _loadLastRead();
+              _showRefreshMessage();
+            },
+          ),
+          _CardContent(isLoading: isLoading, lastReadData: lastReadData),
+        ],
+      ),
     );
   }
 }
@@ -93,10 +100,10 @@ class _GradientBackground extends StatelessWidget {
 class _QuranIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      bottom: -6.h,
-      right: 0,
-      child: SvgPicture.asset('assets/svgs/quran.svg', height: 80.h),
+    return PositionedDirectional(
+      bottom: -24.h,
+      end: 0,
+      child: Image.asset('assets/images/quran.png', height: 80.h),
     );
   }
 }
@@ -108,9 +115,9 @@ class _RefreshButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
+    return PositionedDirectional(
       top: 12.h,
-      right: 12.w,
+      end: 12.w,
       child: GestureDetector(
         onTap: onRefresh,
         child: Container(
@@ -134,10 +141,13 @@ class _CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRTL = Directionality.of(context) == TextDirection.RTL;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: isRTL
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           _Header(),
           const SizedBox(height: 20),
@@ -157,14 +167,18 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      textDirection: Directionality.of(context),
       children: [
         SvgPicture.asset('assets/svgs/book.svg'),
         const SizedBox(width: 8),
-        Text(
-          'Last Read',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
+        Expanded(
+          child: Text(
+            'last_read.title'.tr(),
+            textAlign: TextAlign.start,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],
@@ -207,11 +221,15 @@ class _ReadingData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRTL = Directionality.of(context) == TextDirection.RTL;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: isRTL
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Text(
           data.surahEnglishName,
+          textAlign: isRTL ? TextAlign.end : TextAlign.start,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -220,14 +238,16 @@ class _ReadingData extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Row(
+          mainAxisSize: MainAxisSize.min,
+          textDirection: Directionality.of(context),
           children: [
             Text(
-              'Ayah ${data.ayahNumber}',
+              '${'last_read.ayah'.tr()} ${data.ayahNumber}',
               style: GoogleFonts.poppins(color: Colors.white),
             ),
             if (data.juzzNumber != null) ...[
               const SizedBox(width: 8),
-              _Badge(text: 'Juzz ${data.juzzNumber}'),
+              _Badge(text: '${'last_read.juzz'.tr()} ${data.juzzNumber}'),
             ],
             const SizedBox(width: 8),
             _Badge(text: '${data.progressPercentage.toStringAsFixed(0)}%'),
@@ -266,11 +286,15 @@ class _Badge extends StatelessWidget {
 class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isRTL = Directionality.of(context) == TextDirection.RTL;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: isRTL
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Text(
-          'Start Reading',
+          'last_read.start_reading'.tr(),
+          textAlign: isRTL ? TextAlign.end : TextAlign.start,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -279,7 +303,8 @@ class _EmptyState extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Start Thawab Streak',
+          'last_read.start_thawab_streak'.tr(),
+          textAlign: isRTL ? TextAlign.end : TextAlign.start,
           style: GoogleFonts.poppins(color: Colors.white),
         ),
       ],

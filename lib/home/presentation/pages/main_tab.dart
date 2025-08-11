@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../constants.dart';
 import '../../../hizb/presentation/widgets/hizb_tab.dart';
@@ -24,8 +25,7 @@ class _MainTabScreenState extends State<MainTabScreen>
   final GlobalKey<SurahTabState> surahTabKey = GlobalKey<SurahTabState>();
   final GlobalKey<JuzTabState> juzTabKey = GlobalKey<JuzTabState>();
   final GlobalKey<HizbTabState> hizbTabKey = GlobalKey<HizbTabState>();
-  final GlobalKey<SajdaTabState> sajdaTabKey =
-      GlobalKey<SajdaTabState>(); // Add SajdaTab key
+  final GlobalKey<SajdaTabState> sajdaTabKey = GlobalKey<SajdaTabState>();
 
   @override
   void initState() {
@@ -62,8 +62,7 @@ class _MainTabScreenState extends State<MainTabScreen>
         hizbTabKey.currentState?.performClearSearch();
         break;
       case 3:
-        sajdaTabKey.currentState
-            ?.performClearSearch(); // Add sajda clear search
+        sajdaTabKey.currentState?.performClearSearch();
         break;
     }
   }
@@ -80,7 +79,7 @@ class _MainTabScreenState extends State<MainTabScreen>
         hizbTabKey.currentState?.performSearch(query);
         break;
       case 3:
-        sajdaTabKey.currentState?.performSearch(query); // Add sajda search
+        sajdaTabKey.currentState?.performSearch(query);
         break;
     }
   }
@@ -89,21 +88,21 @@ class _MainTabScreenState extends State<MainTabScreen>
     return tabController.index == 0 ||
         tabController.index == 1 ||
         tabController.index == 2 ||
-        tabController.index == 3; // Enable search for sajda tab
+        tabController.index == 3;
   }
 
   String _getSearchHint() {
     switch (tabController.index) {
       case 0:
-        return 'Search Surahs...';
+        return 'search.search_surahs'.tr();
       case 1:
-        return 'Search Juzz...';
+        return 'search.search_juzz'.tr();
       case 2:
-        return 'Search Hizb sections...';
+        return 'search.search_hizb'.tr();
       case 3:
-        return 'Search Sajdas...'; // Add sajda search hint
+        return 'search.search_sajdas'.tr();
       default:
-        return 'Search...';
+        return 'search.search'.tr();
     }
   }
 
@@ -127,7 +126,6 @@ class _MainTabScreenState extends State<MainTabScreen>
                 const SliverToBoxAdapter(child: GreetingSection()),
               SliverAppBar(
                 floating: false,
-
                 elevation: 0,
                 backgroundColor: scaffoldBackgroundColor,
                 automaticallyImplyLeading: false,
@@ -153,9 +151,7 @@ class _MainTabScreenState extends State<MainTabScreen>
                 SurahTab(key: surahTabKey),
                 JuzTab(key: juzTabKey),
                 HizbTab(key: hizbTabKey),
-                SajdaTab(
-                  key: sajdaTabKey,
-                ), // Replace duplicate HizbTab with SajdaTab
+                SajdaTab(key: sajdaTabKey),
               ],
             ),
           ),
