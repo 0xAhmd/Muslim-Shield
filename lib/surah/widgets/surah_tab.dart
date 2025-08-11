@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import '../../core/connectivity_service.dart';
 import '../../core/widgets/offline_message.dart';
 
@@ -121,8 +122,7 @@ class SurahTabState extends State<SurahTab> {
     // Show offline message if not connected
     if (!isConnected) {
       return OfflineMessageWidget(
-        customMessage:
-            'Surahs content needs internet connectivity.\nPlease make sure you have an internet connection.',
+        customMessage: 'connectivity.surahs_need_internet'.tr(),
         onRetry: () => _initializeConnectivity(),
       );
     }
@@ -137,7 +137,7 @@ class SurahTabState extends State<SurahTab> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Error loading surahs',
+              'errors.error_loading_surahs'.tr(),
               style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
             ),
             const SizedBox(height: 8),
@@ -150,7 +150,7 @@ class SurahTabState extends State<SurahTab> {
             ElevatedButton(
               onPressed: _loadSurahs,
               style: ElevatedButton.styleFrom(backgroundColor: primary),
-              child: const Text('Retry'),
+              child: Text('common.retry'.tr()),
             ),
           ],
         ),
@@ -165,7 +165,7 @@ class SurahTabState extends State<SurahTab> {
             const Icon(Icons.search_off, size: 64, color: textColor),
             const SizedBox(height: 16),
             Text(
-              'No surahs found',
+              'search_results.no_surahs_found'.tr(),
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 18,
@@ -174,7 +174,7 @@ class SurahTabState extends State<SurahTab> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Try searching with different keywords',
+              'search_results.try_different_keywords'.tr(),
               style: GoogleFonts.poppins(color: textColor, fontSize: 14),
             ),
           ],
@@ -199,7 +199,7 @@ class SurahTabState extends State<SurahTab> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    '${filteredSurahs.length} result${filteredSurahs.length == 1 ? '' : 's'} for "$searchQuery"',
+                    '${filteredSurahs.length} ${filteredSurahs.length == 1 ? 'search_results.result'.tr() : 'search_results.results'.tr()} ${'search_results.results_for'.tr()} "$searchQuery"',
                     style: GoogleFonts.poppins(
                       color: primary,
                       fontSize: 12,
@@ -228,8 +228,8 @@ class SurahTabState extends State<SurahTab> {
                   // Check connectivity before navigating
                   if (!_connectivityService.isConnected) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('No internet connection'),
+                      SnackBar(
+                        content: Text('errors.no_internet_connection'.tr()),
                         backgroundColor: Colors.red,
                         behavior: SnackBarBehavior.floating,
                       ),
@@ -387,7 +387,7 @@ class _SurahTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final subtitleText =
-        "${surah.englishNameTranslation} • ${surah.numberOfAyahs} Ayahs";
+        "${surah.englishNameTranslation} • ${surah.numberOfAyahs} ${'surah_details.ayahs'.tr()}";
 
     return ListTile(
       onTap: onTap,
