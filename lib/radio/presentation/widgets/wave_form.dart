@@ -67,7 +67,7 @@ class _WaveformAnimationState extends State<WaveformAnimation>
             if (state is RadioPlaying) {
               return _buildWaveform();
             } else {
-              return _buildIslamicPattern();
+              return const SizedBox.shrink();
             }
           },
         ),
@@ -99,26 +99,26 @@ class _WaveformAnimationState extends State<WaveformAnimation>
     );
   }
 
-  Widget _buildIslamicPattern() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.radio, size: 48, color: primary.withOpacity(0.6)),
-          const SizedBox(height: 12),
-          Text(
-            'بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ',
-            style: TextStyle(
-              color: primary.withOpacity(0.8),
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-            textDirection: TextDirection.rtl,
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildIslamicPattern() {
+  //   return Center(
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Icon(Icons.radio, size: 48, color: primary.withOpacity(0.6)),
+  //         const SizedBox(height: 12),
+  //         Text(
+  //           'بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ',
+  //           style: TextStyle(
+  //             color: primary.withOpacity(0.8),
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.w600,
+  //           ),
+  //           textDirection: TextDirection.rtl,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void _startAnimation() {
     _animationController.repeat();

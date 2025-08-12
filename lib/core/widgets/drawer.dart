@@ -1,5 +1,7 @@
+// Updated lib/core/widgets/drawer.dart
 import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
 import 'package:azkar/calc/presentation/pages/zakaat_calc_page.dart';
+import 'package:azkar/hadith/presentation/pages/books_page.dart';
 import 'package:azkar/names/presentation/pages/adhkar_page.dart';
 import 'package:azkar/names/presentation/pages/allah_names_page.dart';
 import 'package:azkar/prayer_tracker/presentation/pages/prayer_tracker_page.dart';
@@ -8,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:easy_localization/easy_localization.dart';
 import '../../../../constants.dart';
 import '../../../../tasbih/presentation/pages/tasbih_page.dart';
 
@@ -50,7 +51,7 @@ class CustomDrawer extends StatelessWidget {
                       ),
                       SizedBox(width: 12.w),
                       Text(
-                        'app_name'.tr(),
+                        'Muslim Shield',
                         style: GoogleFonts.poppins(
                           fontSize: 19.sp,
                           fontWeight: FontWeight.bold,
@@ -72,7 +73,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/allah.png'),
-                    title: 'drawer.names_of_allah'.tr(),
+                    title: 'Names of Allah',
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -90,7 +91,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/tasbih.png'),
-                    title: 'drawer.digital_tasbih'.tr(),
+                    title: 'Digital Tasbih',
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -107,7 +108,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/dua.png'),
-                    title: 'drawer.morning_evening_adhkar'.tr(),
+                    title: 'Morning & Evening Adhkar',
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -121,11 +122,32 @@ class CustomDrawer extends StatelessWidget {
 
                   SizedBox(height: 5.h),
 
+                  // NEW: Hadith Browser
+                  _buildDrawerItem(
+                    context,
+                    iconWidget: Image.asset(
+                      'assets/images/muhammad.png',
+                      color: Colors.white,
+                    ),
+                    title: 'Hadith Collection',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BooksPage(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: 5.h),
+
                   // Zakat Calculator
                   _buildDrawerItem(
                     context,
                     iconWidget: Image.asset('assets/images/zakat.png'),
-                    title: 'drawer.zakat_calculator'.tr(),
+                    title: 'Zakat Calculator',
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -145,7 +167,7 @@ class CustomDrawer extends StatelessWidget {
                       'assets/images/fire.png',
                       width: 38,
                     ),
-                    title: 'drawer.prayer_tracker'.tr(),
+                    title: 'Prayer Tracker',
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -165,7 +187,7 @@ class CustomDrawer extends StatelessWidget {
                       'assets/svgs/lamp-icon.svg',
                       width: 40,
                     ),
-                    title: 'drawer.reminders'.tr(),
+                    title: 'Reminders',
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -178,18 +200,29 @@ class CustomDrawer extends StatelessWidget {
                     isComingSoon: false,
                   ),
                   SizedBox(height: 5.h),
-
                   Divider(
                     color: grey,
                     thickness: 1,
                     indent: 24.w,
                     endIndent: 24.w,
                   ),
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.info_outline,
+
+                    title: 'About',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showAboutDialog(context);
+                    },
+                  ),
+                  SizedBox(height: 5.h),
 
                   _buildDrawerItem(
                     context,
                     icon: Icons.info_outline,
-                    title: 'drawer.about'.tr(),
+
+                    title: 'About',
                     onTap: () {
                       Navigator.pop(context);
                       _showAboutDialog(context);
@@ -203,7 +236,7 @@ class CustomDrawer extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(24.r),
               child: Text(
-                '${'drawer.version'.tr()} 1.3.2+1',
+                'Version 1.3.2+1',
                 style: GoogleFonts.poppins(
                   fontSize: 12.sp,
                   color: textColor.withOpacity(0.7),
@@ -222,7 +255,6 @@ class CustomDrawer extends StatelessWidget {
     IconData? icon,
     Widget? iconWidget, // SVG or custom widget
     required String title,
-    String? subtitle,
     required VoidCallback onTap,
     bool isComingSoon = false,
   }) {
@@ -252,15 +284,7 @@ class CustomDrawer extends StatelessWidget {
           color: isComingSoon ? textColor.withOpacity(0.5) : Colors.white,
         ),
       ),
-      subtitle: subtitle != null
-          ? Text(
-              subtitle,
-              style: GoogleFonts.poppins(
-                fontSize: 12.sp,
-                color: textColor.withOpacity(0.7),
-              ),
-            )
-          : null,
+
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       hoverColor: primary.withOpacity(0.05),
@@ -276,7 +300,7 @@ class CustomDrawer extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
         ),
         title: Text(
-          'about_dialog.title'.tr(),
+          'About Muslim Shield',
           style: GoogleFonts.poppins(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -288,12 +312,12 @@ class CustomDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'about_dialog.description'.tr(),
+              'A comprehensive Islamic app designed to help Muslims in their daily spiritual journey.',
               style: GoogleFonts.poppins(fontSize: 14.sp, color: textColor),
             ),
             SizedBox(height: 16.h),
             Text(
-              'about_dialog.features'.tr(),
+              'Features:',
               style: GoogleFonts.poppins(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
@@ -302,7 +326,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              'about_dialog.feature_list'.tr(),
+              '• Quran reading with audio\n• Prayer times\n• Duas collection\n• Radio stations\n• Masjid finder\n• Digital Tasbih\n• Names of Allah (99 Names)\n• Morning & Evening Adhkar\n• Hadith Collection Browser\n• Zakat Calculator\n• And more...',
               style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
             ),
           ],
@@ -311,7 +335,7 @@ class CustomDrawer extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'about_dialog.close'.tr(),
+              'Close',
               style: GoogleFonts.poppins(
                 color: primary,
                 fontWeight: FontWeight.w600,
