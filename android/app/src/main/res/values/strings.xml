@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">muslimshield</string>
     <string name="widget_description">Display random Islamic Duas on your home screen</string>
+    <string name="next_prayer_widget_description">Display next prayer time and countdown on your home screen</string>
+
 </resources>

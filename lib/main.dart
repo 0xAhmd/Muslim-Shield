@@ -1,4 +1,5 @@
 import 'package:azkar/core/widgets/home_widget.dart';
+import 'package:azkar/core/widgets/next_prayer_widget_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,15 +22,15 @@ import 'tasbih/data/models/tasbih.dart';
 
 /// Background callback for widget interactions
 /// This MUST be a top-level function (outside of main())
-/// Fixed: Changed to Future<void> and Uri? to match expected signature
 @pragma("vm:entry-point")
 Future<void> _backgroundCallback(Uri? uri) async {
   print('Widget callback triggered: $uri');
-  // Handle the widget tap - you can navigate to specific pages based on the uri
+  
+  // Handle different widget types
   if (uri?.host == 'dua') {
-    // Widget was tapped - the app will open and navigate to Dua page
-    // This will be handled in your app's routing logic
     print('Dua widget tapped - should navigate to dua page');
+  } else if (uri?.host == 'prayer' || uri?.queryParameters['open_prayer_page'] == 'true') {
+    print('Next Prayer widget tapped - should navigate to prayer page');
   }
 }
 
@@ -41,8 +42,9 @@ void main() async {
 
   await Hive.initFlutter();
 
-  // Initialize Widget Service
+  // Initialize Widget Services
   await WidgetService.initialize();
+  await NextPrayerWidgetService.initialize();
 
   // Set up widget callback for when widget is tapped
   HomeWidget.setAppGroupId('group.com.example.azkar.widget');
@@ -64,12 +66,17 @@ void main() async {
   await notificationService.initialize();
   await PrayerTrackerService().initialize();
 
-  // Update widget with initial random Dua
+  // Update widgets with initial data
   try {
     await WidgetService.updateWidgetWithRandomDua();
-    print('Initial widget update completed');
+    // Initialize Next Prayer Widget with default data
+    await NextPrayerWidgetService.updateWidgetWithNextPrayer(
+      nextPrayer: null,
+      location: 'Please open Prayer Times',
+    );
+    print('Initial widgets update completed');
   } catch (e) {
-    print('Error updating widget on startup: $e');
+    print('Error updating widgets on startup: $e');
   }
 
   // Device security checks
@@ -154,8 +161,24 @@ class _AppInitializerState extends State<AppInitializer> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const WidgetLaunchedHomeScreen(
-                    targetPage:
-                        2, // DoaPage is at index 2 based on your pages list
+                    targetPage: 2, // DoaPage is at index 2 based on your pages list
+                    widgetType: 'dua',
+                  ),
+                ),
+              );
+            }
+          });
+          return;
+        } else if (uri.host == 'prayer' || uri.queryParameters['open_prayer_page'] == 'true') {
+          // Navigate to Prayer page
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const WidgetLaunchedHomeScreen(
+                    targetPage: 1, // PrayerPage is at index 1 based on your pages list
+                    widgetType: 'prayer',
                   ),
                 ),
               );
@@ -221,8 +244,13 @@ class _AppInitializerState extends State<AppInitializer> {
 /// Special version of HomeScreen that navigates to specific page when launched from widget
 class WidgetLaunchedHomeScreen extends StatefulWidget {
   final int targetPage;
+  final String widgetType;
 
-  const WidgetLaunchedHomeScreen({super.key, required this.targetPage});
+  const WidgetLaunchedHomeScreen({
+    super.key, 
+    required this.targetPage,
+    required this.widgetType,
+  });
 
   @override
   State<WidgetLaunchedHomeScreen> createState() =>
@@ -246,32 +274,51 @@ class _WidgetLaunchedHomeScreenState extends State<WidgetLaunchedHomeScreen> {
       MaterialPageRoute(builder: (context) => const HomeScreen()),
     );
 
-    // After navigation, we need to programmatically select the Dua tab
-    // We'll do this by accessing the HomeScreen's state
+    // After navigation, show a snackbar indicating which widget was tapped
     Future.delayed(const Duration(milliseconds: 100), () {
-      // Since your HomeScreen uses index 2 for DoaPage, we need to trigger that selection
-      // This is a workaround since your current HomeScreen doesn't accept initialIndex
-      _simulateTabSelection();
+      _showWidgetTappedNotification();
     });
   }
 
-  void _simulateTabSelection() {
-    // This is a workaround to navigate to the Dua page
-    // Since we can't modify your existing HomeScreen easily, we'll show a snackbar
-    // indicating the widget was tapped and suggest opening Duas manually
+  void _showWidgetTappedNotification() {
+    String message;
+    IconData icon;
+    
+    switch (widget.widgetType) {
+      case 'dua':
+        message = 'Dua widget tapped! Navigate to Duas tab';
+        icon = Icons.book;
+        break;
+      case 'prayer':
+        message = 'Prayer widget tapped! Navigate to Prayer Times tab';
+        icon = Icons.schedule;
+        break;
+      default:
+        message = 'Widget tapped!';
+        icon = Icons.touch_app;
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Row(
+        content: Row(
           children: [
-            Icon(Icons.touch_app, color: Colors.white, size: 16),
-            SizedBox(width: 8),
-            Text('Widget tapped! Navigate to Duas tab'),
+            Icon(icon, color: Colors.white, size: 16),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: primary,
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        action: SnackBarAction(
+          label: 'Navigate',
+          textColor: Colors.white,
+          onPressed: () {
+            // Here you could programmatically navigate to the correct tab
+            // This would require modifying your HomeScreen to accept an initialIndex
+          },
+        ),
       ),
     );
   }
@@ -279,6 +326,18 @@ class _WidgetLaunchedHomeScreenState extends State<WidgetLaunchedHomeScreen> {
   @override
   Widget build(BuildContext context) {
     // Show a loading screen briefly while navigating
+    String loadingText;
+    switch (widget.widgetType) {
+      case 'dua':
+        loadingText = 'Opening Duas...';
+        break;
+      case 'prayer':
+        loadingText = 'Opening Prayer Times...';
+        break;
+      default:
+        loadingText = 'Loading...';
+    }
+
     return Scaffold(
       backgroundColor: scaffoldBackgroundColor,
       body: Center(
@@ -292,12 +351,16 @@ class _WidgetLaunchedHomeScreenState extends State<WidgetLaunchedHomeScreen> {
                 color: primary.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: const Icon(Icons.book, size: 30, color: primary),
+              child: Icon(
+                widget.widgetType == 'prayer' ? Icons.schedule : Icons.book,
+                size: 30,
+                color: primary,
+              ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Opening Duas...',
-              style: TextStyle(
+            Text(
+              loadingText,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,

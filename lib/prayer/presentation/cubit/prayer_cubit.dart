@@ -1,3 +1,6 @@
+import 'package:azkar/core/widgets/next_prayer_widget_service.dart';
+import 'package:azkar/prayer/data/models/prayer_location.dart';
+
 import '../../data/repo/prayer_repo.dart';
 import 'prayer_state.dart';
 import 'package:flutter/material.dart';
@@ -12,42 +15,53 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
 
   Future<void> fetchPrayerTimes() async {
     try {
-      if (isClosed) return; // Check if cubit is closed
+      if (isClosed) return;
       emit(PrayerTimesLoading());
 
-      // Initialize notification service with better error handling
+      // Initialize notification service
       try {
         await _notificationService.initialize();
       } catch (e) {
         debugPrint('Warning: Could not initialize notification service: $e');
-        // Continue without notifications rather than failing completely
+      }
+
+      // Initialize Next Prayer Widget Service
+      try {
+        await NextPrayerWidgetService.initialize();
+      } catch (e) {
+        debugPrint(
+          'Warning: Could not initialize Next Prayer Widget service: $e',
+        );
       }
 
       // Get current location
       final location = await _repository.getCurrentLocation();
-      if (isClosed) return; // Check again after async operation
+      if (isClosed) return;
 
       // Fetch prayer times
       final prayerTimes = await _repository.getPrayerTimes(
         location.latitude,
         location.longitude,
       );
-      if (isClosed) return; // Check again after async operation
+      if (isClosed) return;
 
       // Get today's prayers list
       final prayersList = await _repository.getTodayPrayersList(
         prayerTimes.data.timings,
       );
-      if (isClosed) return; // Check again after async operation
+      if (isClosed) return;
 
       // Get next prayer
       final nextPrayer = await _repository.getNextPrayer(
         prayerTimes.data.timings,
       );
-      if (isClosed) return; // Check again after async operation
+      if (isClosed) return;
 
       // Schedule Adhan notifications if enabled
       await _scheduleAdhanNotifications(prayerTimes.data.timings);
+
+      // Update Next Prayer Widget
+      await _updateNextPrayerWidget(nextPrayer, location, prayersList);
 
       emit(
         PrayerTimesLoaded(
@@ -59,15 +73,33 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
       );
     } catch (e) {
       if (!isClosed) {
-        // Only emit error if not closed
         emit(PrayerTimesError(e.toString()));
       }
     }
   }
 
+  /// Update the Next Prayer Widget with latest data
+  Future<void> _updateNextPrayerWidget(
+    PrayerInfo? nextPrayer,
+    LocationInfo location,
+    List<PrayerInfo> prayersList,
+  ) async {
+    try {
+      final locationString = '${location.cityName}, ${location.countryName}';
+
+      // Update widget with prayer times list for better next prayer calculation
+      await NextPrayerWidgetService.updateWidgetWithPrayerTimes(
+        prayers: prayersList,
+        location: locationString,
+        lastUpdated: DateTime.now().toIso8601String(),
+      );
+    } catch (e) {
+      debugPrint('Error updating Next Prayer Widget: $e');
+    }
+  }
+
   Future<void> _scheduleAdhanNotifications(timings) async {
     try {
-      // Check if Adhan is enabled before scheduling
       final isEnabled = await _notificationService.isAdhanEnabled();
       if (isEnabled) {
         await _notificationService.scheduleAdhanNotifications(
@@ -79,7 +111,6 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
         );
       }
     } catch (e) {
-      // Don't fail the whole operation if Adhan scheduling fails
       debugPrint('Error scheduling Adhan notifications: $e');
     }
   }
@@ -89,10 +120,30 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
   }
 
   Future<void> updateAdhanSettings() async {
-    // Refresh prayer times to re-schedule Adhan notifications
     final currentState = state;
     if (currentState is PrayerTimesLoaded) {
       await _scheduleAdhanNotifications(currentState.prayerTimes.data.timings);
+    }
+  }
+
+  /// Manually update Next Prayer Widget (can be called from UI)
+  Future<void> updateNextPrayerWidget() async {
+    final currentState = state;
+    if (currentState is PrayerTimesLoaded) {
+      await _updateNextPrayerWidget(
+        currentState.nextPrayer,
+        currentState.location,
+        currentState.prayersList,
+      );
+    }
+  }
+
+  /// Clear Next Prayer Widget data
+  Future<void> clearNextPrayerWidget() async {
+    try {
+      await NextPrayerWidgetService.clearWidgetData();
+    } catch (e) {
+      debugPrint('Error clearing Next Prayer Widget: $e');
     }
   }
 }
