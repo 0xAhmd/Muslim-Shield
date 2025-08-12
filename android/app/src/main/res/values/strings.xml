@@ -1,1 +1,5 @@
-<string name="widget_description">Display random Islamic Duas on your home screen</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">muslimshield</string>
+    <string name="widget_description">Display random Islamic Duas on your home screen</string>
+</resources>

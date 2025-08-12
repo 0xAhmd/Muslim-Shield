@@ -55,9 +55,8 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Widget Settings'),
-        backgroundColor: background,
-      ),
+        foregroundColor: Colors.white,
+        title: const Text('Widget Settings')),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(

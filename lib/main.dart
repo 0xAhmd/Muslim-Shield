@@ -76,7 +76,7 @@ void main() async {
   final isRooted = await SafeDevice.isJailBroken;
   final isRealDevice = await SafeDevice.isRealDevice;
 
-  if (isRooted || !isRealDevice) {
+  if (isRooted || isRealDevice) {
     runApp(
       EasyLocalization(
         supportedLocales: const [Locale('en', 'US'), Locale('ar', 'SA')],
