@@ -1,6 +1,5 @@
 import '../../../constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JuzzDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,11 +19,7 @@ class JuzzDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: background,
       leading: IconButton(
         onPressed: () => Navigator.pop(context),
-        icon: SvgPicture.asset(
-          'assets/svgs/back-icon.svg',
-          // ignore: deprecated_member_use
-          color: Colors.white,
-        ),
+        icon: const Icon(Icons.arrow_back_outlined, color: Colors.white),
       ),
       title: Text(
         'Juzz $juzzNumber',

@@ -33,7 +33,7 @@ class GreetingSection extends StatelessWidget {
           isRepeatingAnimation: false,
           animatedTexts: [
             TypewriterAnimatedText(
-              'May Allah bless Muhammad',
+              'Bless Muhammad',
               textAlign: TextAlign.left,
               textStyle: GoogleFonts.poppins(
                 fontSize: 24,

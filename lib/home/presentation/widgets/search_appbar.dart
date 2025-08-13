@@ -42,7 +42,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.menu, color: textColor, size: 24),
         ),
         Text(
-          "Quran App", // Replace with your actual app name
+          "Muslim Shield", // Replace with your actual app name
           style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.bold,

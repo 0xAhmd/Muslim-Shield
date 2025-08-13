@@ -1,7 +1,6 @@
 import '../../constants.dart';
 import '../data/service/last_read.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -43,10 +42,7 @@ class _LastReadCardState extends State<LastReadCard> {
           children: [
             Icon(Icons.refresh, color: Colors.white, size: 14.sp),
             SizedBox(width: 6.w),
-            Text(
-              'Refreshed',
-              style: GoogleFonts.poppins(fontSize: 11.sp),
-            ),
+            Text('Refreshed', style: GoogleFonts.poppins(fontSize: 11.sp)),
           ],
         ),
         duration: const Duration(seconds: 1),
@@ -168,7 +164,7 @@ class _Header extends StatelessWidget {
     return Row(
       textDirection: Directionality.of(context),
       children: [
-        SvgPicture.asset('assets/svgs/book.svg'),
+        const Icon(Icons.bookmark_added_rounded, color: Colors.white),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
