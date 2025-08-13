@@ -12,6 +12,7 @@ class NextPrayerWidgetService {
     try {
       // Set app group for iOS (required for data sharing)
       await HomeWidget.setAppGroupId(appGroupId);
+      debugPrint('NextPrayerWidgetService: Initialized successfully');
     } catch (e) {
       debugPrint('Error initializing next prayer widget service: $e');
     }
@@ -25,9 +26,12 @@ class NextPrayerWidgetService {
   }) async {
     try {
       if (nextPrayer == null) {
+        debugPrint('NextPrayerWidgetService: No prayer data - setting default values');
         // Set default values if no prayer data
         await _setDefaultWidgetData();
       } else {
+        debugPrint('NextPrayerWidgetService: Updating widget with ${nextPrayer.name} at ${nextPrayer.time}');
+        
         // Save next prayer data for the widget to access
         await HomeWidget.saveWidgetData<String>(
           'next_prayer_name',
@@ -54,10 +58,11 @@ class NextPrayerWidgetService {
       );
 
       debugPrint(
-        'Next Prayer Widget updated successfully with: ${nextPrayer?.name ?? "Default"} at ${nextPrayer?.time ?? "00:00"}',
+        'NextPrayerWidgetService: Widget updated successfully with: ${nextPrayer?.name ?? "Default"} at ${nextPrayer?.time ?? "00:00"}',
       );
     } catch (e) {
-      debugPrint('Error updating next prayer widget: $e');
+      debugPrint('NextPrayerWidgetService: Error updating next prayer widget: $e');
+      rethrow;
     }
   }
 
@@ -68,8 +73,17 @@ class NextPrayerWidgetService {
     String? lastUpdated,
   }) async {
     try {
-      // Find the next prayer
-      final nextPrayer = _findNextPrayer(prayers);
+      debugPrint('NextPrayerWidgetService: Received ${prayers.length} prayers for processing');
+      
+      // Log all received prayers for debugging
+      for (int i = 0; i < prayers.length; i++) {
+        debugPrint('NextPrayerWidgetService: Prayer $i: ${prayers[i].name} at ${prayers[i].time}');
+      }
+      
+      // Find the next prayer using improved logic
+      final nextPrayer = _findNextPrayerImproved(prayers);
+      
+      debugPrint('NextPrayerWidgetService: Determined next prayer: ${nextPrayer?.name} at ${nextPrayer?.time}');
 
       // Update widget with next prayer data
       await updateWidgetWithNextPrayer(
@@ -78,56 +92,73 @@ class NextPrayerWidgetService {
         lastUpdated: lastUpdated,
       );
     } catch (e) {
-      debugPrint('Error updating widget with prayer times: $e');
+      debugPrint('NextPrayerWidgetService: Error updating widget with prayer times: $e');
+      rethrow;
     }
   }
 
-  /// Find the next prayer from the prayer times list
-  static PrayerInfo? _findNextPrayer(List<PrayerInfo> prayers) {
-    if (prayers.isEmpty) return null;
+  /// Improved logic to find the next prayer from the prayer times list
+  static PrayerInfo? _findNextPrayerImproved(List<PrayerInfo> prayers) {
+    if (prayers.isEmpty) {
+      debugPrint('NextPrayerWidgetService: No prayers provided');
+      return null;
+    }
 
     final now = DateTime.now();
-    final currentTime =
-        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    final currentTimeString = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    
+    debugPrint('NextPrayerWidgetService: Current time: $currentTimeString');
+
+    // Convert prayer times to comparable format and sort them
+    List<MapEntry<PrayerInfo, int>> prayerTimes = prayers.map((prayer) {
+      final timeInMinutes = _timeStringToMinutes(prayer.time);
+      debugPrint('NextPrayerWidgetService: ${prayer.name} -> ${prayer.time} -> $timeInMinutes minutes');
+      return MapEntry(prayer, timeInMinutes);
+    }).toList();
+
+    // Sort by time
+    prayerTimes.sort((a, b) => a.value.compareTo(b.value));
+
+    final currentTimeInMinutes = _timeStringToMinutes(currentTimeString);
+    debugPrint('NextPrayerWidgetService: Current time in minutes: $currentTimeInMinutes');
 
     // Find the next prayer that hasn't passed yet today
-    for (final prayer in prayers) {
-      if (_isTimeAfter(prayer.time, currentTime)) {
-        return prayer;
+    for (final entry in prayerTimes) {
+      if (entry.value > currentTimeInMinutes) {
+        debugPrint('NextPrayerWidgetService: Found next prayer: ${entry.key.name} at ${entry.key.time}');
+        return entry.key;
       }
     }
 
     // If all prayers have passed today, return the first prayer (Fajr) for tomorrow
-    return prayers.isNotEmpty ? prayers.first : null;
+    final firstPrayer = prayerTimes.isNotEmpty ? prayerTimes.first.key : null;
+    debugPrint('NextPrayerWidgetService: All prayers passed, next is tomorrow: ${firstPrayer?.name}');
+    return firstPrayer;
   }
 
-  /// Check if time1 is after time2 (format: "HH:mm")
-  static bool _isTimeAfter(String time1, String time2) {
+  /// Convert time string (HH:mm) to minutes since midnight
+  static int _timeStringToMinutes(String timeString) {
     try {
-      final time1Parts = time1.split(':');
-      final time2Parts = time2.split(':');
-
-      if (time1Parts.length != 2 || time2Parts.length != 2) return false;
-
-      final time1Hour = int.parse(time1Parts[0]);
-      final time1Minute = int.parse(time1Parts[1]);
-      final time2Hour = int.parse(time2Parts[0]);
-      final time2Minute = int.parse(time2Parts[1]);
-
-      if (time1Hour > time2Hour) return true;
-      if (time1Hour == time2Hour && time1Minute > time2Minute) return true;
-
-      return false;
+      final parts = timeString.split(':');
+      if (parts.length != 2) return 0;
+      
+      final hours = int.parse(parts[0]);
+      final minutes = int.parse(parts[1]);
+      
+      return hours * 60 + minutes;
     } catch (e) {
-      return false;
+      debugPrint('NextPrayerWidgetService: Error converting time string "$timeString": $e');
+      return 0;
     }
   }
 
+
   /// Set default widget data when no prayer information is available
   static Future<void> _setDefaultWidgetData() async {
+    debugPrint('NextPrayerWidgetService: Setting default widget data');
     await HomeWidget.saveWidgetData<String>('next_prayer_name', 'Fajr');
     await HomeWidget.saveWidgetData<String>('next_prayer_time', '05:00');
-    await HomeWidget.saveWidgetData<String>('current_location', 'Loading...');
+    await HomeWidget.saveWidgetData<String>('current_location', 'Please open Prayer Times');
     await HomeWidget.saveWidgetData<String>(
       'prayer_last_updated',
       DateTime.now().toIso8601String(),
@@ -152,24 +183,24 @@ class NextPrayerWidgetService {
   static Future<void> handleWidgetTap() async {
     // This will be called when the widget is tapped
     // The native code will handle opening the app to prayer page
-    debugPrint('Next Prayer Widget tapped - opening app to prayer page');
+    debugPrint('NextPrayerWidgetService: Widget tapped - opening app to prayer page');
   }
 
   /// Schedule periodic updates (called every minute for accurate countdown)
   static Future<void> schedulePeriodicUpdates() async {
     // You can implement periodic updates here
     // For example, update every minute to keep countdown accurate
-    debugPrint('Scheduling periodic updates for Next Prayer Widget');
+    debugPrint('NextPrayerWidgetService: Scheduling periodic updates');
   }
 
   /// Update widget when app comes to foreground
   static Future<void> updateOnAppResume() async {
     try {
       // Re-fetch current prayer data and update widget
-      debugPrint('App resumed - updating Next Prayer Widget');
+      debugPrint('NextPrayerWidgetService: App resumed - updating widget');
       // This should be called from your prayer cubit/bloc when app resumes
     } catch (e) {
-      debugPrint('Error updating widget on app resume: $e');
+      debugPrint('NextPrayerWidgetService: Error updating widget on app resume: $e');
     }
   }
 
@@ -181,9 +212,9 @@ class NextPrayerWidgetService {
         iOSName: iOSWidgetName,
         androidName: androidWidgetName,
       );
-      debugPrint('Next Prayer Widget data cleared');
+      debugPrint('NextPrayerWidgetService: Widget data cleared');
     } catch (e) {
-      debugPrint('Error clearing Next Prayer Widget data: $e');
+      debugPrint('NextPrayerWidgetService: Error clearing widget data: $e');
     }
   }
 }

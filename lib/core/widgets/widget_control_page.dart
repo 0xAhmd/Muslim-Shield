@@ -19,6 +19,7 @@ class WidgetControlPage extends StatefulWidget {
 class _WidgetControlPageState extends State<WidgetControlPage> {
   bool _isUpdatingDua = false;
   bool _isUpdatingPrayer = false;
+  bool _isRefreshingPrayer = false; // Separate state for refresh operation
   late PrayerTimesCubit _prayerCubit;
 
   @override
@@ -37,6 +38,8 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
   }
 
   Future<void> _updateDuaWidget() async {
+    if (_isUpdatingDua) return; // Prevent multiple simultaneous updates
+    
     setState(() {
       _isUpdatingDua = true;
     });
@@ -65,16 +68,18 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
           color: Colors.red,
         );
       }
-    }
-
-    if (mounted) {
-      setState(() {
-        _isUpdatingDua = false;
-      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUpdatingDua = false;
+        });
+      }
     }
   }
 
   Future<void> _updateNextPrayerWidget() async {
+    if (_isUpdatingPrayer) return; // Prevent multiple simultaneous updates
+    
     setState(() {
       _isUpdatingPrayer = true;
     });
@@ -86,7 +91,21 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
       if (currentState is PrayerTimesLoaded) {
         // Use existing prayer data
         debugPrint('WidgetControlPage: Found loaded prayer data, updating widget...');
-        await _prayerCubit.updateNextPrayerWidget();
+        debugPrint('WidgetControlPage: Current next prayer: ${currentState.nextPrayer?.name} at ${currentState.nextPrayer?.time}');
+        debugPrint('WidgetControlPage: Location: ${currentState.location.cityName}, ${currentState.location.countryName}');
+        debugPrint('WidgetControlPage: Prayer list length: ${currentState.prayersList.length}');
+        
+        // Log all prayers for debugging
+        for (int i = 0; i < currentState.prayersList.length; i++) {
+          debugPrint('WidgetControlPage: Prayer $i: ${currentState.prayersList[i].name} at ${currentState.prayersList[i].time}');
+        }
+        
+        // Update widget with the EXACT same data that's in the state
+        await NextPrayerWidgetService.updateWidgetWithNextPrayer(
+          nextPrayer: currentState.nextPrayer,
+          location: '${currentState.location.cityName}, ${currentState.location.countryName}',
+          lastUpdated: DateTime.now().toIso8601String(),
+        );
 
         if (mounted) {
           _showNotification(
@@ -98,7 +117,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
         debugPrint('WidgetControlPage: Next Prayer widget updated successfully');
       } else {
         // No prayer data available, show appropriate message
-        debugPrint('WidgetControlPage: No prayer data available');
+        debugPrint('WidgetControlPage: No prayer data available, current state: ${currentState.runtimeType}');
         if (mounted) {
           _showNotification(
             message: 'Please click "Refresh" first to load prayer data',
@@ -116,18 +135,20 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
           color: Colors.red,
         );
       }
-    }
-
-    if (mounted) {
-      setState(() {
-        _isUpdatingPrayer = false;
-      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUpdatingPrayer = false;
+        });
+      }
     }
   }
 
   Future<void> _refreshPrayerData() async {
+    if (_isRefreshingPrayer) return; // Prevent multiple simultaneous refreshes
+    
     setState(() {
-      _isUpdatingPrayer = true;
+      _isRefreshingPrayer = true;
     });
 
     try {
@@ -136,63 +157,17 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
       // Force refresh prayer times
       await _prayerCubit.fetchPrayerTimes();
 
-      // Wait for the state to update with a timeout
-      int attempts = 0;
-      const maxAttempts = 10; // 5 seconds total
+      // Since we're using BlocBuilder, we don't need to manually wait for state changes
+      // The UI will automatically update when the state changes
       
-      while (attempts < maxAttempts) {
-        await Future.delayed(const Duration(milliseconds: 500));
-        final newState = _prayerCubit.state;
-        
-        if (newState is PrayerTimesLoaded) {
-          debugPrint('WidgetControlPage: Prayer data loaded successfully');
-          
-          // Update widget with fresh data
-          await NextPrayerWidgetService.updateWidgetWithPrayerTimes(
-            prayers: newState.prayersList,
-            location: '${newState.location.cityName}, ${newState.location.countryName}',
-            lastUpdated: DateTime.now().toIso8601String(),
-          );
-
-          if (mounted) {
-            _showNotification(
-              message: 'Prayer times refreshed and widget updated!',
-              icon: Icons.refresh,
-              color: primary,
-            );
-          }
-          debugPrint('WidgetControlPage: Prayer refresh completed successfully');
-          return; // Success - exit the function
-          
-        } else if (newState is PrayerTimesError) {
-          debugPrint('WidgetControlPage: Prayer data error: ${newState.message}');
-          if (mounted) {
-            _showNotification(
-              message: 'Failed to fetch prayer times: ${newState.message}',
-              icon: Icons.error,
-              color: Colors.red,
-            );
-          }
-          return; // Error - exit the function
-        }
-        
-        attempts++;
-        debugPrint('WidgetControlPage: Waiting for prayer data... attempt $attempts');
-      }
-
-      // If we get here, it means we timed out waiting for a response
-      debugPrint('WidgetControlPage: Timed out waiting for prayer data');
-      if (mounted) {
-        _showNotification(
-          message: 'Request timed out. Please check your internet connection and try again.',
-          icon: Icons.wifi_off,
-          color: Colors.orange,
-        );
-      }
+      debugPrint('WidgetControlPage: Prayer refresh request sent');
       
     } catch (e) {
       debugPrint('WidgetControlPage: Exception during prayer refresh: $e');
       if (mounted) {
+        setState(() {
+          _isRefreshingPrayer = false;
+        });
         _showNotification(
           message: 'Failed to refresh prayer data: ${e.toString()}',
           icon: Icons.error,
@@ -200,12 +175,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
         );
       }
     }
-
-    if (mounted) {
-      setState(() {
-        _isUpdatingPrayer = false;
-      });
-    }
+    // Note: We don't set _isRefreshingPrayer = false here because the BlocListener will handle it
   }
 
   Future<void> _triggerAndroidWidgetUpdate() async {
@@ -272,37 +242,66 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
           foregroundColor: Colors.white,
           title: const Text('Widget Settings'),
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Home Screen Widgets',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+        body: BlocListener<PrayerTimesCubit, PrayerTimesState>(
+          listener: (context, state) {
+            // Handle state changes for refresh operation
+            if (state is PrayerTimesLoaded && _isRefreshingPrayer) {
+              setState(() {
+                _isRefreshingPrayer = false;
+              });
+              
+              debugPrint('WidgetControlPage: Prayer data refresh completed successfully');
+              _showNotification(
+                message: 'Prayer times refreshed and widget updated!',
+                icon: Icons.refresh,
+                color: primary,
+              );
+              
+            } else if (state is PrayerTimesError && _isRefreshingPrayer) {
+              setState(() {
+                _isRefreshingPrayer = false;
+              });
+              
+              debugPrint('WidgetControlPage: Prayer data refresh failed: ${state.message}');
+              _showNotification(
+                message: 'Failed to fetch prayer times: ${state.message}',
+                icon: Icons.error,
+                color: Colors.red,
+              );
+            }
+          },
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Home Screen Widgets',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Manage your home screen widgets. Update them with fresh content or refresh prayer times.',
-                style: TextStyle(color: textColor, fontSize: 16, height: 1.5),
-              ),
-              const SizedBox(height: 32),
+                const SizedBox(height: 16),
+                const Text(
+                  'Manage your home screen widgets. Update them with fresh content or refresh prayer times.',
+                  style: TextStyle(color: textColor, fontSize: 16, height: 1.5),
+                ),
+                const SizedBox(height: 32),
 
-              // Dua Widget Card
-              _buildDuaWidgetCard(),
-              const SizedBox(height: 16),
+                // Dua Widget Card
+                _buildDuaWidgetCard(),
+                const SizedBox(height: 16),
 
-              // Next Prayer Widget Card
-              _buildPrayerWidgetCard(),
-              const SizedBox(height: 24),
+                // Next Prayer Widget Card
+                _buildPrayerWidgetCard(),
+                const SizedBox(height: 24),
 
-              // Info Card
-              _buildInfoCard(),
-            ],
+                // Info Card
+                _buildInfoCard(),
+              ],
+            ),
           ),
         ),
       ),
@@ -415,7 +414,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: _isUpdatingPrayer ? null : _updateNextPrayerWidget,
+                  onPressed: (_isUpdatingPrayer || _isRefreshingPrayer) ? null : _updateNextPrayerWidget,
                   icon: _isUpdatingPrayer
                       ? const SizedBox(
                           width: 16,
@@ -440,9 +439,18 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: _isUpdatingPrayer ? null : _refreshPrayerData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Refresh'),
+                  onPressed: (_isUpdatingPrayer || _isRefreshingPrayer) ? null : _refreshPrayerData,
+                  icon: _isRefreshingPrayer 
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                          ),
+                        )
+                      : const Icon(Icons.refresh),
+                  label: Text(_isRefreshingPrayer ? 'Refreshing...' : 'Refresh'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
@@ -493,6 +501,14 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
               '📍 ${state.location.cityName}, ${state.location.countryName}',
               style: TextStyle(
                 color: Colors.green.withOpacity(0.8),
+                fontSize: 10,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Total prayers loaded: ${state.prayersList.length}',
+              style: TextStyle(
+                color: Colors.green.withOpacity(0.6),
                 fontSize: 10,
               ),
             ),
