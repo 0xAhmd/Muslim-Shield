@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,7 +16,7 @@ class JuzzEmptyState extends StatelessWidget {
           const Icon(Icons.search_off, size: 64, color: textColor),
           const SizedBox(height: 16),
           Text(
-            'juzz.no_juzz_found'.tr(),
+            'No Juzz found',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 18,
@@ -27,7 +25,7 @@ class JuzzEmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'search_results.try_different_keywords'.tr(),
+            'Try different keywords',
             style: GoogleFonts.poppins(color: textColor, fontSize: 14),
           ),
         ],

@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../constants.dart';
 import '../cubit/juzz_state.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +25,7 @@ class JuzzSearchIndicator extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '${state.filteredJuzz.length} ${state.filteredJuzz.length == 1 ? 'search_results.result'.tr() : 'search_results.results'.tr()} ${'search_results.results_for'.tr()} "${state.searchQuery}"',
+              '${state.filteredJuzz.length} ${state.filteredJuzz.length == 1 ? 'result' : 'results'} for "${state.searchQuery}"',
               style: GoogleFonts.poppins(
                 color: primary,
                 fontSize: 12,

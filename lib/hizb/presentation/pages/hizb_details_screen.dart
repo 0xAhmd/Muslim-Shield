@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 
 import '../../../constants.dart';
 import '../cubit/hizb_cubit.dart';
@@ -88,7 +87,7 @@ class _HizbDetailScreenState extends State<HizbDetailScreen> {
   Widget _buildInitialState() {
     return Center(
       child: Text(
-        'common.initializing'.tr(),
+        'Initializing',
         style: GoogleFonts.poppins(color: textColor),
       ),
     );

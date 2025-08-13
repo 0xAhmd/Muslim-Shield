@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -43,7 +42,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.menu, color: textColor, size: 24),
         ),
         Text(
-          "app_name".tr(),
+          "Quran App", // Replace with your actual app name
           style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.bold,

@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,7 +36,7 @@ class HizbDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           Text(
-            'hizb.holy_quran'.tr(),
+            'Holy Quran',
             style: GoogleFonts.amiri(
               color: textColor.withOpacity(0.7),
               fontSize: 14,

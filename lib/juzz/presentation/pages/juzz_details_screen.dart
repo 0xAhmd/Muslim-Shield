@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../constants.dart';
 import '../../../surah/data/repo/surah_repo.dart';
 import '../cubit/juzz_cubit.dart';
@@ -90,7 +88,7 @@ class _JuzzDetailScreenState extends State<JuzzDetailScreen> {
   Widget _buildInitialState() {
     return Center(
       child: Text(
-        'common.initializing'.tr(),
+        'Initializing...',
         style: GoogleFonts.poppins(color: textColor),
       ),
     );

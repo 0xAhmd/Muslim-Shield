@@ -1,7 +1,5 @@
-// Create this as a new file: lib/core/widgets/offline_message.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants.dart';
 
@@ -22,7 +20,7 @@ class OfflineMessageWidget extends StatelessWidget {
             Icon(Icons.wifi_off, size: 64.sp, color: textColor),
             SizedBox(height: 24.h),
             Text(
-              'connectivity.no_internet_connection'.tr(),
+              'No Internet Connection',
               style: GoogleFonts.poppins(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
@@ -32,7 +30,7 @@ class OfflineMessageWidget extends StatelessWidget {
             ),
             SizedBox(height: 12.h),
             Text(
-              customMessage ?? 'connectivity.content_needs_internet'.tr(),
+              customMessage ?? 'This Content Need Internet Connection ',
               style: GoogleFonts.poppins(
                 fontSize: 14.sp,
                 color: textColor,
@@ -45,7 +43,7 @@ class OfflineMessageWidget extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: Text('connectivity.retry'.tr()),
+                label: const Text('Retry'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primary,
                   foregroundColor: Colors.white,

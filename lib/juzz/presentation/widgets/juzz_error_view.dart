@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,7 +27,7 @@ class JuzzErrorView extends StatelessWidget {
             Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
             const SizedBox(height: 16),
             Text(
-              'errors.error_loading_juzz'.tr(),
+              'Error loading Juzz',
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 20,
@@ -52,7 +51,7 @@ class JuzzErrorView extends StatelessWidget {
                     foregroundColor: Colors.white,
                   ),
                   icon: const Icon(Icons.refresh, size: 18),
-                  label: Text('common.retry'.tr()),
+                  label: const Text('Retry'),
                 ),
                 const SizedBox(width: 12),
                 OutlinedButton.icon(
@@ -62,7 +61,7 @@ class JuzzErrorView extends StatelessWidget {
                     foregroundColor: textColor,
                   ),
                   icon: const Icon(Icons.arrow_back, size: 18),
-                  label: Text('common.go_back'.tr()),
+                  label: const Text('Go Back'),
                 ),
               ],
             ),

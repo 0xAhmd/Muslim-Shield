@@ -4,8 +4,6 @@ import 'package:azkar/constants.dart';
 import 'package:azkar/hizb/data/models/hizb.dart';
 import 'package:azkar/hizb/data/models/hizb_ayah.dart';
 import 'package:azkar/hizb/presentation/widgets/hizb_detaild_appbar.dart';
-import 'package:easy_localization/easy_localization.dart'
-    show StringTranslateExtension;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -106,17 +104,17 @@ class _HizbContentViewState extends State<HizbContentView> {
             children: [
               _buildStatChip(
                 icon: Icons.format_list_numbered,
-                label: 'hizb.ayahs'.tr(),
+                label: 'Ayahs',
                 value: '${widget.hizb.totalAyahs}',
               ),
               _buildStatChip(
                 icon: Icons.book_outlined,
-                label: 'hizb.surahs'.tr(),
+                label: 'Surahs',
                 value: '${widget.hizb.containedSurahs.length}',
               ),
               _buildStatChip(
                 icon: Icons.bookmark_outline,
-                label: 'hizb.juzz'.tr(),
+                label: 'Juzz',
                 value: widget.hizb.juzzRange.replaceAll('Juzz ', ''),
               ),
             ],
@@ -359,7 +357,7 @@ class _HizbContentViewState extends State<HizbContentView> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              'hizb.last_read'.tr(),
+              'Last Read',
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 10,
@@ -415,7 +413,7 @@ class _HizbContentViewState extends State<HizbContentView> {
           const Icon(Icons.keyboard_arrow_down, color: orange, size: 16),
           const SizedBox(width: 4),
           Text(
-            'hizb.sajdah'.tr(),
+            'Sajdah',
             style: GoogleFonts.poppins(
               color: orange,
               fontSize: 12,
@@ -483,10 +481,8 @@ class _HizbContentViewState extends State<HizbContentView> {
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              'hizb.ayah_options'.tr(
-                namedArgs: {'number': '${ayah.numberInSurah}'},
-              ),
+          Text(
+              'Ayah ${ayah.numberInSurah} Options',
               style: GoogleFonts.poppins(
                 color: textColor,
                 fontSize: 18,
@@ -496,7 +492,7 @@ class _HizbContentViewState extends State<HizbContentView> {
             const SizedBox(height: 20),
             _buildOptionTile(
               icon: Icons.bookmark,
-              title: 'hizb.mark_last_read'.tr(),
+              title: 'Mark as Last Read',
               onTap: () {
                 widget.onLastReadChanged(index);
                 Navigator.pop(context);

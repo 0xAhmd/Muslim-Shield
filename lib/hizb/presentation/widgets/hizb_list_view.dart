@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../constants.dart';
 import '../../data/models/hizb_summary.dart';
 import '../../data/repo/hizb_repo.dart';
@@ -56,16 +54,11 @@ class HizbListView extends StatelessWidget {
   }
 
   Widget _buildSearchHeader() {
+    final plural = hizbSummaries.length == 1 ? '' : 's';
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Text(
-        'hizb.found_results'.tr(
-          namedArgs: {
-            'count': '${hizbSummaries.length}',
-            'plural': hizbSummaries.length == 1 ? '' : 's',
-            'query': searchQuery,
-          },
-        ),
+        'Found ${hizbSummaries.length} result$plural for "$searchQuery"',
         style: GoogleFonts.poppins(
           color: textColor.withOpacity(0.8),
           fontSize: 14,
@@ -84,7 +77,7 @@ class HizbListView extends StatelessWidget {
           Icon(Icons.search_off, size: 64, color: textColor.withOpacity(0.5)),
           const SizedBox(height: 24),
           Text(
-            'hizb.no_hizb_found'.tr(),
+            'No Hizb Found',
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -93,7 +86,7 @@ class HizbListView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'hizb.no_hizb_description'.tr(),
+            'We couldn\'t find any Hizb sections matching your search. Try different keywords.',
             style: GoogleFonts.poppins(
               color: textColor.withOpacity(0.7),
               fontSize: 14,
@@ -118,7 +111,7 @@ class HizbListView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'hizb.no_hizb_available'.tr(),
+            'No Hizb Available',
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -126,14 +119,14 @@ class HizbListView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-         Text(
-  'hizb.no_hizb_available_description'.tr(),
-  style: GoogleFonts.poppins(
-    color: textColor.withOpacity(0.7),
-    fontSize: 14,
-  ),
-  textAlign: TextAlign.center,
-),
+          Text(
+            'No Hizb sections are currently available. Please try again later.',
+            style: GoogleFonts.poppins(
+              color: textColor.withOpacity(0.7),
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

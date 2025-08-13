@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart'
-    show StringTranslateExtension;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -89,7 +87,7 @@ class AyahTile extends StatelessWidget {
           const Icon(Icons.bookmark, color: Colors.white, size: 12),
           const SizedBox(width: 4),
           Text(
-            'juzz.last_read'.tr(),
+            'Last Read',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 10,
@@ -141,16 +139,16 @@ class AyahTile extends StatelessWidget {
       runSpacing: 4,
       children: [
         MetadataChip(
-          label: '${'juzz.page'.tr()} ${ayah.page}',
+          label: 'Page ${ayah.page}',
           icon: Icons.book,
         ),
         MetadataChip(
-          label: '${'juzz.ruku'.tr()} ${ayah.ruku}',
+          label: 'Ruku ${ayah.ruku}',
           icon: Icons.bookmark_outlined,
         ),
         if (ayah.sajda)
-          MetadataChip(
-            label: 'juzz.sajda'.tr(),
+          const MetadataChip(
+            label: 'Sajda',
             icon: Icons.keyboard_arrow_down,
             color: orange,
           ),
@@ -176,7 +174,7 @@ class AyahTile extends StatelessWidget {
                 const Icon(Icons.bookmark, color: Colors.white, size: 16),
                 const SizedBox(width: 8),
                 Text(
-                  'bookmarks.bookmark_saved'.tr(),
+                  'Bookmark saved',
                   style: GoogleFonts.poppins(fontSize: 12),
                 ),
               ],

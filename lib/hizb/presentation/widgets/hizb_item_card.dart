@@ -1,6 +1,3 @@
-import 'package:easy_localization/easy_localization.dart'
-    show StringTranslateExtension;
-
 import '../../../constants.dart';
 import '../../data/models/hizb_summary.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +60,7 @@ class HizbItemCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          hizb.name.tr(), // added .tr()
+          hizb.name,
           style: GoogleFonts.poppins(
             color: textColor,
             fontSize: 16,
@@ -72,7 +69,7 @@ class HizbItemCard extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          hizb.description.tr(), // added .tr()
+          hizb.description,
           style: GoogleFonts.poppins(
             color: textColor.withOpacity(0.7),
             fontSize: 14,
@@ -86,13 +83,12 @@ class HizbItemCard extends StatelessWidget {
           children: [
             _buildInfoChip(
               icon: Icons.format_list_numbered,
-              text: '${hizb.approximateAyahs} ${'hizb.ayahs'.tr()}',
+              text: '${hizb.approximateAyahs} Ayahs',
             ),
             const SizedBox(width: 12),
             _buildInfoChip(
               icon: Icons.book_outlined,
-              text:
-                  '${hizb.containedSurahs.length} ${hizb.containedSurahs.length == 1 ? 'hizb.surah'.tr() : 'hizb.surahs'.tr()}',
+              text: '${hizb.containedSurahs.length} ${hizb.containedSurahs.length == 1 ? 'Surah' : 'Surahs'}',
             ),
           ],
         ),

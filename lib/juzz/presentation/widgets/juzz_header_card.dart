@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../constants.dart';
 import '../../data/models/juzz.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +48,7 @@ class JuzzHeaderCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '${'juzz.juzz'.tr()} ${juzz.number}',
+                  'Juzz ${juzz.number}',
                   style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontSize: 24,
@@ -59,7 +57,7 @@ class JuzzHeaderCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${juzz.totalAyahs} ${'juzz.ayahs'.tr()} • ${juzz.containedSurahs.length} ${'juzz.surahs'.tr()}',
+                  '${juzz.totalAyahs} Ayahs • ${juzz.containedSurahs.length} Surahs',
                   style: GoogleFonts.poppins(
                     color: Colors.white.withOpacity(0.9),
                     fontSize: 14,

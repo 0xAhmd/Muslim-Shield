@@ -1,10 +1,6 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../core/connectivity_service.dart';
 import '../../../core/widgets/offline_message.dart';
-
 import '../../../constants.dart';
-
 import '../../../surah/data/repo/surah_repo.dart';
 import '../../data/models/juzz_summary.dart';
 import '../cubit/juzz_cubit.dart';
@@ -128,7 +124,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
                   const CupertinoActivityIndicator(color: primary),
                   const SizedBox(height: 16),
                   Text(
-                    'juzz.loading_juzz_sections'.tr(),
+                    'Loading Juzz sections...',
                     style: GoogleFonts.poppins(color: textColor, fontSize: 14),
                   ),
                 ],
@@ -144,7 +140,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
                   Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
                   const SizedBox(height: 16),
                   Text(
-                    'errors.error_loading_juzz_sections'.tr(),
+                    'Error loading Juzz sections',
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 18,
@@ -171,7 +167,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
                       foregroundColor: Colors.white,
                     ),
                     icon: const Icon(Icons.refresh, size: 18),
-                    label: Text('common.retry'.tr()),
+                    label: const Text('Retry'),
                   ),
                 ],
               ),
@@ -209,7 +205,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
             const Icon(Icons.search_off, size: 64, color: textColor),
             const SizedBox(height: 16),
             Text(
-              'juzz.no_juzz_found'.tr(),
+              'No Juzz found',
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 18,
@@ -218,7 +214,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
             ),
             const SizedBox(height: 8),
             Text(
-              'search_results.try_different_keywords'.tr(),
+              'Try different keywords',
               style: GoogleFonts.poppins(color: textColor, fontSize: 14),
             ),
           ],
@@ -247,8 +243,8 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
                   // Check connectivity before navigating
                   if (!_connectivityService.isConnected) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('errors.no_internet_connection'.tr()),
+                      const SnackBar(
+                        content: Text('No internet connection'),
                         backgroundColor: Colors.red,
                         behavior: SnackBarBehavior.floating,
                       ),
@@ -288,7 +284,7 @@ class JuzTabState extends State<JuzTab> with AutomaticKeepAliveClientMixin {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '${state.filteredJuzz.length} ${state.filteredJuzz.length == 1 ? 'search_results.result'.tr() : 'search_results.results'.tr()} ${'search_results.results_for'.tr()} "${state.searchQuery}"',
+              '${state.filteredJuzz.length} ${state.filteredJuzz.length == 1 ? 'result' : 'results'} for "${state.searchQuery}"',
               style: GoogleFonts.poppins(
                 color: primary,
                 fontSize: 12,
@@ -460,7 +456,7 @@ class _JuzzTile extends StatelessWidget {
             const Icon(Icons.book_outlined, size: 14, color: primary),
             const SizedBox(width: 4),
             Text(
-              '${juzzSummary.containedSurahs.length} ${juzzSummary.containedSurahs.length == 1 ? 'juzz.surah'.tr() : 'juzz.surahs'.tr()}',
+              '${juzzSummary.containedSurahs.length} ${juzzSummary.containedSurahs.length == 1 ? 'Surah' : 'Surahs'}',
               style: GoogleFonts.poppins(
                 color: primary,
                 fontSize: 10,

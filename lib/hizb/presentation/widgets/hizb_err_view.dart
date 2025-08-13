@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart'
-    show StringTranslateExtension;
 
 import '../../../constants.dart';
 import '../cubit/hizb_state.dart';
@@ -34,7 +32,7 @@ class HizbErrorView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'hizb.something_wrong'.tr(),
+            'something went wrong',
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -68,7 +66,7 @@ class HizbErrorView extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.arrow_back, size: 18),
                   label: Text(
-                    'common.go_back'.tr(),
+                    'Go Back',
                     style: GoogleFonts.poppins(fontSize: 14),
                   ),
                 ),
@@ -86,7 +84,7 @@ class HizbErrorView extends StatelessWidget {
                 ),
                 icon: const Icon(Icons.refresh, size: 18),
                 label: Text(
-                  'hizb.try_again'.tr(),
+                  'Try Again',
                   style: GoogleFonts.poppins(fontSize: 14),
                 ),
               ),

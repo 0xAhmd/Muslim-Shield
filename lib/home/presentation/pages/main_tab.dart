@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 import '../../../constants.dart';
 import '../../../hizb/presentation/widgets/hizb_tab.dart';
@@ -94,15 +93,15 @@ class _MainTabScreenState extends State<MainTabScreen>
   String _getSearchHint() {
     switch (tabController.index) {
       case 0:
-        return 'search.search_surahs'.tr();
+        return 'Search Surahs';
       case 1:
-        return 'search.search_juzz'.tr();
+        return 'Search Juzz';
       case 2:
-        return 'search.search_hizb'.tr();
+        return 'Search Hizb';
       case 3:
-        return 'search.search_sajdas'.tr();
+        return 'Search Sajdas';
       default:
-        return 'search.search'.tr();
+        return 'Search';
     }
   }
 
