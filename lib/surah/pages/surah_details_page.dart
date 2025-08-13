@@ -330,7 +330,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_outlined, color: primary),
+          icon: const Icon(Icons.arrow_back_outlined, color: primary),
         ),
         title: Text(
           widget.surah.englishName,
