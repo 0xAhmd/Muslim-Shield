@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,10 +22,8 @@ class SajdaLoadingView extends StatelessWidget {
             const SizedBox(height: 24),
             Text(
               sajdaId != null
-                  ? 'sajda.loading_sajda_number'.tr(
-                      namedArgs: {'number': '$sajdaId'},
-                    )
-                  : 'sajda.loading_sajdas'.tr(),
+                  ? 'Loading Sajda $sajdaId...'
+                  : 'Loading sajdas...',
               style: GoogleFonts.poppins(
                 color: textColor,
                 fontSize: 16,
@@ -37,7 +33,7 @@ class SajdaLoadingView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'sajda.loading_fetch_data'.tr(),
+              'Fetching data...',
               style: GoogleFonts.poppins(
                 color: textColor.withOpacity(0.7),
                 fontSize: 14,

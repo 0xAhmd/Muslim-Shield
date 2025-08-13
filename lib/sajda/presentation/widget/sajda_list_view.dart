@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../pages/sajda_details_screen.dart';
 
 import '../../../constants.dart';
@@ -60,7 +58,7 @@ class SajdaListView extends StatelessWidget {
           Icon(Icons.search_off, size: 64, color: textColor.withOpacity(0.5)),
           const SizedBox(height: 24),
           Text(
-            'sajda.no_sajdas_found'.tr(),
+            'No sajdas found',
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -69,7 +67,7 @@ class SajdaListView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'sajda.search_different_keywords'.tr(),
+            'Try searching with different keywords',
             style: GoogleFonts.poppins(
               color: textColor.withOpacity(0.7),
               fontSize: 14,
@@ -94,7 +92,7 @@ class SajdaListView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'sajda.no_sajdas_available'.tr(),
+            'No sajdas available',
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -103,7 +101,7 @@ class SajdaListView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'sajda.check_internet_connection'.tr(),
+            'Please check your internet connection',
             style: GoogleFonts.poppins(
               color: textColor.withOpacity(0.7),
               fontSize: 14,

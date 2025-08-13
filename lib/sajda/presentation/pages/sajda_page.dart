@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../data/repo/sajda_repo.dart';
 import '../cubit/sajda_cubit.dart';
 import '../cubit/sajda_state.dart';
@@ -80,7 +78,7 @@ class _SajdaPageState extends State<SajdaPage> {
       title: _isSearching
           ? null
           : Text(
-              'sajda.sajdas'.tr(),
+              'Sajdas',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -97,7 +95,7 @@ class _SajdaPageState extends State<SajdaPage> {
                   children: [
                     _buildFilterButton(
                       icon: Icons.priority_high,
-                      label: 'sajda.obligatory'.tr(),
+                      label: 'Obligatory',
                       isActive: state.showObligatory,
                       color: Colors.red,
                       onPressed: () => _sajdaCubit.toggleObligatory(),
@@ -105,7 +103,7 @@ class _SajdaPageState extends State<SajdaPage> {
                     const SizedBox(width: 8),
                     _buildFilterButton(
                       icon: Icons.star_outline,
-                      label: 'sajda.recommended'.tr(),
+                      label: 'Recommended',
                       isActive: state.showRecommended,
                       color: orange,
                       onPressed: () => _sajdaCubit.toggleRecommended(),
@@ -186,7 +184,7 @@ class _SajdaPageState extends State<SajdaPage> {
         onChanged: _onSearchChanged,
         style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
         decoration: InputDecoration(
-          hintText: 'sajda.search_placeholder'.tr(),
+          hintText: 'Search sajdas...',
           hintStyle: GoogleFonts.poppins(
             color: textColor.withOpacity(0.6),
             fontSize: 14,

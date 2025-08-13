@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../constants.dart';
 import '../cubit/sajda_state.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +31,7 @@ class SajdaErrorView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'sajda.something_wrong'.tr(),
+            'Something went wrong',
             style: GoogleFonts.poppins(
               color: textColor,
               fontSize: 18,
@@ -67,7 +65,7 @@ class SajdaErrorView extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.arrow_back, size: 18),
                   label: Text(
-                    'sajda.go_back'.tr(),
+                    'Go Back',
                     style: GoogleFonts.poppins(fontSize: 14),
                   ),
                 ),
@@ -85,7 +83,7 @@ class SajdaErrorView extends StatelessWidget {
                 ),
                 icon: const Icon(Icons.refresh, size: 18),
                 label: Text(
-                  'sajda.try_again'.tr(),
+                  'Try Again',
                   style: GoogleFonts.poppins(fontSize: 14),
                 ),
               ),

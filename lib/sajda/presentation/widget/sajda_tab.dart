@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../core/connectivity_service.dart';
 import '../../../core/widgets/offline_message.dart';
 import '../../data/repo/sajda_repo.dart';
@@ -101,7 +99,7 @@ class SajdaTabState extends State<SajdaTab> with AutomaticKeepAliveClientMixin {
     // Show offline message if not connected
     if (!_isConnected) {
       return OfflineMessageWidget(
-        customMessage: 'connectivity.sajda_need_internet'.tr(),
+        customMessage: 'Sajdas need internet connection to load',
         onRetry: () => _initializeConnectivity(),
       );
     }

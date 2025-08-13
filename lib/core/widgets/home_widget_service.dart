@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
 import '../../Doa/data/dua_data.dart';
 import '../../Doa/data/dua_model.dart';
@@ -17,7 +18,7 @@ class WidgetService {
       // Start the automatic update timer
       await _startPeriodicUpdates();
     } catch (e) {
-      print('Error initializing widget service: $e');
+      debugPrint('Error initializing widget service: $e');
     }
   }
 
@@ -29,11 +30,11 @@ class WidgetService {
 
       // Schedule periodic updates using native platform capabilities
       // We'll rely on the Android widget's updatePeriodMillis and iOS widget timeline
-      print(
+      debugPrint(
         'Periodic updates initialized - widget will update every 10 minutes',
       );
     } catch (e) {
-      print('Error starting periodic updates: $e');
+      debugPrint('Error starting periodic updates: $e');
     }
   }
 
@@ -68,9 +69,9 @@ class WidgetService {
         androidName: androidWidgetName,
       );
 
-      print('Widget updated successfully with: ${randomDua.title}');
+      debugPrint('Widget updated successfully with: ${randomDua.title}');
     } catch (e) {
-      print('Error updating widget: $e');
+      debugPrint('Error updating widget: $e');
     }
   }
 
@@ -113,7 +114,7 @@ class WidgetService {
   static Future<void> handleWidgetTap() async {
     // This will be called when the widget is tapped
     // The native code will handle opening the app
-    print('Widget tapped - opening app');
+    debugPrint('Widget tapped - opening app');
   }
 
   /// Force update widget (can be called manually if needed)

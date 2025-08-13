@@ -13,14 +13,14 @@ import 'constants.dart';
 /// This MUST be a top-level function (outside of main())
 @pragma("vm:entry-point")
 Future<void> _backgroundCallback(Uri? uri) async {
-  print('Widget callback triggered: $uri');
+  debugPrint('Widget callback triggered: $uri');
 
   // Handle different widget types
   if (uri?.host == 'dua') {
-    print('Dua widget tapped - should navigate to dua page');
+    debugPrint('Dua widget tapped - should navigate to dua page');
   } else if (uri?.host == 'prayer' ||
       uri?.queryParameters['open_prayer_page'] == 'true') {
-    print('Next Prayer widget tapped - should navigate to prayer page');
+    debugPrint('Next Prayer widget tapped - should navigate to prayer page');
   }
 }
 

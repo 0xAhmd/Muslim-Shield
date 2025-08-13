@@ -1,6 +1,7 @@
 import 'package:azkar/core/connectivity_service.dart';
 import 'package:azkar/core/widgets/home_widget_service.dart';
 import 'package:azkar/core/widgets/next_prayer_widget_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -44,14 +45,16 @@ class AppInitializer {
   static Future<void> _initializeServices() async {
     await BookmarksService().init();
     await LocalAudioService().initialize();
-    
+
     final notificationService = NotificationService();
     await notificationService.initialize();
-    
+
     await PrayerTrackerService().initialize();
   }
 
-  static Future<void> _initializeWidgets(Function(Uri?) backgroundCallback) async {
+  static Future<void> _initializeWidgets(
+    Function(Uri?) backgroundCallback,
+  ) async {
     // Initialize Widget Services
     await WidgetService.initialize();
     await NextPrayerWidgetService.initialize();
@@ -65,19 +68,19 @@ class AppInitializer {
     try {
       // Update widgets with initial data
       await WidgetService.updateWidgetWithRandomDua();
-      
+
       // Initialize Next Prayer Widget with default data
       await NextPrayerWidgetService.updateWidgetWithNextPrayer(
         nextPrayer: null,
         location: 'Please open Prayer Times',
       );
-      
+
       // Start Android auto-update service for widgets
       await _startWidgetAutoUpdateService();
-      
-      print('All services started successfully');
+
+      debugPrint('All services started successfully');
     } catch (e) {
-      print('Error starting services: $e');
+      debugPrint('Error starting services: $e');
     }
   }
 
@@ -86,9 +89,9 @@ class AppInitializer {
     try {
       const platform = MethodChannel('com.example.azkar/widget_service');
       await platform.invokeMethod('startAutoUpdates');
-      print('Widget auto-update service started successfully');
+      debugPrint('Widget auto-update service started successfully');
     } catch (e) {
-      print('Error starting widget auto-update service: $e');
+      debugPrint('Error starting widget auto-update service: $e');
     }
   }
 }

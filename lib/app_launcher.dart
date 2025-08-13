@@ -44,9 +44,9 @@ class _AppLauncherState extends State<AppLauncher> with WidgetsBindingObserver {
     try {
       // Update Dua widget with a new random dua when app resumes
       await WidgetService.updateWidgetWithRandomDua();
-      print('Widgets updated on app resume');
+      debugPrint('Widgets updated on app resume');
     } catch (e) {
-      print('Error updating widgets on app resume: $e');
+      debugPrint('Error updating widgets on app resume: $e');
     }
   }
 
@@ -64,14 +64,14 @@ class _AppLauncherState extends State<AppLauncher> with WidgetsBindingObserver {
       if (!mounted) return;
       
       if (uri != null) {
-        print('App launched from widget with URI: $uri');
+        debugPrint('App launched from widget with URI: $uri');
         await _handleWidgetLaunch(uri);
       } else {
         // Normal app launch - navigate to home screen
         _navigateToHome();
       }
     } catch (e) {
-      print('Error during app initialization: $e');
+      debugPrint('Error during app initialization: $e');
       // Remove splash screen even if there's an error
       FlutterNativeSplash.remove();
       if (mounted) {
