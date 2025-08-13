@@ -387,7 +387,7 @@ class _SurahTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final subtitleText =
-        "${surah.englishNameTranslation} • ${surah.numberOfAyahs} ${'surah_details.ayahs'.tr()}";
+        "${surah.englishNameTranslation} • ${surah.numberOfAyahs} ${'ayahs'}";
 
     return ListTile(
       onTap: onTap,
