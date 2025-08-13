@@ -1,9 +1,11 @@
-import 'package:azkar/core/widgets/home_widget.dart';
+import 'package:azkar/core/widgets/home_widget_service.dart';
 import 'package:azkar/core/widgets/next_prayer_widget_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:safe_device/safe_device.dart';
@@ -35,7 +37,9 @@ Future<void> _backgroundCallback(Uri? uri) async {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // Preserve the native splash screen
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await ConnectivityService().initialize();
   await EasyLocalization.ensureInitialized();
@@ -74,7 +78,11 @@ void main() async {
       nextPrayer: null,
       location: 'Please open Prayer Times',
     );
-    print('Initial widgets update completed');
+    
+    // Start Android auto-update service for widgets
+    await _startWidgetAutoUpdateService();
+    
+    print('Initial widgets update completed and auto-update service started');
   } catch (e) {
     print('Error updating widgets on startup: $e');
   }
@@ -104,6 +112,18 @@ void main() async {
   }
 }
 
+/// Start the Android widget auto-update service
+Future<void> _startWidgetAutoUpdateService() async {
+  try {
+    // This will call the Android native method to start the auto-update service
+    const platform = MethodChannel('com.example.azkar/widget_service');
+    await platform.invokeMethod('startAutoUpdates');
+    print('Widget auto-update service started successfully');
+  } catch (e) {
+    print('Error starting widget auto-update service: $e');
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -122,7 +142,7 @@ class MyApp extends StatelessWidget {
             locale: context.locale,
             debugShowCheckedModeBanner: false,
             theme: AppThemes.getTheme(context),
-            home: const AppInitializer(),
+            home: const AppLauncher(),
           ),
         );
       },
@@ -130,113 +150,125 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Handles app initialization and widget launch detection
-class AppInitializer extends StatefulWidget {
-  const AppInitializer({super.key});
+/// Handles app launch detection and navigation without interfering with splash screen
+class AppLauncher extends StatefulWidget {
+  const AppLauncher({super.key});
 
   @override
-  State<AppInitializer> createState() => _AppInitializerState();
+  State<AppLauncher> createState() => _AppLauncherState();
 }
 
-class _AppInitializerState extends State<AppInitializer> {
+class _AppLauncherState extends State<AppLauncher> with WidgetsBindingObserver {
+  bool _isInitialized = false;
+
   @override
   void initState() {
     super.initState();
-    _checkLaunchIntent();
+    WidgetsBinding.instance.addObserver(this);
+    _initializeApp();
   }
 
-  void _checkLaunchIntent() async {
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    
+    if (state == AppLifecycleState.resumed && _isInitialized) {
+      // App came to foreground - update widgets with fresh content
+      _updateWidgetsOnResume();
+    }
+  }
+
+  Future<void> _updateWidgetsOnResume() async {
     try {
+      // Update Dua widget with a new random dua when app resumes
+      await WidgetService.updateWidgetWithRandomDua();
+      print('Widgets updated on app resume');
+    } catch (e) {
+      print('Error updating widgets on app resume: $e');
+    }
+  }
+
+  Future<void> _initializeApp() async {
+    try {
+      // Small delay to ensure splash screen is fully displayed
+      await Future.delayed(const Duration(milliseconds: 100));
+      
       // Check if app was launched from widget
       final Uri? uri = await HomeWidget.initiallyLaunchedFromHomeWidget();
-
+      
+      // Remove splash screen
+      FlutterNativeSplash.remove();
+      
+      if (!mounted) return;
+      
       if (uri != null) {
         print('App launched from widget with URI: $uri');
-
-        if (uri.host == 'dua') {
-          // Navigate to Dua page after a short delay
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const WidgetLaunchedHomeScreen(
-                    targetPage: 2, // DoaPage is at index 2 based on your pages list
-                    widgetType: 'dua',
-                  ),
-                ),
-              );
-            }
-          });
-          return;
-        } else if (uri.host == 'prayer' || uri.queryParameters['open_prayer_page'] == 'true') {
-          // Navigate to Prayer page
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const WidgetLaunchedHomeScreen(
-                    targetPage: 1, // PrayerPage is at index 1 based on your pages list
-                    widgetType: 'prayer',
-                  ),
-                ),
-              );
-            }
-          });
-          return;
-        }
+        await _handleWidgetLaunch(uri);
+      } else {
+        // Normal app launch - navigate to home screen
+        _navigateToHome();
       }
     } catch (e) {
-      print('Error checking launch intent: $e');
-    }
-
-    // Normal app launch - go to home screen
-    Future.delayed(const Duration(milliseconds: 100), () {
+      print('Error during app initialization: $e');
+      // Remove splash screen even if there's an error
+      FlutterNativeSplash.remove();
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+        _navigateToHome();
       }
-    });
+    } finally {
+      _isInitialized = true;
+    }
+  }
+
+  Future<void> _handleWidgetLaunch(Uri uri) async {
+    if (uri.host == 'dua') {
+      // Navigate to Dua page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const WidgetLaunchedHomeScreen(
+            targetPage: 2, // DoaPage is at index 2
+            widgetType: 'dua',
+          ),
+        ),
+      );
+    } else if (uri.host == 'prayer' || uri.queryParameters['open_prayer_page'] == 'true') {
+      // Navigate to Prayer page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const WidgetLaunchedHomeScreen(
+            targetPage: 1, // PrayerPage is at index 1
+            widgetType: 'prayer',
+          ),
+        ),
+      );
+    } else {
+      // Unknown widget type, go to home
+      _navigateToHome();
+    }
+  }
+
+  void _navigateToHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: scaffoldBackgroundColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // App logo or icon
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: primary.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(Icons.book, size: 40, color: primary),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Muslim Shield',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(primary),
-              strokeWidth: 2,
-            ),
-          ],
-        ),
-      ),
+    // Return a transparent container while initialization is happening
+    // The native splash screen will be visible until FlutterNativeSplash.remove() is called
+    return const Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SizedBox.shrink(), // Invisible placeholder
     );
   }
 }
@@ -275,8 +307,10 @@ class _WidgetLaunchedHomeScreenState extends State<WidgetLaunchedHomeScreen> {
     );
 
     // After navigation, show a snackbar indicating which widget was tapped
-    Future.delayed(const Duration(milliseconds: 100), () {
-      _showWidgetTappedNotification();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        _showWidgetTappedNotification();
+      }
     });
   }
 
@@ -286,8 +320,8 @@ class _WidgetLaunchedHomeScreenState extends State<WidgetLaunchedHomeScreen> {
     
     switch (widget.widgetType) {
       case 'dua':
-        message = 'Dua widget tapped! Navigate to Duas tab';
-        icon = Icons.book;
+        message = 'Dua widget tapped! Opening fresh Dua content';
+        icon = Icons.auto_awesome;
         break;
       case 'prayer':
         message = 'Prayer widget tapped! Navigate to Prayer Times tab';
@@ -312,11 +346,10 @@ class _WidgetLaunchedHomeScreenState extends State<WidgetLaunchedHomeScreen> {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         action: SnackBarAction(
-          label: 'Navigate',
+          label: 'Dismiss',
           textColor: Colors.white,
           onPressed: () {
-            // Here you could programmatically navigate to the correct tab
-            // This would require modifying your HomeScreen to accept an initialIndex
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
         ),
       ),
@@ -325,48 +358,13 @@ class _WidgetLaunchedHomeScreenState extends State<WidgetLaunchedHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Show a loading screen briefly while navigating
-    String loadingText;
-    switch (widget.widgetType) {
-      case 'dua':
-        loadingText = 'Opening Duas...';
-        break;
-      case 'prayer':
-        loadingText = 'Opening Prayer Times...';
-        break;
-      default:
-        loadingText = 'Loading...';
-    }
-
-    return Scaffold(
+    // This is just a brief transition screen, should be barely visible
+    return const Scaffold(
       backgroundColor: scaffoldBackgroundColor,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: primary.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Icon(
-                widget.widgetType == 'prayer' ? Icons.schedule : Icons.book,
-                size: 30,
-                color: primary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              loadingText,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(primary),
+          strokeWidth: 2,
         ),
       ),
     );

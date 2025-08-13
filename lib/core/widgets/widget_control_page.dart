@@ -1,10 +1,12 @@
-import 'package:azkar/core/widgets/home_widget.dart';
+import 'package:azkar/core/widgets/home_widget_service.dart';
 import 'package:azkar/core/widgets/next_prayer_widget_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants.dart';
 import '../../prayer/presentation/cubit/prayer_cubit.dart';
 import '../../prayer/presentation/cubit/prayer_state.dart';
+import '../../prayer/data/repo/prayer_repo.dart';
+import '../../prayer/data/service/prayer_api_service.dart';
 
 class WidgetControlPage extends StatefulWidget {
   const WidgetControlPage({super.key});
@@ -32,11 +34,12 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
               children: [
                 Icon(Icons.check_circle, color: Colors.white, size: 16),
                 SizedBox(width: 8),
-                Text('Dua widget updated with new Dua!'),
+                Text('Dua widget updated! Auto-updates every 10 minutes.'),
               ],
             ),
             backgroundColor: primary,
             behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 4),
           ),
         );
       }
@@ -195,279 +198,321 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.white,
-        title: const Text('Widget Settings'),
+    return BlocProvider(
+      create: (context) => PrayerTimesCubit(
+        PrayerRepositoryImpl(PrayerApiServiceFactory.create()),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Home Screen Widgets',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+      child: Scaffold(
+        appBar: AppBar(
+          foregroundColor: Colors.white,
+          title: const Text('Widget Settings'),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Home Screen Widgets',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Manage your home screen widgets. Update them with fresh content or refresh prayer times.',
-              style: TextStyle(color: textColor, fontSize: 16, height: 1.5),
-            ),
-            const SizedBox(height: 32),
-
-            // Dua Widget Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: grey,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: primary.withOpacity(0.3)),
+              const SizedBox(height: 16),
+              const Text(
+                'Manage your home screen widgets. Update them with fresh content or refresh prayer times.',
+                style: TextStyle(color: textColor, fontSize: 16, height: 1.5),
               ),
-              child: Column(
-                children: [
-                  const Icon(Icons.auto_awesome, color: primary, size: 48),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Random Dua Widget',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Displays a random Dua on your home screen',
-                    style: TextStyle(color: textColor, fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
+              const SizedBox(height: 32),
 
-                  ElevatedButton.icon(
-                    onPressed: _isUpdatingDua ? null : _updateDuaWidget,
-                    icon: _isUpdatingDua
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation(Colors.white),
-                            ),
-                          )
-                        : const Icon(Icons.refresh),
-                    label: Text(
-                      _isUpdatingDua ? 'Updating...' : 'Update Widget',
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+              // Dua Widget Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: grey,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: primary.withOpacity(0.3)),
+                ),
+                child: Column(
+                  children: [
+                    const Icon(Icons.auto_awesome, color: primary, size: 48),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Random Dua Widget (Auto-Updates Every 10min)',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Next Prayer Widget Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: grey,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: orange.withOpacity(0.3)),
-              ),
-              child: Column(
-                children: [
-                  const Icon(Icons.schedule, color: orange, size: 48),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Next Prayer Widget',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Displays random Duas on your home screen and automatically updates with new content every 10 minutes',
+                      style: TextStyle(color: textColor, fontSize: 14),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Shows next prayer time with countdown on your home screen',
-                    style: TextStyle(color: textColor, fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                  // Show current prayer status
-                  BlocBuilder<PrayerTimesCubit, PrayerTimesState>(
-                    builder: (context, state) {
-                      if (state is PrayerTimesLoaded) {
-                        return Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          margin: const EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Colors.green.withOpacity(0.3),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Current: ${state.nextPrayer?.name ?? 'Unknown'} at ${state.nextPrayer?.time ?? 'Unknown'}',
-                                style: const TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 12,
+                    ElevatedButton.icon(
+                      onPressed: _isUpdatingDua ? null : _updateDuaWidget,
+                      icon: _isUpdatingDua
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation(
+                                  Colors.white,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
-                              Text(
-                                '${state.location.cityName}, ${state.location.countryName}',
-                                style: TextStyle(
-                                  color: Colors.green.withOpacity(0.8),
-                                  fontSize: 10,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        );
-                      } else if (state is PrayerTimesError) {
-                        return Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          margin: const EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Colors.red.withOpacity(0.3),
-                            ),
-                          ),
-                          child: const Text(
-                            'No prayer data available',
-                            style: TextStyle(color: Colors.red, fontSize: 12),
-                            textAlign: TextAlign.center,
-                          ),
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
+                            )
+                          : const Icon(Icons.refresh),
+                      label: Text(
+                        _isUpdatingDua ? 'Updating...' : 'Update Now',
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: _isUpdatingPrayer
-                              ? null
-                              : _updateNextPrayerWidget,
-                          icon: _isUpdatingPrayer
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
+              // Next Prayer Widget Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: grey,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: orange.withOpacity(0.3)),
+                ),
+                child: Column(
+                  children: [
+                    const Icon(Icons.schedule, color: orange, size: 48),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Next Prayer Widget',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Shows next prayer time with countdown on your home screen',
+                      style: TextStyle(color: textColor, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Show current prayer status
+                    BlocBuilder<PrayerTimesCubit, PrayerTimesState>(
+                      builder: (context, state) {
+                        if (state is PrayerTimesLoaded) {
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.green.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Current: ${state.nextPrayer?.name ?? 'Unknown'} at ${state.nextPrayer?.time ?? 'Unknown'}',
+                                  style: const TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 12,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  '${state.location.cityName}, ${state.location.countryName}',
+                                  style: TextStyle(
+                                    color: Colors.green.withOpacity(0.8),
+                                    fontSize: 10,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          );
+                        } else if (state is PrayerTimesError) {
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.red.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.red.withOpacity(0.3),
+                              ),
+                            ),
+                            child: const Text(
+                              'No prayer data available',
+                              style: TextStyle(color: Colors.red, fontSize: 12),
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        } else if (state is PrayerTimesLoading) {
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.blue.withOpacity(0.3),
+                              ),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 12,
+                                  height: 12,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation(
-                                      Colors.white,
+                                      Colors.blue,
                                     ),
                                   ),
-                                )
-                              : const Icon(Icons.update),
-                          label: Text(
-                            _isUpdatingPrayer ? 'Updating...' : 'Update',
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: orange,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Loading prayer data...',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: _isUpdatingPrayer
-                              ? null
-                              : _refreshPrayerData,
-                          icon: const Icon(Icons.refresh),
-                          label: const Text('Refresh'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: background,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.info, color: orange, size: 16),
-                      SizedBox(width: 8),
-                      Text(
-                        'How to add widgets',
-                        style: TextStyle(
-                          color: orange,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    '1. Long press on your home screen\n'
-                    '2. Tap the "+" button or "Widgets"\n'
-                    '3. Search for "Muslim Shield"\n'
-                    '4. Select either "Random Dua" or "Next Prayer" widget\n'
-                    '5. Tap "Add Widget"\n\n'
-                    'Note: For Next Prayer widget, make sure to open Prayer Times page first to get accurate prayer data.',
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 14,
-                      height: 1.4,
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
                     ),
-                  ),
-                ],
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: _isUpdatingPrayer
+                                ? null
+                                : _updateNextPrayerWidget,
+                            icon: _isUpdatingPrayer
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : const Icon(Icons.update),
+                            label: Text(
+                              _isUpdatingPrayer ? 'Updating...' : 'Update',
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: orange,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: _isUpdatingPrayer
+                                ? null
+                                : _refreshPrayerData,
+                            icon: const Icon(Icons.refresh),
+                            label: const Text('Refresh'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 24),
+
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: background,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.info, color: orange, size: 16),
+                        SizedBox(width: 8),
+                        Text(
+                          'Widget Features',
+                          style: TextStyle(
+                            color: orange,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      '• Dua widget updates automatically every 10 minutes with fresh content\n'
+                      '• Next Prayer widget updates based on prayer times\n'
+                      '• Widgets continue updating even when app is closed\n'
+                      '• Manual updates available through this page\n\n'
+                      'Note: For Next Prayer widget, make sure to open Prayer Times page first to get accurate prayer data.',
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: 14,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

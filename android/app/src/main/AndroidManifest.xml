@@ -1,21 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Internet permission (you already have this - good!) -->
+    <!-- Existing permissions -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- Remove duplicate INTERNET permission -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- Remove second duplicate INTERNET permission -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- For Android 12+ exact alarm scheduling -->
+    
+    <!-- Widget and alarm permissions -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SET_ALARM" />
     
     <!-- For compass functionality -->
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
@@ -26,23 +25,50 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
-<receiver android:name=".DuaAppWidget"
-    android:exported="true">
-    <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-    </intent-filter>
-    <meta-data android:name="android.appwidget.provider"
-        android:resource="@xml/dua_widget_info" />
-</receiver>
 
-<receiver android:name=".NextPrayerAppWidget"
-    android:exported="true">
-    <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-    </intent-filter>
-    <meta-data android:name="android.appwidget.provider"
-        android:resource="@xml/next_prayer_widget_info" />
-</receiver>
+        <!-- Dua Widget -->
+        <receiver android:name=".DuaAppWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/dua_widget_info" />
+        </receiver>
+
+        <!-- Next Prayer Widget -->
+        <receiver android:name=".NextPrayerAppWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/next_prayer_widget_info" />
+        </receiver>
+
+        <!-- Widget Auto-Update Service -->
+        <service android:name=".WidgetUpdateService"
+            android:exported="false" />
+
+        <!-- Widget Update Receiver -->
+        <receiver android:name=".WidgetUpdateService$WidgetUpdateReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.azkar.UPDATE_WIDGET" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Boot receiver to restart widget updates after device reboot -->
+        <receiver android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
         <!-- Audio service for background playback -->
         <service android:name="com.ryanheise.audioservice.AudioService"
             android:foregroundServiceType="mediaPlayback"

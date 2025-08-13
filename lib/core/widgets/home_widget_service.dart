@@ -13,8 +13,27 @@ class WidgetService {
     try {
       // Set app group for iOS (required for data sharing)
       await HomeWidget.setAppGroupId(appGroupId);
+
+      // Start the automatic update timer
+      await _startPeriodicUpdates();
     } catch (e) {
       print('Error initializing widget service: $e');
+    }
+  }
+
+  /// Start periodic updates every 10 minutes
+  static Future<void> _startPeriodicUpdates() async {
+    try {
+      // Update immediately on startup
+      await updateWidgetWithRandomDua();
+
+      // Schedule periodic updates using native platform capabilities
+      // We'll rely on the Android widget's updatePeriodMillis and iOS widget timeline
+      print(
+        'Periodic updates initialized - widget will update every 10 minutes',
+      );
+    } catch (e) {
+      print('Error starting periodic updates: $e');
     }
   }
 
@@ -23,20 +42,32 @@ class WidgetService {
     try {
       // Get a random Dua
       final randomDua = _getRandomDua();
-      
+
       // Save data for the widget to access
       await HomeWidget.saveWidgetData<String>('dua_title', randomDua.title);
-      await HomeWidget.saveWidgetData<String>('dua_arabic', _truncateArabic(randomDua.arabic));
-      await HomeWidget.saveWidgetData<String>('dua_translation', _truncateTranslation(randomDua.translation));
-      await HomeWidget.saveWidgetData<String>('dua_category', randomDua.category);
-      await HomeWidget.saveWidgetData<String>('last_updated', DateTime.now().toIso8601String());
+      await HomeWidget.saveWidgetData<String>(
+        'dua_arabic',
+        _truncateArabic(randomDua.arabic),
+      );
+      await HomeWidget.saveWidgetData<String>(
+        'dua_translation',
+        _truncateTranslation(randomDua.translation),
+      );
+      await HomeWidget.saveWidgetData<String>(
+        'dua_category',
+        randomDua.category,
+      );
+      await HomeWidget.saveWidgetData<String>(
+        'last_updated',
+        DateTime.now().toIso8601String(),
+      );
 
       // Update the actual widget
       await HomeWidget.updateWidget(
         iOSName: iOSWidgetName,
         androidName: androidWidgetName,
       );
-      
+
       print('Widget updated successfully with: ${randomDua.title}');
     } catch (e) {
       print('Error updating widget: $e');
@@ -54,12 +85,12 @@ class WidgetService {
   static String _truncateArabic(String text) {
     const maxLength = 60;
     if (text.length <= maxLength) return text;
-    
+
     int cutoff = maxLength;
     while (cutoff > 0 && text[cutoff] != ' ') {
       cutoff--;
     }
-    
+
     if (cutoff == 0) cutoff = maxLength;
     return '${text.substring(0, cutoff)}...';
   }
@@ -68,12 +99,12 @@ class WidgetService {
   static String _truncateTranslation(String text) {
     const maxLength = 80;
     if (text.length <= maxLength) return text;
-    
+
     int cutoff = maxLength;
     while (cutoff > 0 && text[cutoff] != ' ') {
       cutoff--;
     }
-    
+
     if (cutoff == 0) cutoff = maxLength;
     return '${text.substring(0, cutoff)}...';
   }
@@ -85,10 +116,8 @@ class WidgetService {
     print('Widget tapped - opening app');
   }
 
-  /// Schedule periodic updates (optional)
-  static Future<void> schedulePeriodicUpdates() async {
-    // You can implement periodic updates here
-    // For example, update every hour with a new random Dua
+  /// Force update widget (can be called manually if needed)
+  static Future<void> forceUpdateWidget() async {
     await updateWidgetWithRandomDua();
   }
 }
