@@ -64,7 +64,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Row(
-                children:  [
+                children: [
                   Icon(Icons.wifi_off, color: Colors.white, size: 16),
                   SizedBox(width: 8),
                   Text('Connection lost'),
@@ -194,8 +194,9 @@ class _PrayerPageViewState extends State<PrayerPageView>
                     }
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    _isConnected ? primary : primary.withOpacity(0.5),
+                backgroundColor: _isConnected
+                    ? primary
+                    : primary.withOpacity(0.5),
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
                 shape: RoundedRectangleBorder(
@@ -244,8 +245,9 @@ class _PrayerPageViewState extends State<PrayerPageView>
                   }
                 : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  _isConnected ? primary : primary.withOpacity(0.5),
+              backgroundColor: _isConnected
+                  ? primary
+                  : primary.withOpacity(0.5),
               foregroundColor: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
               shape: RoundedRectangleBorder(

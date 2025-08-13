@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -73,7 +72,7 @@ class NextPrayerCard extends StatelessWidget {
                 // Next prayer info
                 if (nextPrayer != null) ...[
                   Text(
-                    'prayer.next_prayer'.tr(),
+                    'Next Prayer',
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 14.sp,
@@ -116,7 +115,7 @@ class NextPrayerCard extends StatelessWidget {
                   // Loading or error state
                   Center(
                     child: Text(
-                      'prayer.loading_next_prayer'.tr(),
+                      'Loading next prayer...',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: 16.sp,

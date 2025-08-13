@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,7 +50,7 @@ class _QiblahCompassState extends State<QiblahCompass>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'prayer.qiblah_direction'.tr(),
+            'Qiblah Direction',
             style: TextStyle(
               color: textColor,
               fontSize: 18.sp,
@@ -90,7 +89,7 @@ class _QiblahCompassState extends State<QiblahCompass>
             const CircularProgressIndicator(color: primary, strokeWidth: 3),
             SizedBox(height: 16.h),
             Text(
-              'prayer.loading_compass'.tr(),
+              'Loading compass...',
               style: TextStyle(
                 color: textColor.withOpacity(0.7),
                 fontSize: 14.sp,
@@ -117,7 +116,7 @@ class _QiblahCompassState extends State<QiblahCompass>
             Icon(Icons.error_outline, color: Colors.red.shade400, size: 48.sp),
             SizedBox(height: 16.h),
             Text(
-              'prayer.device_not_supported'.tr(),
+              'Device not supported',
               style: TextStyle(
                 color: Colors.red.shade400,
                 fontSize: 16.sp,
@@ -126,7 +125,7 @@ class _QiblahCompassState extends State<QiblahCompass>
             ),
             SizedBox(height: 8.h),
             Text(
-              'prayer.device_no_compass'.tr(),
+              'Your device does not have compass sensors',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: textColor.withOpacity(0.7),
@@ -224,12 +223,12 @@ class _QiblahCompassState extends State<QiblahCompass>
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildDirectionInfo(
-                      'prayer.qiblah'.tr(),
+                      'Qiblah',
                       '${qiblahDirection.qiblah.toStringAsFixed(1)}°',
                       primary,
                     ),
                     _buildDirectionInfo(
-                      'prayer.direction'.tr(),
+                      'Direction',
                       qiblahDirection.direction.toStringAsFixed(1),
                       orange,
                     ),
@@ -258,7 +257,7 @@ class _QiblahCompassState extends State<QiblahCompass>
             Icon(Icons.warning_amber_outlined, color: orange, size: 48.sp),
             SizedBox(height: 16.h),
             Text(
-              'prayer.compass_error'.tr(),
+              'Compass Error',
               style: TextStyle(
                 color: orange,
                 fontSize: 16.sp,
@@ -267,7 +266,7 @@ class _QiblahCompassState extends State<QiblahCompass>
             ),
             SizedBox(height: 8.h),
             Text(
-              'prayer.check_sensors'.tr(),
+              'Please check your device sensors',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: textColor.withOpacity(0.7),
