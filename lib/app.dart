@@ -3,7 +3,6 @@ import 'package:azkar/core/widgets/home_widget_service.dart';
 import 'package:azkar/core/widgets/next_prayer_widget_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:home_widget/home_widget.dart';
 
@@ -14,7 +13,6 @@ import '../prayer_tracker/data/models/prayer_completion.dart';
 import '../prayer_tracker/data/service/prayer_tracker_service.dart';
 import '../surah/audio/audio_state.dart';
 import '../tasbih/data/models/tasbih.dart';
-
 
 /// Handles all app initialization logic
 class AppInitializer {
@@ -28,7 +26,6 @@ class AppInitializer {
 
   static Future<void> _initializeCore() async {
     await ConnectivityService().initialize();
-    await EasyLocalization.ensureInitialized();
     await dotenv.load(fileName: ".env");
   }
 

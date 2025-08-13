@@ -1,6 +1,5 @@
 import 'package:azkar/app.dart';
 import 'package:azkar/app_launcher.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,23 +37,9 @@ void main() async {
   final isRealDevice = await SafeDevice.isRealDevice;
 
   if (isRooted || isRealDevice) {
-    runApp(
-      EasyLocalization(
-        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'SA')],
-        path: 'assets/translations',
-        fallbackLocale: const Locale('en', 'US'),
-        child: const BlockedDeviceApp(),
-      ),
-    );
+    runApp(const BlockedDeviceApp());
   } else {
-    runApp(
-      EasyLocalization(
-        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'SA')],
-        path: 'assets/translations',
-        fallbackLocale: const Locale('en', 'US'),
-        child: const MyApp(),
-      ),
-    );
+    runApp(const MyApp());
   }
 }
 
@@ -68,16 +53,11 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return Builder(
-          builder: (context) => MaterialApp(
-            navigatorKey: NavigationService.navigatorKey,
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            debugShowCheckedModeBanner: false,
-            theme: AppThemes.getTheme(context),
-            home: const AppLauncher(),
-          ),
+        return MaterialApp(
+          navigatorKey: NavigationService.navigatorKey,
+          debugShowCheckedModeBanner: false,
+          theme: AppThemes.getTheme(),
+          home: const AppLauncher(),
         );
       },
     );
