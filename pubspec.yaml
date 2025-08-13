@@ -19,8 +19,7 @@ dependencies:
 
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
+
   
   flutter_bloc: ^9.1.1
   flutter_dotenv: ^5.2.1
@@ -84,7 +83,6 @@ flutter:
     - assets/
     - assets/images/
     - assets/sounds/
-    - assets/translations/
     - .env
   fonts:
     - family: Amiri
