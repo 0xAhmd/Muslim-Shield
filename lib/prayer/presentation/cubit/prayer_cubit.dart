@@ -16,11 +16,14 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
   Future<void> fetchPrayerTimes() async {
     try {
       if (isClosed) return;
+
+      debugPrint('PrayerTimesCubit: Starting to fetch prayer times...');
       emit(PrayerTimesLoading());
 
       // Initialize notification service
       try {
         await _notificationService.initialize();
+        debugPrint('PrayerTimesCubit: Notification service initialized');
       } catch (e) {
         debugPrint('Warning: Could not initialize notification service: $e');
       }
@@ -28,6 +31,7 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
       // Initialize Next Prayer Widget Service
       try {
         await NextPrayerWidgetService.initialize();
+        debugPrint('PrayerTimesCubit: Next Prayer Widget service initialized');
       } catch (e) {
         debugPrint(
           'Warning: Could not initialize Next Prayer Widget service: $e',
@@ -35,15 +39,23 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
       }
 
       // Get current location
+      debugPrint('PrayerTimesCubit: Getting current location...');
       final location = await _repository.getCurrentLocation();
       if (isClosed) return;
 
+      debugPrint(
+        'PrayerTimesCubit: Location obtained: ${location.cityName}, ${location.countryName}',
+      );
+
       // Fetch prayer times
+      debugPrint('PrayerTimesCubit: Fetching prayer times from API...');
       final prayerTimes = await _repository.getPrayerTimes(
         location.latitude,
         location.longitude,
       );
       if (isClosed) return;
+
+      debugPrint('PrayerTimesCubit: Prayer times fetched successfully');
 
       // Get today's prayers list
       final prayersList = await _repository.getTodayPrayersList(
@@ -51,11 +63,19 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
       );
       if (isClosed) return;
 
+      debugPrint(
+        'PrayerTimesCubit: Prayers list created with ${prayersList.length} prayers',
+      );
+
       // Get next prayer
       final nextPrayer = await _repository.getNextPrayer(
         prayerTimes.data.timings,
       );
       if (isClosed) return;
+
+      debugPrint(
+        'PrayerTimesCubit: Next prayer: ${nextPrayer?.name} at ${nextPrayer?.time}',
+      );
 
       // Schedule Adhan notifications if enabled
       await _scheduleAdhanNotifications(prayerTimes.data.timings);
@@ -63,6 +83,7 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
       // Update Next Prayer Widget
       await _updateNextPrayerWidget(nextPrayer, location, prayersList);
 
+      debugPrint('PrayerTimesCubit: Emitting PrayerTimesLoaded state');
       emit(
         PrayerTimesLoaded(
           prayerTimes: prayerTimes,
@@ -71,9 +92,14 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
           nextPrayer: nextPrayer,
         ),
       );
-    } catch (e) {
+
+      debugPrint('PrayerTimesCubit: Successfully completed fetchPrayerTimes');
+    } catch (e, stackTrace) {
+      debugPrint('PrayerTimesCubit: Error in fetchPrayerTimes: $e');
+      debugPrint('PrayerTimesCubit: Stack trace: $stackTrace');
+
       if (!isClosed) {
-        emit(PrayerTimesError(e.toString()));
+        emit(PrayerTimesError('Failed to fetch prayer times: ${e.toString()}'));
       }
     }
   }
@@ -85,6 +111,7 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
     List<PrayerInfo> prayersList,
   ) async {
     try {
+      debugPrint('PrayerTimesCubit: Updating Next Prayer Widget...');
       final locationString = '${location.cityName}, ${location.countryName}';
 
       // Update widget with prayer times list for better next prayer calculation
@@ -93,13 +120,17 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
         location: locationString,
         lastUpdated: DateTime.now().toIso8601String(),
       );
+
+      debugPrint('PrayerTimesCubit: Next Prayer Widget updated successfully');
     } catch (e) {
-      debugPrint('Error updating Next Prayer Widget: $e');
+      debugPrint('PrayerTimesCubit: Error updating Next Prayer Widget: $e');
+      // Don't throw here, just log the error
     }
   }
 
   Future<void> _scheduleAdhanNotifications(timings) async {
     try {
+      debugPrint('PrayerTimesCubit: Scheduling Adhan notifications...');
       final isEnabled = await _notificationService.isAdhanEnabled();
       if (isEnabled) {
         await _notificationService.scheduleAdhanNotifications(
@@ -109,25 +140,37 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
           maghribTime: timings.maghrib,
           ishaTime: timings.isha,
         );
+        debugPrint('PrayerTimesCubit: Adhan notifications scheduled');
+      } else {
+        debugPrint('PrayerTimesCubit: Adhan notifications disabled');
       }
     } catch (e) {
-      debugPrint('Error scheduling Adhan notifications: $e');
+      debugPrint('PrayerTimesCubit: Error scheduling Adhan notifications: $e');
+      // Don't throw here, just log the error
     }
   }
 
   Future<void> refreshPrayerTimes() async {
+    debugPrint('PrayerTimesCubit: Refresh prayer times called');
     await fetchPrayerTimes();
   }
 
   Future<void> updateAdhanSettings() async {
+    debugPrint('PrayerTimesCubit: Updating Adhan settings...');
     final currentState = state;
     if (currentState is PrayerTimesLoaded) {
       await _scheduleAdhanNotifications(currentState.prayerTimes.data.timings);
+      debugPrint('PrayerTimesCubit: Adhan settings updated');
+    } else {
+      debugPrint(
+        'PrayerTimesCubit: Cannot update Adhan settings - no loaded state',
+      );
     }
   }
 
   /// Manually update Next Prayer Widget (can be called from UI)
   Future<void> updateNextPrayerWidget() async {
+    debugPrint('PrayerTimesCubit: Manual widget update called');
     final currentState = state;
     if (currentState is PrayerTimesLoaded) {
       await _updateNextPrayerWidget(
@@ -135,15 +178,25 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
         currentState.location,
         currentState.prayersList,
       );
+      debugPrint('PrayerTimesCubit: Manual widget update completed');
+    } else {
+      debugPrint(
+        'PrayerTimesCubit: Cannot update widget - no loaded state available',
+      );
+      throw Exception(
+        'No prayer data available. Please load prayer times first.',
+      );
     }
   }
 
   /// Clear Next Prayer Widget data
   Future<void> clearNextPrayerWidget() async {
     try {
+      debugPrint('PrayerTimesCubit: Clearing Next Prayer Widget...');
       await NextPrayerWidgetService.clearWidgetData();
+      debugPrint('PrayerTimesCubit: Next Prayer Widget cleared');
     } catch (e) {
-      debugPrint('Error clearing Next Prayer Widget: $e');
+      debugPrint('PrayerTimesCubit: Error clearing Next Prayer Widget: $e');
     }
   }
 }
@@ -156,10 +209,13 @@ class LocationCubit extends Cubit<LocationState> {
 
   Future<void> getCurrentLocation() async {
     try {
+      debugPrint('LocationCubit: Getting current location...');
       emit(LocationLoading());
       final location = await _repository.getCurrentLocation();
+      debugPrint('LocationCubit: Location obtained: ${location.cityName}');
       emit(LocationLoaded(location));
     } catch (e) {
+      debugPrint('LocationCubit: Error getting location: $e');
       emit(LocationError(e.toString()));
     }
   }

@@ -1,15 +1,13 @@
 import 'package:azkar/core/widgets/home_widget_service.dart';
 import 'package:azkar/core/widgets/next_prayer_widget_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants.dart';
 import '../../prayer/presentation/cubit/prayer_cubit.dart';
 import '../../prayer/presentation/cubit/prayer_state.dart';
 import '../../prayer/data/repo/prayer_repo.dart';
 import '../../prayer/data/service/prayer_api_service.dart';
-
-// Import the custom notification (you'll need to create this file)
-// import 'custom_notification.dart';
 
 class WidgetControlPage extends StatefulWidget {
   const WidgetControlPage({super.key});
@@ -21,6 +19,22 @@ class WidgetControlPage extends StatefulWidget {
 class _WidgetControlPageState extends State<WidgetControlPage> {
   bool _isUpdatingDua = false;
   bool _isUpdatingPrayer = false;
+  late PrayerTimesCubit _prayerCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    // Create a dedicated cubit instance for this page
+    _prayerCubit = PrayerTimesCubit(
+      PrayerRepositoryImpl(PrayerApiServiceFactory.create()),
+    );
+  }
+
+  @override
+  void dispose() {
+    _prayerCubit.close();
+    super.dispose();
+  }
 
   Future<void> _updateDuaWidget() async {
     setState(() {
@@ -28,7 +42,11 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
     });
 
     try {
+      debugPrint('WidgetControlPage: Updating Dua widget...');
       await WidgetService.updateWidgetWithRandomDua();
+      
+      // Also trigger Android widget update
+      await _triggerAndroidWidgetUpdate();
 
       if (mounted) {
         _showNotification(
@@ -37,19 +55,23 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
           color: primary,
         );
       }
+      debugPrint('WidgetControlPage: Dua widget updated successfully');
     } catch (e) {
+      debugPrint('WidgetControlPage: Error updating Dua widget: $e');
       if (mounted) {
         _showNotification(
-          message: 'Failed to update Dua widget',
+          message: 'Failed to update Dua widget: ${e.toString()}',
           icon: Icons.error,
           color: Colors.red,
         );
       }
     }
 
-    setState(() {
-      _isUpdatingDua = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isUpdatingDua = false;
+      });
+    }
   }
 
   Future<void> _updateNextPrayerWidget() async {
@@ -58,12 +80,13 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
     });
 
     try {
-      final prayerCubit = context.read<PrayerTimesCubit>();
-      final currentState = prayerCubit.state;
+      debugPrint('WidgetControlPage: Updating Next Prayer widget with existing data...');
+      final currentState = _prayerCubit.state;
 
       if (currentState is PrayerTimesLoaded) {
         // Use existing prayer data
-        await prayerCubit.updateNextPrayerWidget();
+        debugPrint('WidgetControlPage: Found loaded prayer data, updating widget...');
+        await _prayerCubit.updateNextPrayerWidget();
 
         if (mounted) {
           _showNotification(
@@ -72,29 +95,34 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
             color: primary,
           );
         }
+        debugPrint('WidgetControlPage: Next Prayer widget updated successfully');
       } else {
         // No prayer data available, show appropriate message
+        debugPrint('WidgetControlPage: No prayer data available');
         if (mounted) {
           _showNotification(
-            message: 'Please visit Prayer Times page first to load prayer data',
+            message: 'Please click "Refresh" first to load prayer data',
             icon: Icons.info,
             color: orange,
           );
         }
       }
     } catch (e) {
+      debugPrint('WidgetControlPage: Error updating Next Prayer widget: $e');
       if (mounted) {
         _showNotification(
-          message: 'Failed to update Next Prayer widget',
+          message: 'Failed to update Next Prayer widget: ${e.toString()}',
           icon: Icons.error,
           color: Colors.red,
         );
       }
     }
 
-    setState(() {
-      _isUpdatingPrayer = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isUpdatingPrayer = false;
+      });
+    }
   }
 
   Future<void> _refreshPrayerData() async {
@@ -103,64 +131,91 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
     });
 
     try {
-      final prayerCubit = context.read<PrayerTimesCubit>();
-
+      debugPrint('WidgetControlPage: Starting prayer data refresh...');
+      
       // Force refresh prayer times
-      await prayerCubit.fetchPrayerTimes();
+      await _prayerCubit.fetchPrayerTimes();
 
-      // Wait for the state to update
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      final newState = prayerCubit.state;
-
-      if (newState is PrayerTimesLoaded) {
-        // Update widget with fresh data - use prayersList instead of prayerTimes
-        await NextPrayerWidgetService.updateWidgetWithPrayerTimes(
-          prayers: newState
-              .prayersList, // Fixed: use prayersList instead of prayerTimes
-          location:
-              '${newState.location.cityName}, ${newState.location.countryName}',
-          lastUpdated: DateTime.now().toIso8601String(),
-        );
-
-        if (mounted) {
-          _showNotification(
-            message: 'Prayer times refreshed and widget updated!',
-            icon: Icons.refresh,
-            color: primary,
+      // Wait for the state to update with a timeout
+      int attempts = 0;
+      const maxAttempts = 10; // 5 seconds total
+      
+      while (attempts < maxAttempts) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        final newState = _prayerCubit.state;
+        
+        if (newState is PrayerTimesLoaded) {
+          debugPrint('WidgetControlPage: Prayer data loaded successfully');
+          
+          // Update widget with fresh data
+          await NextPrayerWidgetService.updateWidgetWithPrayerTimes(
+            prayers: newState.prayersList,
+            location: '${newState.location.cityName}, ${newState.location.countryName}',
+            lastUpdated: DateTime.now().toIso8601String(),
           );
+
+          if (mounted) {
+            _showNotification(
+              message: 'Prayer times refreshed and widget updated!',
+              icon: Icons.refresh,
+              color: primary,
+            );
+          }
+          debugPrint('WidgetControlPage: Prayer refresh completed successfully');
+          return; // Success - exit the function
+          
+        } else if (newState is PrayerTimesError) {
+          debugPrint('WidgetControlPage: Prayer data error: ${newState.message}');
+          if (mounted) {
+            _showNotification(
+              message: 'Failed to fetch prayer times: ${newState.message}',
+              icon: Icons.error,
+              color: Colors.red,
+            );
+          }
+          return; // Error - exit the function
         }
-      } else if (newState is PrayerTimesError) {
-        if (mounted) {
-          _showNotification(
-            message: 'Failed to fetch prayer times: ${newState.message}',
-            icon: Icons.error,
-            color: Colors.red,
-          );
-        }
-      } else {
-        if (mounted) {
-          _showNotification(
-            message:
-                'Unable to load prayer data. Please check your internet connection.',
-            icon: Icons.wifi_off,
-            color: Colors.orange,
-          );
-        }
+        
+        attempts++;
+        debugPrint('WidgetControlPage: Waiting for prayer data... attempt $attempts');
       }
-    } catch (e) {
+
+      // If we get here, it means we timed out waiting for a response
+      debugPrint('WidgetControlPage: Timed out waiting for prayer data');
       if (mounted) {
         _showNotification(
-          message: 'Failed to refresh prayer data',
+          message: 'Request timed out. Please check your internet connection and try again.',
+          icon: Icons.wifi_off,
+          color: Colors.orange,
+        );
+      }
+      
+    } catch (e) {
+      debugPrint('WidgetControlPage: Exception during prayer refresh: $e');
+      if (mounted) {
+        _showNotification(
+          message: 'Failed to refresh prayer data: ${e.toString()}',
           icon: Icons.error,
           color: Colors.red,
         );
       }
     }
 
-    setState(() {
-      _isUpdatingPrayer = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isUpdatingPrayer = false;
+      });
+    }
+  }
+
+  Future<void> _triggerAndroidWidgetUpdate() async {
+    try {
+      const platform = MethodChannel('com.example.azkar/widget_service');
+      await platform.invokeMethod('updateDuaWidget');
+      debugPrint('WidgetControlPage: Android widget update triggered');
+    } catch (e) {
+      debugPrint('WidgetControlPage: Error triggering Android widget update: $e');
+    }
   }
 
   void _showNotification({
@@ -168,15 +223,8 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
     required IconData icon,
     required Color color,
   }) {
-    // Option 1: Use the custom notification overlay (recommended)
-    // CustomNotification.show(
-    //   context: context,
-    //   message: message,
-    //   icon: icon,
-    //   color: color,
-    // );
-
-    // Option 2: Use regular SnackBar with fixed behavior (safer)
+    debugPrint('WidgetControlPage: Showing notification: $message');
+    
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -189,7 +237,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
               child: Text(
                 message,
                 style: const TextStyle(fontSize: 14),
-                maxLines: 2,
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -197,7 +245,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
         ),
         backgroundColor: color,
         behavior: SnackBarBehavior.fixed,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 4),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(8),
@@ -217,10 +265,8 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PrayerTimesCubit(
-        PrayerRepositoryImpl(PrayerApiServiceFactory.create()),
-      ),
+    return BlocProvider.value(
+      value: _prayerCubit,
       child: Scaffold(
         appBar: AppBar(
           foregroundColor: Colors.white,
@@ -470,6 +516,8 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
               child: Text(
                 'Error: ${state.message}',
                 style: const TextStyle(color: Colors.red, fontSize: 12),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -519,7 +567,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
           SizedBox(width: 8),
           Expanded(
             child: Text(
-              'No prayer data loaded. Please visit Prayer Times first or click Refresh.',
+              'No prayer data loaded. Click "Refresh" to load prayer times.',
               style: TextStyle(color: Colors.orange, fontSize: 12),
             ),
           ),
@@ -555,7 +603,10 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
             '• Next Prayer widget shows countdown to next prayer\n'
             '• Widgets continue updating even when app is closed\n'
             '• Manual updates available through this page\n\n'
-            '📝 Note: For accurate prayer times, please visit the Prayer Times page first to enable location services and load prayer data.',
+            '🔄 Troubleshooting:\n'
+            '• If widgets aren\'t updating, try clicking "Update Now"\n'
+            '• For prayer widget, click "Refresh" first to load fresh data\n'
+            '• Ensure location services are enabled for accurate prayer times',
             style: TextStyle(color: textColor, fontSize: 14, height: 1.4),
           ),
         ],
