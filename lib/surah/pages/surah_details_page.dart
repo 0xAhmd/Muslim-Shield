@@ -333,10 +333,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           icon: const Icon(Icons.arrow_back_outlined, color: primary),
         ),
         title: Text(
-          widget.surah.englishName,
-          style: GoogleFonts.poppins(
+          widget.surah.name,
+          style: GoogleFonts.amiri(
             color: Colors.white,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
+            fontSize: 26,
           ),
         ),
         centerTitle: true,
@@ -378,8 +379,8 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           Column(
             children: [
               Text(
-                widget.surah.englishName,
-                style: GoogleFonts.poppins(
+                widget.surah.name,
+                style: GoogleFonts.amiri(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                   fontSize: 26,
@@ -408,8 +409,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 ],
               ),
               const SizedBox(height: 32),
-              if (widget.surah.number != 1 && widget.surah.number != 9)
-                SvgPicture.asset('assets/svgs/bismillah.svg'),
+              SvgPicture.asset('assets/svgs/bismillah.svg'),
             ],
           ),
         ],
