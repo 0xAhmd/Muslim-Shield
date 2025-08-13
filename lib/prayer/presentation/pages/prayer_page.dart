@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 import '../../../core/connectivity_service.dart';
 import '../../../core/widgets/azan_settings.dart';
 import '../../../core/widgets/offline_message.dart';
@@ -49,7 +47,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this); // Updated to 4 tabs
+    _tabController = TabController(length: 4, vsync: this);
     _initializeConnectivity();
   }
 
@@ -65,11 +63,11 @@ class _PrayerPageViewState extends State<PrayerPageView>
         if (!connected) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.wifi_off, color: Colors.white, size: 16),
-                  const SizedBox(width: 8),
-                  Text('prayer.connection_lost'.tr()),
+              content: const Row(
+                children:  [
+                  Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Connection lost'),
                 ],
               ),
               backgroundColor: Colors.orange.withOpacity(0.9),
@@ -93,7 +91,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'prayer.prayer_times'.tr(),
+          'Prayer Times',
           style: TextStyle(
             color: textColor,
             fontSize: 20.sp,
@@ -113,7 +111,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
                     : () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('prayer.no_internet'.tr()),
+                            content: const Text('No internet connection'),
                             backgroundColor: Colors.red.withOpacity(0.9),
                             behavior: SnackBarBehavior.floating,
                           ),
@@ -171,7 +169,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
             Icon(Icons.error_outline, color: Colors.red.shade400, size: 64.sp),
             SizedBox(height: 24.h),
             Text(
-              'prayer.something_wrong'.tr(),
+              'Something went wrong',
               style: TextStyle(
                 color: textColor,
                 fontSize: 18.sp,
@@ -196,9 +194,8 @@ class _PrayerPageViewState extends State<PrayerPageView>
                     }
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isConnected
-                    ? primary
-                    : primary.withOpacity(0.5),
+                backgroundColor:
+                    _isConnected ? primary : primary.withOpacity(0.5),
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
                 shape: RoundedRectangleBorder(
@@ -206,9 +203,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 ),
               ),
               child: Text(
-                _isConnected
-                    ? 'prayer.try_again'.tr()
-                    : 'prayer.no_connection'.tr(),
+                _isConnected ? 'Try Again' : 'No Connection',
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
               ),
             ),
@@ -226,7 +221,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
           Icon(Icons.location_searching, color: primary, size: 64.sp),
           SizedBox(height: 24.h),
           Text(
-            'prayer.welcome'.tr(),
+            'Welcome',
             style: TextStyle(
               color: textColor,
               fontSize: 18.sp,
@@ -235,7 +230,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
           ),
           SizedBox(height: 12.h),
           Text(
-            'prayer.get_started'.tr(),
+            'Get started by fetching prayer times',
             style: TextStyle(
               color: textColor.withOpacity(0.7),
               fontSize: 14.sp,
@@ -249,9 +244,8 @@ class _PrayerPageViewState extends State<PrayerPageView>
                   }
                 : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: _isConnected
-                  ? primary
-                  : primary.withOpacity(0.5),
+              backgroundColor:
+                  _isConnected ? primary : primary.withOpacity(0.5),
               foregroundColor: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
               shape: RoundedRectangleBorder(
@@ -259,9 +253,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
               ),
             ),
             child: Text(
-              _isConnected
-                  ? 'prayer.get_prayer_times'.tr()
-                  : 'prayer.no_connection'.tr(),
+              _isConnected ? 'Get Prayer Times' : 'No Connection',
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
             ),
           ),
@@ -273,7 +265,6 @@ class _PrayerPageViewState extends State<PrayerPageView>
   Widget _buildLoadedState(PrayerTimesLoaded state) {
     return Column(
       children: [
-        // Connection status indicator
         if (!_isConnected)
           Container(
             width: double.infinity,
@@ -285,7 +276,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
-                    'prayer.offline_cached'.tr(),
+                    'Offline - showing cached data',
                     style: TextStyle(
                       color: Colors.orange,
                       fontSize: 12.sp,
@@ -297,10 +288,8 @@ class _PrayerPageViewState extends State<PrayerPageView>
             ),
           ),
 
-        // Next Prayer Card
         NextPrayerCard(nextPrayer: state.nextPrayer, location: state.location),
 
-        // Tab Bar - Updated with 4 tabs
         Container(
           margin: EdgeInsets.symmetric(horizontal: 24.w),
           decoration: BoxDecoration(
@@ -322,24 +311,21 @@ class _PrayerPageViewState extends State<PrayerPageView>
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
             ),
-            // Remove isScrollable to center the tabs properly
-            tabs: [
-              Tab(text: 'prayer.prayer_times'.tr()),
-              Tab(text: 'prayer.qiblah'.tr()),
-              Tab(text: 'prayer.sunnah'.tr()),
-              Tab(text: 'prayer.adhan'.tr()),
+            tabs: const [
+              Tab(text: 'Prayer Times'),
+              Tab(text: 'Qiblah'),
+              Tab(text: 'Sunnah'),
+              Tab(text: 'Adhan'),
             ],
           ),
         ),
 
         SizedBox(height: 16.h),
 
-        // Tab View Content - Removed Center wrapper and fixed alignment
         Expanded(
           child: TabBarView(
             controller: _tabController,
             children: [
-              // Prayer Times Tab
               SingleChildScrollView(
                 child: Column(
                   children: [
@@ -349,7 +335,6 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 ),
               ),
 
-              // Qiblah Tab
               SingleChildScrollView(
                 child: Column(
                   children: [
@@ -374,7 +359,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
                             SizedBox(width: 8.w),
                             Expanded(
                               child: Text(
-                                'prayer.compass_offline'.tr(),
+                                'Compass may be inaccurate offline',
                                 style: TextStyle(
                                   color: Colors.blue,
                                   fontSize: 12.sp,
@@ -391,7 +376,6 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 ),
               ),
 
-              // Sunnah Prayers Tab
               SingleChildScrollView(
                 child: Column(
                   children: [
@@ -416,7 +400,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
                             SizedBox(width: 8.w),
                             Expanded(
                               child: Text(
-                                'prayer.sunnah_offline'.tr(),
+                                'Sunnah list available offline',
                                 style: TextStyle(
                                   color: Colors.green,
                                   fontSize: 12.sp,
@@ -433,13 +417,11 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 ),
               ),
 
-              // Adhan Settings Tab
               SingleChildScrollView(
                 child: Column(
                   children: [
                     BlocListener<PrayerTimesCubit, PrayerTimesState>(
                       listener: (context, cubitState) {
-                        // Update Adhan settings when prayer times change
                         if (cubitState is PrayerTimesLoaded) {
                           context
                               .read<PrayerTimesCubit>()
