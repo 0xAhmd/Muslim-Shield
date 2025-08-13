@@ -1,4 +1,4 @@
-package example.azkar;
+package com.example.azkar;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -10,7 +10,6 @@ import android.widget.RemoteViews;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import io.flutter.embedding.android.FlutterActivity;
 
 public class NextPrayerAppWidget extends AppWidgetProvider {
 
@@ -39,38 +38,22 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         String currentDate = dateFormat.format(new Date());
 
-        // Get package name for resources
-        String packageName = context.getPackageName();
-        
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(packageName, 
-            context.getResources().getIdentifier("next_prayer_widget", "layout", packageName));
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.next_prayer_widget);
         
-        // Update widget views using resource identifiers
-        views.setTextViewText(
-            context.getResources().getIdentifier("widget_location", "id", packageName), 
-            location);
-        views.setTextViewText(
-            context.getResources().getIdentifier("widget_date", "id", packageName), 
-            currentDate);
-        views.setTextViewText(
-            context.getResources().getIdentifier("widget_next_prayer_name", "id", packageName), 
-            prayerName);
-        views.setTextViewText(
-            context.getResources().getIdentifier("widget_next_prayer_time", "id", packageName), 
-            prayerTime);
+        // Update widget views
+        views.setTextViewText(R.id.widget_location, location);
+        views.setTextViewText(R.id.widget_date, currentDate);
+        views.setTextViewText(R.id.widget_next_prayer_name, prayerName);
+        views.setTextViewText(R.id.widget_next_prayer_time, prayerTime);
         
         // Set prayer icon based on prayer name
         int iconResource = getPrayerIcon(context, prayerName);
-        views.setImageViewResource(
-            context.getResources().getIdentifier("widget_prayer_icon", "id", packageName), 
-            iconResource);
+        views.setImageViewResource(R.id.widget_prayer_icon, iconResource);
         
         // Calculate time remaining
         String timeRemaining = calculateTimeRemaining(prayerTime);
-        views.setTextViewText(
-            context.getResources().getIdentifier("widget_time_remaining", "id", packageName), 
-            timeRemaining);
+        views.setTextViewText(R.id.widget_time_remaining, timeRemaining);
 
         // Create an Intent to launch the app when widget is clicked
         Intent intent = new Intent(context, MainActivity.class);
@@ -84,30 +67,27 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         
-        views.setOnClickPendingIntent(
-            context.getResources().getIdentifier("widget_container", "id", packageName), 
-            pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_container, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     private static int getPrayerIcon(Context context, String prayerName) {
-        String packageName = context.getPackageName();
         switch (prayerName.toLowerCase()) {
             case "fajr":
-                return context.getResources().getIdentifier("ic_fajr", "drawable", packageName);
+                return R.drawable.ic_fajr;
             case "dhuhr":
             case "zuhr":
-                return context.getResources().getIdentifier("ic_dhuhr", "drawable", packageName);
+                return R.drawable.ic_dhuhr;
             case "asr":
-                return context.getResources().getIdentifier("ic_asr", "drawable", packageName);
+                return R.drawable.ic_asr;
             case "maghrib":
-                return context.getResources().getIdentifier("ic_maghrib", "drawable", packageName);
+                return R.drawable.ic_maghrib;
             case "isha":
-                return context.getResources().getIdentifier("ic_isha", "drawable", packageName);
+                return R.drawable.ic_isha;
             default:
-                return context.getResources().getIdentifier("ic_prayer_default", "drawable", packageName);
+                return R.drawable.ic_prayer_default;
         }
     }
 

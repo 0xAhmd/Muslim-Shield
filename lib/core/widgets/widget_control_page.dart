@@ -34,7 +34,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
               children: [
                 Icon(Icons.check_circle, color: Colors.white, size: 16),
                 SizedBox(width: 8),
-                Text('Dua widget updated! Auto-updates every 10 minutes.'),
+                Text('Dua widget updated!'),
               ],
             ),
             backgroundColor: primary,

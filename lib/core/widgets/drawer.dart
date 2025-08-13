@@ -217,16 +217,20 @@ class CustomDrawer extends StatelessWidget {
                       _showAboutDialog(context);
                     },
                   ),
-                  SizedBox(height: 5.h),
 
                   _buildDrawerItem(
                     context,
-                    icon: Icons.info_outline,
+                    icon: Icons.widgets_outlined,
 
                     title: 'Widget Settings',
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const WidgetControlPage()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WidgetControlPage(),
+                        ),
+                      );
                     },
                   ),
                 ],
