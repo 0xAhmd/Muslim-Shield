@@ -114,9 +114,10 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
       final newState = prayerCubit.state;
 
       if (newState is PrayerTimesLoaded) {
-        // Update widget with fresh data
+        // Update widget with fresh data - use prayersList instead of prayerTimes
         await NextPrayerWidgetService.updateWidgetWithPrayerTimes(
-          prayers: newState.prayerTimes,
+          prayers: newState
+              .prayersList, // Fixed: use prayersList instead of prayerTimes
           location:
               '${newState.location.cityName}, ${newState.location.countryName}',
           lastUpdated: DateTime.now().toIso8601String(),
