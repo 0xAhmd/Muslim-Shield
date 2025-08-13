@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 import '../../constants.dart';
 
@@ -23,11 +22,11 @@ class CustomTabBar extends StatelessWidget {
       ),
       dividerHeight: 0,
       onTap: onTap,
-      tabs: [
-        Tab(text: "tabs.surah".tr()),
-        Tab(text: "tabs.juzz".tr()),
-        Tab(text: "tabs.hizb".tr()),
-        Tab(text: "tabs.sajda".tr()),
+      tabs: const [
+        Tab(text: "Surah"),
+        Tab(text: "Juzz"),
+        Tab(text: "Hizb"),
+        Tab(text: "Sajda"),
       ],
     );
   }

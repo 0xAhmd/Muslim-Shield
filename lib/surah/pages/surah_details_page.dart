@@ -1,6 +1,3 @@
-import 'package:easy_localization/easy_localization.dart'
-    show StringTranslateExtension;
-
 import '../../bookmarks/presentation/cubit/bookmark_cubit.dart';
 import '../../bookmarks/presentation/cubit/bookmark_state.dart';
 import '../../bookmarks/service/bookmark_service.dart';
@@ -199,9 +196,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         isLoadingAudio = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${'errors.failed_load_audio'.tr()}: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load audio: $e')));
       }
     }
   }
@@ -232,9 +229,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${'errors.audio_playback_error'.tr()}: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Audio playback error: $e')));
       }
     }
   }
@@ -260,9 +257,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${'errors.failed_play_ayah'.tr()}: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to play ayah: $e')));
       }
     }
   }
@@ -438,9 +435,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         labelColor: Colors.white,
         unselectedLabelColor: textColor,
         labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        tabs: [
-          Tab(text: "surah_details.read".tr()),
-          Tab(text: "surah_details.listen".tr()),
+        tabs: const [
+          Tab(text: "Read"),
+          Tab(text: "Listen"),
         ],
       ),
     );
@@ -457,7 +454,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'errors.error_loading_surah'.tr(),
+              'Error loading surah',
               style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
             ),
             const SizedBox(height: 8),
@@ -470,7 +467,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
             ElevatedButton(
               onPressed: _loadSurahDetail,
               style: ElevatedButton.styleFrom(backgroundColor: primary),
-              child: Text('common.retry'.tr()),
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -498,7 +495,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 borderRadius: BorderRadius.circular(16),
               ),
               title: Text(
-                'surah_details.save_reading_progress'.tr(),
+                'Save Reading Progress',
                 style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
@@ -510,7 +507,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'surah_details.select_current_ayah'.tr(),
+                    'Select your current ayah',
                     style: GoogleFonts.poppins(color: textColor, fontSize: 14),
                   ),
                   const SizedBox(height: 16),
@@ -569,7 +566,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'surah_details.progress\'.tr(): ${((selectedAyah / (surahDetail?.ayahs.length ?? 1)) * 100).toStringAsFixed(0)}%',
+                            'Progress: ${((selectedAyah / (surahDetail?.ayahs.length ?? 1)) * 100).toStringAsFixed(0)}%',
                             style: GoogleFonts.poppins(
                               color: primary,
                               fontSize: 12,
@@ -586,7 +583,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
-                    'common.cancel'.tr(),
+                    'Cancel',
                     style: GoogleFonts.poppins(color: textColor),
                   ),
                 ),
@@ -609,9 +606,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                                 color: Colors.white,
                               ),
                               const SizedBox(width: 8),
-                              Text(
-                                'surah_details.progress_saved\'.tr()$selectedAyah',
-                              ),
+                              Text('Progress saved at Ayah $selectedAyah'),
                             ],
                           ),
                           duration: const Duration(seconds: 2),
@@ -632,7 +627,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                     ),
                   ),
                   child: Text(
-                    'common.save'.tr(),
+                    'Save',
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -665,7 +660,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
             ),
             icon: const Icon(Icons.bookmark_add),
             label: Text(
-              'surah_details.save_reading_progress'.tr(),
+              'Save Reading Progress',
               style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
             ),
           ),
@@ -802,15 +797,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Row(
+              content: const Row(
                 children: [
-                  const Icon(
-                    Icons.bookmark_remove,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 8),
-                  Text('bookmarks.bookmark_removed'.tr()),
+                  Icon(Icons.bookmark_remove, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Bookmark removed'),
                 ],
               ),
               duration: const Duration(seconds: 2),
@@ -833,15 +824,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Row(
+              content: const Row(
                 children: [
-                  const Icon(
-                    Icons.bookmark_added,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 8),
-                  Text('bookmarks.ayah_bookmarked'.tr()),
+                  Icon(Icons.bookmark_added, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Ayah bookmarked'),
                 ],
               ),
               duration: const Duration(seconds: 2),
@@ -903,7 +890,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 TextButton(
                   onPressed: _showReciterDialog,
                   child: Text(
-                    'common.change'.tr(),
+                    'Change',
                     style: GoogleFonts.poppins(
                       color: primary,
                       fontWeight: FontWeight.w500,
@@ -928,14 +915,14 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                     const CupertinoActivityIndicator(color: primary),
                     const SizedBox(height: 12),
                     Text(
-                      'surah_details.loading_audio'.tr(),
+                      'Loading audio...',
                       style: GoogleFonts.poppins(color: textColor),
                     ),
                   ],
                 )
               else ...[
                 Text(
-                  'surah_details.now_playing'.tr(),
+                  'Now Playing',
                   style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontSize: 18,
@@ -944,7 +931,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${'surah_details.ayah'.tr()} ${currentAyah + 1} ${'surah_details.of'.tr()} ${widget.surah.numberOfAyahs}',
+                  'Ayah ${currentAyah + 1} of ${widget.surah.numberOfAyahs}',
                   style: GoogleFonts.poppins(color: textColor),
                 ),
                 const SizedBox(height: 20),
@@ -967,13 +954,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            _formatDuration(currentPosition),
-                            style: GoogleFonts.poppins(
-                              color: textColor,
-                              fontSize: 12,
-                            ),
-                          ),
                           Text(
                             _formatDuration(totalDuration),
                             style: GoogleFonts.poppins(

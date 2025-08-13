@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import '../../constants.dart';
 import '../data/models/surah.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +104,7 @@ class _DialogHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: Text(
-            'reciter.select_reciter'.tr(),
+            'Select Reciter',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -133,7 +132,7 @@ class _SearchField extends StatelessWidget {
       onChanged: onChanged,
       style: GoogleFonts.poppins(color: Colors.white),
       decoration: InputDecoration(
-        hintText: 'search_results.search_reciters'.tr(),
+        hintText: 'Search reciters...',
         hintStyle: GoogleFonts.poppins(color: textColor),
         prefixIcon: const Icon(Icons.search, color: textColor),
         filled: true,
@@ -165,7 +164,7 @@ class _ResultsCount extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        '$count ${count == 1 ? 'search_results.reciter_found'.tr() : 'search_results.reciters_found'.tr()}',
+        '$count ${count == 1 ? 'reciter found' : 'reciters found'}',
         style: GoogleFonts.poppins(
           color: primary,
           fontSize: 12,
@@ -230,8 +229,8 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             searchQuery.isEmpty
-                ? 'search_results.no_reciters_available'.tr()
-                : '${'search_results.no_reciters_found_for'.tr()} "$searchQuery"',
+                ? 'No reciters available'
+                : 'No reciters found for "$searchQuery"',
             style: GoogleFonts.poppins(color: textColor, fontSize: 16),
             textAlign: TextAlign.center,
           ),
@@ -240,7 +239,7 @@ class _EmptyState extends StatelessWidget {
             TextButton(
               onPressed: onClearSearch,
               child: Text(
-                'search_results.clear_search'.tr(),
+                'Clear search',
                 style: GoogleFonts.poppins(color: primary),
               ),
             ),
@@ -286,7 +285,7 @@ class _ReciterTile extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          reciter.style ?? 'reciter.tajweed'.tr(),
+          reciter.style ?? 'Tajweed',
           style: GoogleFonts.poppins(color: textColor, fontSize: 12),
         ),
         trailing: _ReciterTrailing(reciter: reciter, isSelected: isSelected),
@@ -369,7 +368,7 @@ class _ActionButtons extends StatelessWidget {
           child: TextButton(
             onPressed: onCancel,
             child: Text(
-              'common.cancel'.tr(),
+              'Cancel',
               style: GoogleFonts.poppins(
                 color: textColor,
                 fontWeight: FontWeight.w500,
@@ -390,7 +389,7 @@ class _ActionButtons extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
             child: Text(
-              'reciter.select'.tr(),
+              'Select',
               style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
             ),
           ),

@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import '../../constants.dart';
 import '../data/service/last_read.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,7 @@ class _LastReadCardState extends State<LastReadCard> {
             Icon(Icons.refresh, color: Colors.white, size: 14.sp),
             SizedBox(width: 6.w),
             Text(
-              'last_read.refreshed'.tr(),
+              'Refreshed',
               style: GoogleFonts.poppins(fontSize: 11.sp),
             ),
           ],
@@ -141,7 +140,7 @@ class _CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRTL = Directionality.of(context) == TextDirection.RTL;
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -173,7 +172,7 @@ class _Header extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: Text(
-            'last_read.title'.tr(),
+            'Last Read',
             textAlign: TextAlign.start,
             style: GoogleFonts.poppins(
               color: Colors.white,
@@ -221,7 +220,7 @@ class _ReadingData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRTL = Directionality.of(context) == TextDirection.RTL;
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
     return Column(
       crossAxisAlignment: isRTL
           ? CrossAxisAlignment.end
@@ -242,12 +241,12 @@ class _ReadingData extends StatelessWidget {
           textDirection: Directionality.of(context),
           children: [
             Text(
-              '${'last_read.ayah'.tr()} ${data.ayahNumber}',
+              'Ayah ${data.ayahNumber}',
               style: GoogleFonts.poppins(color: Colors.white),
             ),
             if (data.juzzNumber != null) ...[
               const SizedBox(width: 8),
-              _Badge(text: '${'last_read.juzz'.tr()} ${data.juzzNumber}'),
+              _Badge(text: 'Juzz ${data.juzzNumber}'),
             ],
             const SizedBox(width: 8),
             _Badge(text: '${data.progressPercentage.toStringAsFixed(0)}%'),
@@ -286,14 +285,14 @@ class _Badge extends StatelessWidget {
 class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final isRTL = Directionality.of(context) == TextDirection.RTL;
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
     return Column(
       crossAxisAlignment: isRTL
           ? CrossAxisAlignment.end
           : CrossAxisAlignment.start,
       children: [
         Text(
-          'last_read.start_reading'.tr(),
+          'Start Reading',
           textAlign: isRTL ? TextAlign.end : TextAlign.start,
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -303,7 +302,7 @@ class _EmptyState extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'last_read.start_thawab_streak'.tr(),
+          'Begin your thawab streak',
           textAlign: isRTL ? TextAlign.end : TextAlign.start,
           style: GoogleFonts.poppins(color: Colors.white),
         ),
