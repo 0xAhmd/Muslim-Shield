@@ -1,4 +1,3 @@
-// Updated lib/core/widgets/drawer.dart
 import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
 import 'package:azkar/calc/presentation/pages/zakaat_calc_page.dart';
 import 'package:azkar/core/widgets/widget_control_page.dart';
@@ -86,7 +85,7 @@ class CustomDrawer extends StatelessWidget {
                     },
                   ),
 
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 2.h),
 
                   // Digital Tasbih
                   _buildDrawerItem(
@@ -103,7 +102,7 @@ class CustomDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 2.h),
 
                   // Morning & Evening Adhkar
                   _buildDrawerItem(
@@ -121,7 +120,7 @@ class CustomDrawer extends StatelessWidget {
                     },
                   ),
 
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 2.h),
 
                   // NEW: Hadith Browser
                   _buildDrawerItem(
@@ -142,7 +141,7 @@ class CustomDrawer extends StatelessWidget {
                     },
                   ),
 
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 2.h),
 
                   // Zakat Calculator
                   _buildDrawerItem(
@@ -160,7 +159,7 @@ class CustomDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 2.h),
 
                   _buildDrawerItem(
                     context,
@@ -179,7 +178,7 @@ class CustomDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 2.h),
 
                   // Reminders
                   _buildDrawerItem(
@@ -200,7 +199,7 @@ class CustomDrawer extends StatelessWidget {
                     },
                     isComingSoon: false,
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 2.h),
                   Divider(
                     color: grey,
                     thickness: 1,
