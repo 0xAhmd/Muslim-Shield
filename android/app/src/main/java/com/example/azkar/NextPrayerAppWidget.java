@@ -10,6 +10,7 @@ import android.widget.RemoteViews;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Calendar;
 
 public class NextPrayerAppWidget extends AppWidgetProvider {
 
@@ -34,6 +35,8 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
         String prayerTime = prefs.getString(PRAYER_TIME_KEY, "05:00");
         String location = prefs.getString(LOCATION_KEY, "Loading...");
         
+        System.out.println("NextPrayerAppWidget: Updating widget with " + prayerName + " at " + prayerTime);
+        
         // Format current date
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         String currentDate = dateFormat.format(new Date());
@@ -45,7 +48,10 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_location, location);
         views.setTextViewText(R.id.widget_date, currentDate);
         views.setTextViewText(R.id.widget_next_prayer_name, prayerName);
-        views.setTextViewText(R.id.widget_next_prayer_time, prayerTime);
+        
+        // Format prayer time for display (convert 24h to 12h if needed)
+        String displayTime = formatPrayerTimeForDisplay(prayerTime);
+        views.setTextViewText(R.id.widget_next_prayer_time, displayTime);
         
         // Set prayer icon based on prayer name
         int iconResource = getPrayerIcon(context, prayerName);
@@ -71,6 +77,35 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+        
+        System.out.println("NextPrayerAppWidget: Widget updated successfully with: " + prayerName + " at " + displayTime);
+    }
+
+    private static String formatPrayerTimeForDisplay(String time24h) {
+        try {
+            // Parse the 24-hour format time (e.g., "05:04" or "13:13")
+            String[] parts = time24h.split(":");
+            if (parts.length != 2) return time24h;
+            
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+            
+            // Convert to 12-hour format
+            String amPm = (hour >= 12) ? "PM" : "AM";
+            int displayHour = hour;
+            
+            if (hour == 0) {
+                displayHour = 12; // Midnight
+            } else if (hour > 12) {
+                displayHour = hour - 12; // Afternoon/evening
+            }
+            
+            return String.format(Locale.getDefault(), "%d:%02d %s", displayHour, minute, amPm);
+            
+        } catch (Exception e) {
+            System.err.println("Error formatting prayer time: " + e.getMessage());
+            return time24h; // Return original if parsing fails
+        }
     }
 
     private static int getPrayerIcon(Context context, String prayerName) {
@@ -93,6 +128,7 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
 
     private static String calculateTimeRemaining(String prayerTime) {
         try {
+            // Parse the prayer time (24-hour format: "HH:mm")
             String[] parts = prayerTime.split(":");
             if (parts.length != 2) return "N/A";
             
@@ -100,13 +136,14 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
             int prayerMinute = Integer.parseInt(parts[1]);
             
             // Get current time
-            Date now = new Date();
-            @SuppressWarnings("deprecation")
-            int currentHour = now.getHours();
-            @SuppressWarnings("deprecation")
-            int currentMinute = now.getMinutes();
+            Calendar now = Calendar.getInstance();
+            int currentHour = now.get(Calendar.HOUR_OF_DAY);
+            int currentMinute = now.get(Calendar.MINUTE);
             
-            // Calculate difference
+            System.out.println("NextPrayerAppWidget: Current time: " + currentHour + ":" + currentMinute);
+            System.out.println("NextPrayerAppWidget: Prayer time: " + prayerHour + ":" + prayerMinute);
+            
+            // Calculate difference in minutes
             int totalPrayerMinutes = prayerHour * 60 + prayerMinute;
             int totalCurrentMinutes = currentHour * 60 + currentMinute;
             
@@ -115,17 +152,24 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
             // If negative, it means the prayer is tomorrow
             if (diff < 0) {
                 diff += 24 * 60; // Add 24 hours in minutes
+                System.out.println("NextPrayerAppWidget: Prayer is tomorrow, adjusted diff: " + diff);
             }
             
             int hoursRemaining = diff / 60;
             int minutesRemaining = diff % 60;
             
+            System.out.println("NextPrayerAppWidget: Time remaining: " + hoursRemaining + "h " + minutesRemaining + "m");
+            
             if (hoursRemaining > 0) {
                 return hoursRemaining + "h " + minutesRemaining + "m";
-            } else {
+            } else if (minutesRemaining > 0) {
                 return minutesRemaining + "m";
+            } else {
+                return "Now";
             }
+            
         } catch (Exception e) {
+            System.err.println("NextPrayerAppWidget: Error calculating time remaining: " + e.getMessage());
             return "N/A";
         }
     }
@@ -133,10 +177,12 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+        System.out.println("NextPrayerAppWidget: Widget enabled");
     }
 
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+        System.out.println("NextPrayerAppWidget: Widget disabled");
     }
 }

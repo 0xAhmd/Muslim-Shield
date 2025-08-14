@@ -17,7 +17,7 @@ class GreetingSection extends StatelessWidget {
           isRepeatingAnimation: false,
           animatedTexts: [
             TypewriterAnimatedText(
-              'Assalamu Alaikum',
+              'Assalamualaikum',
               textAlign: TextAlign.left,
               textStyle: GoogleFonts.poppins(
                 fontSize: 18,

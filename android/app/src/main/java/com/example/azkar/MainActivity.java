@@ -30,6 +30,10 @@ public class MainActivity extends FlutterActivity {
                         updateDuaWidget();
                         result.success("Dua widget updated");
                         break;
+                    case "updateNextPrayerWidget":
+                        updateNextPrayerWidget();
+                        result.success("Next Prayer widget updated");
+                        break;
                     default:
                         result.notImplemented();
                         break;
@@ -105,6 +109,24 @@ public class MainActivity extends FlutterActivity {
             System.out.println("Dua widget updated manually");
         } catch (Exception e) {
             System.err.println("Error updating Dua widget: " + e.getMessage());
+        }
+    }
+
+    private void updateNextPrayerWidget() {
+        try {
+            android.appwidget.AppWidgetManager appWidgetManager = android.appwidget.AppWidgetManager.getInstance(this);
+            android.content.ComponentName prayerWidget = new android.content.ComponentName(this, NextPrayerAppWidget.class);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(prayerWidget);
+            
+            System.out.println("Found " + appWidgetIds.length + " Next Prayer widgets to update");
+            
+            for (int widgetId : appWidgetIds) {
+                NextPrayerAppWidget.updateAppWidget(this, appWidgetManager, widgetId);
+            }
+            
+            System.out.println("Next Prayer widget updated manually");
+        } catch (Exception e) {
+            System.err.println("Error updating Next Prayer widget: " + e.getMessage());
         }
     }
 
