@@ -15,11 +15,12 @@ import java.util.Calendar;
 public class NextPrayerAppWidget extends AppWidgetProvider {
 
     private static final String PREFS_NAME = "FlutterSharedPreferences";
-    // Updated keys to match home_widget package format
-    private static final String PRAYER_NAME_KEY = "flutter.next_prayer_name";
-    private static final String PRAYER_TIME_KEY = "flutter.next_prayer_time";
-    private static final String LOCATION_KEY = "flutter.current_location";
-    private static final String LAST_UPDATED_KEY = "flutter.prayer_last_updated";
+    
+    // FIXED: Updated keys to match home_widget package format (without "flutter." prefix)
+    private static final String PRAYER_NAME_KEY = "next_prayer_name";
+    private static final String PRAYER_TIME_KEY = "next_prayer_time";
+    private static final String LOCATION_KEY = "current_location";
+    private static final String LAST_UPDATED_KEY = "prayer_last_updated";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -31,7 +32,7 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         
-        // First try to get data from home_widget (Flutter data)
+        // Try to get data from home_widget (Flutter data) with CORRECT keys
         String prayerName = prefs.getString(PRAYER_NAME_KEY, null);
         String prayerTime = prefs.getString(PRAYER_TIME_KEY, null);
         String location = prefs.getString(LOCATION_KEY, null);
@@ -41,9 +42,23 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
         System.out.println("  Prayer Time: " + prayerTime);
         System.out.println("  Location: " + location);
         
-        // If Flutter data is not available, use fallback values
+        // Also check for old Flutter keys as fallback
+        if (prayerName == null) {
+            prayerName = prefs.getString("flutter.next_prayer_name", null);
+            System.out.println("  Fallback Prayer Name: " + prayerName);
+        }
+        if (prayerTime == null) {
+            prayerTime = prefs.getString("flutter.next_prayer_time", null);
+            System.out.println("  Fallback Prayer Time: " + prayerTime);
+        }
+        if (location == null) {
+            location = prefs.getString("flutter.current_location", null);
+            System.out.println("  Fallback Location: " + location);
+        }
+        
+        // If still no data available, use fallback values
         if (prayerName == null || prayerTime == null) {
-            System.out.println("NextPrayerAppWidget: Flutter data not found, using fallback");
+            System.out.println("NextPrayerAppWidget: No Flutter data found, using fallback");
             prayerName = "Fajr";
             prayerTime = "05:00";
             location = "Please open Prayer Times";

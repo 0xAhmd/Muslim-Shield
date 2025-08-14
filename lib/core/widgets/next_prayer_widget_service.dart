@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../prayer/data/models/prayer_location.dart';
 
 class NextPrayerWidgetService {
@@ -38,7 +39,10 @@ class NextPrayerWidgetService {
         // Ensure the time is in 24-hour format (HH:mm)
         String formattedTime = _ensure24HourFormat(nextPrayer.time);
 
-        // Save next prayer data for the widget to access
+        // FIXED: Save data using both home_widget AND direct SharedPreferences
+        // This ensures compatibility with Android widgets
+        
+        // Method 1: home_widget package (for iOS compatibility)
         await HomeWidget.saveWidgetData<String>(
           'next_prayer_name',
           nextPrayer.name,
@@ -56,9 +60,21 @@ class NextPrayerWidgetService {
           lastUpdated ?? DateTime.now().toIso8601String(),
         );
 
+        // Method 2: Direct SharedPreferences (for Android compatibility)
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('next_prayer_name', nextPrayer.name);
+        await prefs.setString('next_prayer_time', formattedTime);
+        await prefs.setString('current_location', _truncateLocation(location));
+        await prefs.setString('prayer_last_updated', lastUpdated ?? DateTime.now().toIso8601String());
+
         debugPrint(
-          'NextPrayerWidgetService: Saved data - ${nextPrayer.name} at $formattedTime, Location: ${_truncateLocation(location)}',
+          'NextPrayerWidgetService: Saved data via both methods - ${nextPrayer.name} at $formattedTime, Location: ${_truncateLocation(location)}',
         );
+
+        // Verify data was saved
+        final savedName = await prefs.getString('next_prayer_name');
+        final savedTime = await prefs.getString('next_prayer_time');
+        debugPrint('NextPrayerWidgetService: Verification - Name: $savedName, Time: $savedTime');
       }
 
       // Update the actual widget
@@ -67,7 +83,7 @@ class NextPrayerWidgetService {
         androidName: androidWidgetName,
       );
 
-      debugPrint('NextPrayerWidgetService: Widget update $success ');
+      debugPrint('NextPrayerWidgetService: Widget update result: $success');
 
       debugPrint(
         'NextPrayerWidgetService: Widget updated successfully with: ${nextPrayer?.name ?? "Default"} at ${nextPrayer?.time ?? "00:00"}',
@@ -238,6 +254,8 @@ class NextPrayerWidgetService {
   /// Set default widget data when no prayer information is available
   static Future<void> _setDefaultWidgetData(String location) async {
     debugPrint('NextPrayerWidgetService: Setting default widget data');
+    
+    // Use both methods to ensure compatibility
     await HomeWidget.saveWidgetData<String>('next_prayer_name', 'Fajr');
     await HomeWidget.saveWidgetData<String>('next_prayer_time', '05:00');
     await HomeWidget.saveWidgetData<String>(
@@ -250,6 +268,13 @@ class NextPrayerWidgetService {
       'prayer_last_updated',
       DateTime.now().toIso8601String(),
     );
+
+    // Also save via direct SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('next_prayer_name', 'Fajr');
+    await prefs.setString('next_prayer_time', '05:00');
+    await prefs.setString('current_location', location.isEmpty ? 'Please open Prayer Times' : _truncateLocation(location));
+    await prefs.setString('prayer_last_updated', DateTime.now().toIso8601String());
   }
 
   /// Truncate location text for widget display
@@ -320,13 +345,56 @@ class NextPrayerWidgetService {
         androidName: androidWidgetName,
       );
 
-      debugPrint('NextPrayerWidgetService: Force update $success');
+      debugPrint('NextPrayerWidgetService: Force update result: $success');
 
-      if (!success!) {
+      if (success != true) {
         throw Exception('Widget update returned false');
       }
     } catch (e) {
       debugPrint('NextPrayerWidgetService: Error force updating widget: $e');
+      rethrow;
+    }
+  }
+
+  /// FIXED: Direct method to update widget data via SharedPreferences
+  /// This bypasses home_widget package issues
+  static Future<void> updateWidgetDataDirectly({
+    required String prayerName,
+    required String prayerTime,
+    required String location,
+  }) async {
+    try {
+      debugPrint('NextPrayerWidgetService: Updating widget data directly');
+      debugPrint('  Prayer: $prayerName at $prayerTime');
+      debugPrint('  Location: $location');
+
+      final prefs = await SharedPreferences.getInstance();
+      
+      // Save data directly to SharedPreferences
+      await prefs.setString('next_prayer_name', prayerName);
+      await prefs.setString('next_prayer_time', _ensure24HourFormat(prayerTime));
+      await prefs.setString('current_location', _truncateLocation(location));
+      await prefs.setString('prayer_last_updated', DateTime.now().toIso8601String());
+
+      // Verify the data was saved
+      final savedName = prefs.getString('next_prayer_name');
+      final savedTime = prefs.getString('next_prayer_time');
+      final savedLocation = prefs.getString('current_location');
+      
+      debugPrint('NextPrayerWidgetService: Verification after direct save:');
+      debugPrint('  Saved Name: $savedName');
+      debugPrint('  Saved Time: $savedTime');
+      debugPrint('  Saved Location: $savedLocation');
+
+      // Try to update the widget
+      await HomeWidget.updateWidget(
+        iOSName: iOSWidgetName,
+        androidName: androidWidgetName,
+      );
+
+      debugPrint('NextPrayerWidgetService: Widget data updated directly');
+    } catch (e) {
+      debugPrint('NextPrayerWidgetService: Error updating widget data directly: $e');
       rethrow;
     }
   }

@@ -197,7 +197,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
     }
   }
 
-  Future<void> _updateNextPrayerWidget() async {
+Future<void> _updateNextPrayerWidget() async {
     if (_isUpdatingPrayer) return;
 
     setState(() {
@@ -219,13 +219,21 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
           'WidgetControlPage: Location: ${currentState.location.cityName}, ${currentState.location.countryName}',
         );
 
-        // Force update widget with current data
-        await NextPrayerWidgetService.updateWidgetWithNextPrayer(
-          nextPrayer: currentState.nextPrayer,
-          location:
-              '${currentState.location.cityName}, ${currentState.location.countryName}',
-          lastUpdated: DateTime.now().toIso8601String(),
-        );
+        // FIXED: Use the direct update method to bypass home_widget issues
+        if (currentState.nextPrayer != null) {
+          await NextPrayerWidgetService.updateWidgetDataDirectly(
+            prayerName: currentState.nextPrayer!.name,
+            prayerTime: currentState.nextPrayer!.time,
+            location: '${currentState.location.cityName}, ${currentState.location.countryName}',
+          );
+        } else {
+          // No next prayer found, use default
+          await NextPrayerWidgetService.updateWidgetDataDirectly(
+            prayerName: 'Fajr',
+            prayerTime: '05:00',
+            location: '${currentState.location.cityName}, ${currentState.location.countryName}',
+          );
+        }
 
         // Also trigger Android widget update
         await _triggerAndroidNextPrayerWidgetUpdate();
@@ -233,7 +241,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
         if (mounted) {
           _showNotification(
             message:
-                'Next Prayer widget updated: ${currentState.nextPrayer?.name} at ${currentState.nextPrayer?.time}',
+                'Next Prayer widget updated: ${currentState.nextPrayer?.name ?? 'Fajr'} at ${currentState.nextPrayer?.time ?? '05:00'}',
             icon: Icons.check_circle,
             color: primary,
           );
@@ -270,7 +278,6 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
       }
     }
   }
-
   Future<void> _refreshPrayerData() async {
     if (_isRefreshingPrayer) return;
 
