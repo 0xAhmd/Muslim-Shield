@@ -2,6 +2,8 @@ package com.example.azkar;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.content.Context; // <-- add this
+
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -34,6 +36,10 @@ public class MainActivity extends FlutterActivity {
                         updateNextPrayerWidget();
                         result.success("Next Prayer widget updated");
                         break;
+                    case "debugPrayerWidget":
+                        debugPrayerWidgetData();
+                        result.success("Debug info logged");
+                        break;
                     default:
                         result.notImplemented();
                         break;
@@ -65,7 +71,7 @@ public class MainActivity extends FlutterActivity {
             if ("dua".equals(route)) {
                 // App was launched from Dua widget
                 // You can communicate this back to Flutter if needed
-                System.out.println("App launched from Dua widget");
+                System.out.println("MainActivity: App launched from Dua widget");
                 
                 // Update the dua widget with fresh content
                 updateDuaWidget();
@@ -74,25 +80,27 @@ public class MainActivity extends FlutterActivity {
         
         // Check for prayer widget launch
         if (intent.getBooleanExtra("open_prayer_page", false)) {
-            System.out.println("App launched from Prayer widget");
+            System.out.println("MainActivity: App launched from Prayer widget");
+            // Update the prayer widget when app is opened
+            updateNextPrayerWidget();
         }
     }
 
     private void startWidgetAutoUpdates() {
         try {
             WidgetUpdateService.startAutoUpdates(this);
-            System.out.println("Widget auto-updates started from Flutter");
+            System.out.println("MainActivity: Widget auto-updates started from Flutter");
         } catch (Exception e) {
-            System.err.println("Error starting widget auto-updates: " + e.getMessage());
+            System.err.println("MainActivity: Error starting widget auto-updates: " + e.getMessage());
         }
     }
 
     private void stopWidgetAutoUpdates() {
         try {
             WidgetUpdateService.stopAutoUpdates(this);
-            System.out.println("Widget auto-updates stopped from Flutter");
+            System.out.println("MainActivity: Widget auto-updates stopped from Flutter");
         } catch (Exception e) {
-            System.err.println("Error stopping widget auto-updates: " + e.getMessage());
+            System.err.println("MainActivity: Error stopping widget auto-updates: " + e.getMessage());
         }
     }
 
@@ -106,9 +114,9 @@ public class MainActivity extends FlutterActivity {
                 DuaAppWidget.updateAppWidget(this, appWidgetManager, widgetId);
             }
             
-            System.out.println("Dua widget updated manually");
+            System.out.println("MainActivity: Dua widget updated manually (" + appWidgetIds.length + " widgets)");
         } catch (Exception e) {
-            System.err.println("Error updating Dua widget: " + e.getMessage());
+            System.err.println("MainActivity: Error updating Dua widget: " + e.getMessage());
         }
     }
 
@@ -118,15 +126,38 @@ public class MainActivity extends FlutterActivity {
             android.content.ComponentName prayerWidget = new android.content.ComponentName(this, NextPrayerAppWidget.class);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(prayerWidget);
             
-            System.out.println("Found " + appWidgetIds.length + " Next Prayer widgets to update");
+            System.out.println("MainActivity: Found " + appWidgetIds.length + " Next Prayer widgets to update");
             
             for (int widgetId : appWidgetIds) {
                 NextPrayerAppWidget.updateAppWidget(this, appWidgetManager, widgetId);
             }
             
-            System.out.println("Next Prayer widget updated manually");
+            System.out.println("MainActivity: Next Prayer widget updated manually (" + appWidgetIds.length + " widgets)");
         } catch (Exception e) {
-            System.err.println("Error updating Next Prayer widget: " + e.getMessage());
+            System.err.println("MainActivity: Error updating Next Prayer widget: " + e.getMessage());
+        }
+    }
+
+    private void debugPrayerWidgetData() {
+        try {
+            android.content.SharedPreferences prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
+            
+            System.out.println("=== PRAYER WIDGET DEBUG INFO ===");
+            System.out.println("Prayer Name: " + prefs.getString("flutter.next_prayer_name", "NOT_FOUND"));
+            System.out.println("Prayer Time: " + prefs.getString("flutter.next_prayer_time", "NOT_FOUND"));
+            System.out.println("Location: " + prefs.getString("flutter.current_location", "NOT_FOUND"));
+            System.out.println("Last Updated: " + prefs.getString("flutter.prayer_last_updated", "NOT_FOUND"));
+            
+            // List all keys in SharedPreferences
+            System.out.println("All SharedPreferences keys:");
+            for (String key : prefs.getAll().keySet()) {
+                Object value = prefs.getAll().get(key);
+                System.out.println("  " + key + " = " + value);
+            }
+            System.out.println("=== END DEBUG INFO ===");
+            
+        } catch (Exception e) {
+            System.err.println("MainActivity: Error debugging prayer widget: " + e.getMessage());
         }
     }
 

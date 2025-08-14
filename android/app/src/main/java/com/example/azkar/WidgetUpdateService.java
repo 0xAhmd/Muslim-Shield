@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 public class WidgetUpdateService extends Service {
     private static final String ACTION_UPDATE_WIDGET = "com.example.azkar.UPDATE_WIDGET";
-    private static final long UPDATE_INTERVAL = 10 * 60 * 1000; // 10 minutes in milliseconds
+    private static final long DUA_UPDATE_INTERVAL = 10 * 60 * 1000; // 10 minutes for Dua widget
+    private static final long PRAYER_UPDATE_INTERVAL = 1 * 60 * 1000; // 1 minute for Prayer widget (for countdown)
     private ScheduledExecutorService executorService;
 
     @Override
@@ -49,37 +50,75 @@ public class WidgetUpdateService extends Service {
     private void scheduleWidgetUpdates() {
         // Use AlarmManager for reliable periodic updates
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent updateIntent = new Intent(this, WidgetUpdateReceiver.class);
-        updateIntent.setAction(ACTION_UPDATE_WIDGET);
         
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+        // Schedule Dua widget updates (every 10 minutes)
+        Intent duaUpdateIntent = new Intent(this, WidgetUpdateReceiver.class);
+        duaUpdateIntent.setAction(ACTION_UPDATE_WIDGET);
+        duaUpdateIntent.putExtra("widget_type", "dua");
+        
+        PendingIntent duaPendingIntent = PendingIntent.getBroadcast(
             this, 
-            0, 
-            updateIntent, 
+            1, 
+            duaUpdateIntent, 
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        // Schedule repeating alarm every 10 minutes
         alarmManager.setRepeating(
             AlarmManager.ELAPSED_REALTIME,
-            SystemClock.elapsedRealtime() + UPDATE_INTERVAL,
-            UPDATE_INTERVAL,
-            pendingIntent
+            SystemClock.elapsedRealtime() + DUA_UPDATE_INTERVAL,
+            DUA_UPDATE_INTERVAL,
+            duaPendingIntent
+        );
+
+        // Schedule Prayer widget updates (every 1 minute for countdown)
+        Intent prayerUpdateIntent = new Intent(this, WidgetUpdateReceiver.class);
+        prayerUpdateIntent.setAction(ACTION_UPDATE_WIDGET);
+        prayerUpdateIntent.putExtra("widget_type", "prayer");
+        
+        PendingIntent prayerPendingIntent = PendingIntent.getBroadcast(
+            this, 
+            2, 
+            prayerUpdateIntent, 
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        alarmManager.setRepeating(
+            AlarmManager.ELAPSED_REALTIME,
+            SystemClock.elapsedRealtime() + PRAYER_UPDATE_INTERVAL,
+            PRAYER_UPDATE_INTERVAL,
+            prayerPendingIntent
         );
 
         // Also use ScheduledExecutorService as backup
         if (executorService == null) {
             executorService = Executors.newSingleThreadScheduledExecutor();
+            
+            // Schedule Dua widget updates
             executorService.scheduleAtFixedRate(
-                this::updateAllWidgets, 
+                this::updateDuaWidgets, 
                 10, 
                 10, 
                 TimeUnit.MINUTES
             );
+            
+            // Schedule Prayer widget updates (more frequent for countdown)
+            executorService.scheduleAtFixedRate(
+                this::updatePrayerWidgets, 
+                1, 
+                1, 
+                TimeUnit.MINUTES
+            );
         }
+        
+        System.out.println("WidgetUpdateService: Scheduled updates for both widget types");
     }
 
     private void updateAllWidgets() {
+        updateDuaWidgets();
+        updatePrayerWidgets();
+    }
+
+    private void updateDuaWidgets() {
         try {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
             ComponentName duaWidget = new ComponentName(this, DuaAppWidget.class);
@@ -96,10 +135,31 @@ public class WidgetUpdateService extends Service {
                     DuaAppWidget.updateAppWidget(this, appWidgetManager, widgetId);
                 }
                 
-                System.out.println("Auto-updated " + appWidgetIds.length + " dua widgets");
+                System.out.println("WidgetUpdateService: Auto-updated " + appWidgetIds.length + " dua widgets");
             }
         } catch (Exception e) {
-            System.err.println("Error auto-updating widgets: " + e.getMessage());
+            System.err.println("WidgetUpdateService: Error auto-updating dua widgets: " + e.getMessage());
+        }
+    }
+
+    private void updatePrayerWidgets() {
+        try {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+            ComponentName prayerWidget = new ComponentName(this, NextPrayerAppWidget.class);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(prayerWidget);
+            
+            if (appWidgetIds.length > 0) {
+                System.out.println("WidgetUpdateService: Updating " + appWidgetIds.length + " prayer widgets");
+                
+                // Directly update prayer widgets
+                for (int widgetId : appWidgetIds) {
+                    NextPrayerAppWidget.updateAppWidget(this, appWidgetManager, widgetId);
+                }
+                
+                System.out.println("WidgetUpdateService: Auto-updated " + appWidgetIds.length + " prayer widgets");
+            }
+        } catch (Exception e) {
+            System.err.println("WidgetUpdateService: Error auto-updating prayer widgets: " + e.getMessage());
         }
     }
 
@@ -108,10 +168,15 @@ public class WidgetUpdateService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_UPDATE_WIDGET.equals(intent.getAction())) {
+                String widgetType = intent.getStringExtra("widget_type");
+                
                 // Start the service to update widgets
                 Intent serviceIntent = new Intent(context, WidgetUpdateService.class);
                 serviceIntent.setAction(ACTION_UPDATE_WIDGET);
+                serviceIntent.putExtra("widget_type", widgetType);
                 context.startService(serviceIntent);
+                
+                System.out.println("WidgetUpdateReceiver: Triggered update for " + widgetType + " widget");
             }
         }
     }
@@ -120,6 +185,7 @@ public class WidgetUpdateService extends Service {
     public static void startAutoUpdates(Context context) {
         Intent serviceIntent = new Intent(context, WidgetUpdateService.class);
         context.startService(serviceIntent);
+        System.out.println("WidgetUpdateService: Auto-updates started");
     }
 
     // Method to stop auto updates
@@ -127,16 +193,33 @@ public class WidgetUpdateService extends Service {
         Intent serviceIntent = new Intent(context, WidgetUpdateService.class);
         context.stopService(serviceIntent);
         
-        // Cancel the alarm
+        // Cancel the alarms
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent updateIntent = new Intent(context, WidgetUpdateReceiver.class);
-        updateIntent.setAction(ACTION_UPDATE_WIDGET);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+        
+        // Cancel Dua widget alarm
+        Intent duaUpdateIntent = new Intent(context, WidgetUpdateReceiver.class);
+        duaUpdateIntent.setAction(ACTION_UPDATE_WIDGET);
+        duaUpdateIntent.putExtra("widget_type", "dua");
+        PendingIntent duaPendingIntent = PendingIntent.getBroadcast(
             context, 
-            0, 
-            updateIntent, 
+            1, 
+            duaUpdateIntent, 
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
-        alarmManager.cancel(pendingIntent);
+        alarmManager.cancel(duaPendingIntent);
+        
+        // Cancel Prayer widget alarm
+        Intent prayerUpdateIntent = new Intent(context, WidgetUpdateReceiver.class);
+        prayerUpdateIntent.setAction(ACTION_UPDATE_WIDGET);
+        prayerUpdateIntent.putExtra("widget_type", "prayer");
+        PendingIntent prayerPendingIntent = PendingIntent.getBroadcast(
+            context, 
+            2, 
+            prayerUpdateIntent, 
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        alarmManager.cancel(prayerPendingIntent);
+        
+        System.out.println("WidgetUpdateService: Auto-updates stopped");
     }
 }

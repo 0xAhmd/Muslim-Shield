@@ -15,6 +15,7 @@ import java.util.Calendar;
 public class NextPrayerAppWidget extends AppWidgetProvider {
 
     private static final String PREFS_NAME = "FlutterSharedPreferences";
+    // Updated keys to match home_widget package format
     private static final String PRAYER_NAME_KEY = "flutter.next_prayer_name";
     private static final String PRAYER_TIME_KEY = "flutter.next_prayer_time";
     private static final String LOCATION_KEY = "flutter.current_location";
@@ -30,12 +31,35 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         
-        // Get data from SharedPreferences
-        String prayerName = prefs.getString(PRAYER_NAME_KEY, "Fajr");
-        String prayerTime = prefs.getString(PRAYER_TIME_KEY, "05:00");
-        String location = prefs.getString(LOCATION_KEY, "Loading...");
+        // First try to get data from home_widget (Flutter data)
+        String prayerName = prefs.getString(PRAYER_NAME_KEY, null);
+        String prayerTime = prefs.getString(PRAYER_TIME_KEY, null);
+        String location = prefs.getString(LOCATION_KEY, null);
         
-        System.out.println("NextPrayerAppWidget: Updating widget with " + prayerName + " at " + prayerTime);
+        System.out.println("NextPrayerAppWidget: Raw data from SharedPreferences:");
+        System.out.println("  Prayer Name: " + prayerName);
+        System.out.println("  Prayer Time: " + prayerTime);
+        System.out.println("  Location: " + location);
+        
+        // If Flutter data is not available, use fallback values
+        if (prayerName == null || prayerTime == null) {
+            System.out.println("NextPrayerAppWidget: Flutter data not found, using fallback");
+            prayerName = "Fajr";
+            prayerTime = "05:00";
+            location = "Please open Prayer Times";
+        } else {
+            System.out.println("NextPrayerAppWidget: Using Flutter data");
+        }
+        
+        // Ensure we have valid location
+        if (location == null || location.isEmpty()) {
+            location = "Loading...";
+        }
+
+        System.out.println("NextPrayerAppWidget: Final data to display:");
+        System.out.println("  Prayer Name: " + prayerName);
+        System.out.println("  Prayer Time: " + prayerTime);
+        System.out.println("  Location: " + location);
         
         // Format current date
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
@@ -83,9 +107,14 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
 
     private static String formatPrayerTimeForDisplay(String time24h) {
         try {
+            System.out.println("NextPrayerAppWidget: Formatting time: " + time24h);
+            
             // Parse the 24-hour format time (e.g., "05:04" or "13:13")
             String[] parts = time24h.split(":");
-            if (parts.length != 2) return time24h;
+            if (parts.length != 2) {
+                System.out.println("NextPrayerAppWidget: Invalid time format, returning as-is");
+                return time24h;
+            }
             
             int hour = Integer.parseInt(parts[0]);
             int minute = Integer.parseInt(parts[1]);
@@ -100,15 +129,19 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
                 displayHour = hour - 12; // Afternoon/evening
             }
             
-            return String.format(Locale.getDefault(), "%d:%02d %s", displayHour, minute, amPm);
+            String result = String.format(Locale.getDefault(), "%d:%02d %s", displayHour, minute, amPm);
+            System.out.println("NextPrayerAppWidget: Formatted time result: " + result);
+            return result;
             
         } catch (Exception e) {
-            System.err.println("Error formatting prayer time: " + e.getMessage());
+            System.err.println("NextPrayerAppWidget: Error formatting prayer time: " + e.getMessage());
             return time24h; // Return original if parsing fails
         }
     }
 
     private static int getPrayerIcon(Context context, String prayerName) {
+        if (prayerName == null) return R.drawable.ic_prayer_default;
+        
         switch (prayerName.toLowerCase()) {
             case "fajr":
                 return R.drawable.ic_fajr;
@@ -128,9 +161,14 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
 
     private static String calculateTimeRemaining(String prayerTime) {
         try {
+            System.out.println("NextPrayerAppWidget: Calculating time remaining for: " + prayerTime);
+            
             // Parse the prayer time (24-hour format: "HH:mm")
             String[] parts = prayerTime.split(":");
-            if (parts.length != 2) return "N/A";
+            if (parts.length != 2) {
+                System.out.println("NextPrayerAppWidget: Invalid time format for calculation");
+                return "N/A";
+            }
             
             int prayerHour = Integer.parseInt(parts[0]);
             int prayerMinute = Integer.parseInt(parts[1]);
@@ -150,7 +188,7 @@ public class NextPrayerAppWidget extends AppWidgetProvider {
             int diff = totalPrayerMinutes - totalCurrentMinutes;
             
             // If negative, it means the prayer is tomorrow
-            if (diff < 0) {
+            if (diff <= 0) {
                 diff += 24 * 60; // Add 24 hours in minutes
                 System.out.println("NextPrayerAppWidget: Prayer is tomorrow, adjusted diff: " + diff);
             }
