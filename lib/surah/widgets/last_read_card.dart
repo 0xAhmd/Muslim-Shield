@@ -96,7 +96,7 @@ class _QuranIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PositionedDirectional(
-      bottom: -24.h,
+      bottom: -10.h,
       end: 0,
       child: Image.asset('assets/images/quran.png', height: 80.h),
     );

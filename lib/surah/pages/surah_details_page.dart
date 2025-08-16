@@ -6,7 +6,6 @@ import '../data/models/surah.dart';
 import '../data/repo/surah_repo.dart';
 import '../data/service/last_read.dart';
 import '../widgets/reciter_dialog.dart';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
