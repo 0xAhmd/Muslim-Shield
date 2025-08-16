@@ -1,9 +1,3 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M17.75,4.09L15.5,6.34C16.24,7.05 16.75,8 16.75,9.06c0,1.06 -0.51,2.01 -1.25,2.72l2.25,2.25C18.97,12.78 19.75,11.42 19.75,9.06c0,-2.36 -0.78,-3.72 -2,-4.97zM6.25,4.09c-1.22,1.25 -2,2.61 -2,4.97 0,2.36 0.78,3.72 2,4.97L8.5,11.78C7.76,11.07 7.25,10.12 7.25,9.06S7.76,7.05 8.5,6.34L6.25,4.09zM12,2C6.48,2 2,6.48 2,12s4.48,10 10,10c1.54,0 3.01,-0.34 4.33,-0.96l-0.51,-0.51C14.77,21.39 13.42,21.75 12,21.75c-5.38,0 -9.75,-4.37 -9.75,-9.75S6.62,2.25 12,2.25s9.75,4.37 9.75,9.75c0,1.42 -0.36,2.77 -1.22,3.82l0.51,0.51C21.66,15.01 22,13.54 22,12c0,-5.52 -4.48,-10 -10,-10z"/>
-</vector>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/night"
+    android:gravity="center" />
