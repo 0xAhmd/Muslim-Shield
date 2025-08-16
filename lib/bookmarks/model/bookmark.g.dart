@@ -79,6 +79,8 @@ class BookmarkTypeAdapter extends TypeAdapter<BookmarkType> {
         return BookmarkType.hadith;
       case 3:
         return BookmarkType.other;
+      case 4:
+        return BookmarkType.surah;
       default:
         return BookmarkType.ayah;
     }
@@ -98,6 +100,9 @@ class BookmarkTypeAdapter extends TypeAdapter<BookmarkType> {
         break;
       case BookmarkType.other:
         writer.writeByte(3);
+        break;
+      case BookmarkType.surah:
+        writer.writeByte(4);
         break;
     }
   }

@@ -73,6 +73,57 @@ class BookmarkModel extends HiveObject {
     );
   }
 
+  // NEW: Factory constructor for entire Surah
+// Update the BookmarkModel.fromSurah factory constructor to store complete ayah data with translations
+factory BookmarkModel.fromSurah({
+  required int surahNumber,
+  required String surahName,
+  required String englishName,
+  required String revelationType,
+  required int numberOfAyahs,
+  required String englishNameTranslation,
+  List<dynamic>? ayahs, // Complete ayah data
+  Map<String, String>? translations, // Ayah translations by verse number
+}) {
+  final id = 'surah_$surahNumber';
+  final snippet = '$numberOfAyahs verses • $revelationType • Available Offline';
+
+  // Process ayahs to include all necessary data for offline reading
+  List<Map<String, dynamic>>? processedAyahs;
+  if (ayahs != null) {
+    processedAyahs = ayahs.map((ayah) {
+      final ayahNumber = ayah.numberInSurah ?? ayah.number ?? 0;
+      return {
+        'numberInSurah': ayahNumber,
+        'text': ayah.text ?? '',
+        'number': ayah.number ?? 0,
+        'translation': translations?[ayahNumber.toString()] ?? '', // Add translation if available
+        'transliteration': '', // Can be added if you have transliteration data
+      };
+    }).toList();
+  }
+
+  return BookmarkModel(
+    id: id,
+    title: surahName,
+    content: englishNameTranslation,
+    snippet: snippet,
+    type: BookmarkType.surah,
+    reference: 'Surah $surahNumber',
+    createdAt: DateTime.now(),
+    metadata: {
+      'surahNumber': surahNumber,
+      'surahName': surahName,
+      'englishName': englishName,
+      'revelationType': revelationType,
+      'numberOfAyahs': numberOfAyahs,
+      'englishNameTranslation': englishNameTranslation,
+      'ayahs': processedAyahs, // Store ALL ayahs for complete offline access
+      'isComplete': true, // Flag to indicate this is a complete surah
+      'downloadedAt': DateTime.now().toIso8601String(),
+    },
+  );
+}
   factory BookmarkModel.fromDua({
     required String duaId,
     required String title,
@@ -104,14 +155,11 @@ class BookmarkModel extends HiveObject {
     );
   }
 
-  // Update the BookmarkModel.fromHadith factory constructor
-  // In lib/bookmarks/model/bookmark.dart
-
   factory BookmarkModel.fromHadith({
     required String hadithId,
     required String title,
     required String text,
-    String? arabicText, // Add Arabic text parameter
+    String? arabicText,
     required String reference,
     String? category,
   }) {
@@ -120,31 +168,35 @@ class BookmarkModel extends HiveObject {
     return BookmarkModel(
       id: 'hadith_$hadithId',
       title: title,
-      content:
-          arabicText ??
-          text, // Store Arabic text in content, fallback to English
+      content: arabicText ?? text,
       snippet: snippet,
       type: BookmarkType.hadith,
       reference: reference,
       category: category,
       createdAt: DateTime.now(),
       metadata: {
-        'text': text, // Store English text in metadata
-        'arabicText': arabicText, // Store Arabic text in metadata
+        'text': text,
+        'arabicText': arabicText,
         'reference': reference,
       },
     );
   }
 
-  // Add getter for English text
+  // Getters for easy access to metadata
   String? get englishText => metadata?['text'];
   String? get arabicText => metadata?['arabicText'];
-  // Getters for easy access to metadata
   String? get translation => metadata?['translation'];
   String? get transliteration => metadata?['transliteration'];
   int? get surahNumber => metadata?['surahNumber'];
   int? get ayahNumber => metadata?['ayahNumber'];
   String? get surahName => metadata?['surahName'];
+  
+  // NEW: Surah-specific getters
+  String? get englishName => metadata?['englishName'];
+  String? get revelationType => metadata?['revelationType'];
+  int? get numberOfAyahs => metadata?['numberOfAyahs'];
+  String? get englishNameTranslation => metadata?['englishNameTranslation'];
+  List<dynamic>? get ayahs => metadata?['ayahs'];
 
   @override
   String toString() {
@@ -164,16 +216,21 @@ enum BookmarkType {
   hadith,
 
   @HiveField(3)
-  other;
+  other,
+  
+  @HiveField(4)  // NEW: Add surah type
+  surah;
 
   String get displayName {
     switch (this) {
       case BookmarkType.ayah:
-        return 'Quran';
+        return 'Ayah';
       case BookmarkType.dua:
         return 'Dua';
       case BookmarkType.hadith:
         return 'Hadith';
+      case BookmarkType.surah:
+        return 'Surah';
       case BookmarkType.other:
         return 'Other';
     }
@@ -187,6 +244,8 @@ enum BookmarkType {
         return '🤲';
       case BookmarkType.hadith:
         return '📚';
+      case BookmarkType.surah:
+        return '📜';
       case BookmarkType.other:
         return '⭐';
     }
