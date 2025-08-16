@@ -72,8 +72,8 @@ class NextPrayerWidgetService {
         );
 
         // Verify data was saved
-        final savedName = await prefs.getString('next_prayer_name');
-        final savedTime = await prefs.getString('next_prayer_time');
+        final savedName = prefs.getString('next_prayer_name');
+        final savedTime = prefs.getString('next_prayer_time');
         debugPrint('NextPrayerWidgetService: Verification - Name: $savedName, Time: $savedTime');
       }
 

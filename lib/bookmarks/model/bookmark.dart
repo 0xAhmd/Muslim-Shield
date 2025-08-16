@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 part 'bookmark.g.dart';
@@ -73,57 +74,119 @@ class BookmarkModel extends HiveObject {
     );
   }
 
-  // NEW: Factory constructor for entire Surah
-// Update the BookmarkModel.fromSurah factory constructor to store complete ayah data with translations
-factory BookmarkModel.fromSurah({
-  required int surahNumber,
-  required String surahName,
-  required String englishName,
-  required String revelationType,
-  required int numberOfAyahs,
-  required String englishNameTranslation,
-  List<dynamic>? ayahs, // Complete ayah data
-  Map<String, String>? translations, // Ayah translations by verse number
-}) {
-  final id = 'surah_$surahNumber';
-  final snippet = '$numberOfAyahs verses • $revelationType • Available Offline';
+  // Replace your BookmarkModel.fromSurah factory constructor with this debug version
 
-  // Process ayahs to include all necessary data for offline reading
-  List<Map<String, dynamic>>? processedAyahs;
-  if (ayahs != null) {
-    processedAyahs = ayahs.map((ayah) {
-      final ayahNumber = ayah.numberInSurah ?? ayah.number ?? 0;
-      return {
-        'numberInSurah': ayahNumber,
-        'text': ayah.text ?? '',
-        'number': ayah.number ?? 0,
-        'translation': translations?[ayahNumber.toString()] ?? '', // Add translation if available
-        'transliteration': '', // Can be added if you have transliteration data
-      };
-    }).toList();
+  factory BookmarkModel.fromSurah({
+    required int surahNumber,
+    required String surahName,
+    required String englishName,
+    required String revelationType,
+    required int numberOfAyahs,
+    required String englishNameTranslation,
+    List<dynamic>? ayahs, // Complete ayah data
+    Map<String, String>? translations, // Ayah translations by verse number
+  }) {
+    debugPrint('BookmarkModel.fromSurah: Creating bookmark...');
+    debugPrint('BookmarkModel.fromSurah: surahNumber: $surahNumber');
+    debugPrint('BookmarkModel.fromSurah: surahName: $surahName');
+    debugPrint('BookmarkModel.fromSurah: englishName: $englishName');
+    debugPrint('BookmarkModel.fromSurah: revelationType: $revelationType');
+    debugPrint('BookmarkModel.fromSurah: numberOfAyahs: $numberOfAyahs');
+    debugPrint(
+      'BookmarkModel.fromSurah: englishNameTranslation: $englishNameTranslation',
+    );
+    debugPrint('BookmarkModel.fromSurah: ayahs length: ${ayahs?.length ?? 0}');
+
+    final id = 'surah_$surahNumber';
+    debugPrint('BookmarkModel.fromSurah: Generated ID: $id');
+
+    final snippet =
+        '$numberOfAyahs verses • $revelationType • Available Offline';
+    debugPrint('BookmarkModel.fromSurah: Generated snippet: $snippet');
+
+    // Process ayahs to include all necessary data for offline reading
+    List<Map<String, dynamic>>? processedAyahs;
+    if (ayahs != null) {
+      debugPrint('BookmarkModel.fromSurah: Processing ${ayahs.length} ayahs...');
+      try {
+        processedAyahs = ayahs.map((ayah) {
+          // Handle different ayah object types
+          int ayahNumber;
+          String ayahText;
+          int ayahGlobalNumber;
+
+          // Check if ayah is a Map or an object with properties
+          if (ayah is Map) {
+            ayahNumber = ayah['numberInSurah'] ?? ayah['number'] ?? 0;
+            ayahText = ayah['text'] ?? '';
+            ayahGlobalNumber = ayah['number'] ?? 0;
+          } else {
+            // Assume it's an object with properties
+            ayahNumber = ayah.numberInSurah ?? ayah.number ?? 0;
+            ayahText = ayah.text ?? '';
+            ayahGlobalNumber = ayah.number ?? 0;
+          }
+
+          return {
+            'numberInSurah': ayahNumber,
+            'text': ayahText,
+            'number': ayahGlobalNumber,
+            'translation':
+                translations?[ayahNumber.toString()] ??
+                '', // Add translation if available
+            'transliteration':
+                '', // Can be added if you have transliteration data
+          };
+        }).toList();
+        debugPrint(
+          'BookmarkModel.fromSurah: Successfully processed ${processedAyahs.length} ayahs',
+        );
+      } catch (e, stackTrace) {
+        debugPrint('BookmarkModel.fromSurah: Error processing ayahs: $e');
+        debugPrint('BookmarkModel.fromSurah: Stack trace: $stackTrace');
+        processedAyahs = [];
+      }
+    } else {
+      debugPrint('BookmarkModel.fromSurah: No ayahs provided');
+      processedAyahs = [];
+    }
+
+    try {
+      final bookmark = BookmarkModel(
+        id: id,
+        title: surahName,
+        content: englishNameTranslation,
+        snippet: snippet,
+        type: BookmarkType.surah,
+        reference: 'Surah $surahNumber',
+        createdAt: DateTime.now(),
+        metadata: {
+          'surahNumber': surahNumber,
+          'surahName': surahName,
+          'englishName': englishName,
+          'revelationType': revelationType,
+          'numberOfAyahs': numberOfAyahs,
+          'englishNameTranslation': englishNameTranslation,
+          'ayahs':
+              processedAyahs, // Store ALL ayahs for complete offline access
+          'isComplete': true, // Flag to indicate this is a complete surah
+          'downloadedAt': DateTime.now().toIso8601String(),
+        },
+      );
+
+      debugPrint('BookmarkModel.fromSurah: Successfully created bookmark');
+      debugPrint('BookmarkModel.fromSurah: Final bookmark ID: ${bookmark.id}');
+      debugPrint('BookmarkModel.fromSurah: Final bookmark type: ${bookmark.type}');
+      debugPrint('BookmarkModel.fromSurah: Final bookmark title: ${bookmark.title}');
+
+      return bookmark;
+    } catch (e, stackTrace) {
+      debugPrint('BookmarkModel.fromSurah: Error creating BookmarkModel: $e');
+      debugPrint('BookmarkModel.fromSurah: Stack trace: $stackTrace');
+      rethrow;
+    }
   }
 
-  return BookmarkModel(
-    id: id,
-    title: surahName,
-    content: englishNameTranslation,
-    snippet: snippet,
-    type: BookmarkType.surah,
-    reference: 'Surah $surahNumber',
-    createdAt: DateTime.now(),
-    metadata: {
-      'surahNumber': surahNumber,
-      'surahName': surahName,
-      'englishName': englishName,
-      'revelationType': revelationType,
-      'numberOfAyahs': numberOfAyahs,
-      'englishNameTranslation': englishNameTranslation,
-      'ayahs': processedAyahs, // Store ALL ayahs for complete offline access
-      'isComplete': true, // Flag to indicate this is a complete surah
-      'downloadedAt': DateTime.now().toIso8601String(),
-    },
-  );
-}
   factory BookmarkModel.fromDua({
     required String duaId,
     required String title,
@@ -190,7 +253,7 @@ factory BookmarkModel.fromSurah({
   int? get surahNumber => metadata?['surahNumber'];
   int? get ayahNumber => metadata?['ayahNumber'];
   String? get surahName => metadata?['surahName'];
-  
+
   // NEW: Surah-specific getters
   String? get englishName => metadata?['englishName'];
   String? get revelationType => metadata?['revelationType'];
@@ -217,8 +280,8 @@ enum BookmarkType {
 
   @HiveField(3)
   other,
-  
-  @HiveField(4)  // NEW: Add surah type
+
+  @HiveField(4) // NEW: Add surah type
   surah;
 
   String get displayName {

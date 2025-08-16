@@ -1,60 +1,59 @@
-// Updated lib/bookmarks/service/bookmark_service.dart
-import '../model/bookmark.dart';
-import 'package:hive/hive.dart';
+// lib/bookmarks/service/bookmark_service.dart
 
-class LocalBookmarksSource {
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import '../model/bookmark.dart';
+
+class BookmarksService {
   static const String _boxName = 'bookmarks';
   Box<BookmarkModel>? _box;
 
-  // Initialize Hive box
+  // Singleton pattern
+  static final BookmarksService _instance = BookmarksService._internal();
+  factory BookmarksService() => _instance;
+  BookmarksService._internal();
+
+  // Initialize the service - called from AppInitializer
   Future<void> init() async {
-    if (!Hive.isBoxOpen(_boxName)) {
-      _box = await Hive.openBox<BookmarkModel>(_boxName);
-    } else {
-      _box = Hive.box<BookmarkModel>(_boxName);
+    try {
+      debugPrint('BookmarksService: Initializing...');
+      await _ensureBoxOpen();
+      debugPrint('BookmarksService: Initialization complete. Box has ${_box!.length} bookmarks');
+      
+      // Debug: Print all existing bookmarks
+      final bookmarks = _box!.values.toList();
+      for (var bookmark in bookmarks) {
+        debugPrint('BookmarksService: Existing bookmark - ${bookmark.type.displayName}: ${bookmark.title}');
+      }
+    } catch (e, stackTrace) {
+      debugPrint('BookmarksService: Error during initialization: $e');
+      debugPrint('BookmarksService: Stack trace: $stackTrace');
+      rethrow;
     }
   }
 
-  // Add bookmark
-  Future<void> addBookmark(BookmarkModel bookmark) async {
-    await _ensureBoxOpen();
-    await _box!.put(bookmark.id, bookmark);
-  }
-
-  // Remove bookmark
-  Future<void> removeBookmark(String bookmarkId) async {
-    await _ensureBoxOpen();
-    await _box!.delete(bookmarkId);
+  // Ensure Hive box is open
+  Future<void> _ensureBoxOpen() async {
+    if (_box == null || !_box!.isOpen) {
+      try {
+        _box = await Hive.openBox<BookmarkModel>(_boxName);
+        debugPrint('BookmarksService: Box opened successfully');
+      } catch (e) {
+        debugPrint('BookmarksService: Error opening box: $e');
+        rethrow;
+      }
+    }
   }
 
   // Get all bookmarks
   Future<List<BookmarkModel>> getAllBookmarks() async {
     await _ensureBoxOpen();
-    return _box!.values.toList();
-  }
-
-  // Get bookmarks by type
-  Future<List<BookmarkModel>> getBookmarksByType(BookmarkType type) async {
-    await _ensureBoxOpen();
-    return _box!.values.where((bookmark) => bookmark.type == type).toList();
-  }
-
-  // Check if item is bookmarked
-  Future<bool> isBookmarked(String bookmarkId) async {
-    await _ensureBoxOpen();
-    return _box!.containsKey(bookmarkId);
-  }
-
-  // Get bookmark by ID
-  Future<BookmarkModel?> getBookmark(String bookmarkId) async {
-    await _ensureBoxOpen();
-    return _box!.get(bookmarkId);
-  }
-
-  // Clear all bookmarks
-  Future<void> clearAllBookmarks() async {
-    await _ensureBoxOpen();
-    await _box!.clear();
+    final bookmarks = _box!.values.toList();
+    debugPrint('BookmarksService: getAllBookmarks() - Found ${bookmarks.length} bookmarks');
+    for (var bookmark in bookmarks) {
+      debugPrint('BookmarksService: ${bookmark.type.displayName} - ${bookmark.title}');
+    }
+    return bookmarks;
   }
 
   // Get bookmarks count
@@ -66,52 +65,47 @@ class LocalBookmarksSource {
   // Search bookmarks
   Future<List<BookmarkModel>> searchBookmarks(String query) async {
     await _ensureBoxOpen();
-    final lowercaseQuery = query.toLowerCase();
-
-    return _box!.values.where((bookmark) {
-      return bookmark.title.toLowerCase().contains(lowercaseQuery) ||
-          bookmark.content.toLowerCase().contains(lowercaseQuery) ||
-          bookmark.snippet.toLowerCase().contains(lowercaseQuery) ||
-          (bookmark.category?.toLowerCase().contains(lowercaseQuery) ?? false);
+    if (query.isEmpty) return getAllBookmarks();
+    
+    final allBookmarks = _box!.values.toList();
+    return allBookmarks.where((bookmark) {
+      final searchText = query.toLowerCase();
+      return bookmark.title.toLowerCase().contains(searchText) ||
+             bookmark.content.toLowerCase().contains(searchText) ||
+             bookmark.snippet.toLowerCase().contains(searchText) ||
+             (bookmark.reference?.toLowerCase().contains(searchText) ?? false) ||
+             (bookmark.category?.toLowerCase().contains(searchText) ?? false);
     }).toList();
   }
 
-  // Get recent bookmarks (last 10)
-  Future<List<BookmarkModel>> getRecentBookmarks({int limit = 10}) async {
+  // Get bookmarks by type
+  Future<List<BookmarkModel>> getBookmarksByType(BookmarkType type) async {
     await _ensureBoxOpen();
-    final bookmarks = _box!.values.toList();
-    bookmarks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    return bookmarks.take(limit).toList();
+    final allBookmarks = _box!.values.toList();
+    return allBookmarks.where((bookmark) => bookmark.type == type).toList();
   }
 
-  // Private helper to ensure box is open
-  Future<void> _ensureBoxOpen() async {
-    if (_box == null || !_box!.isOpen) {
-      await init();
-    }
+  // Remove bookmark by ID
+  Future<void> removeBookmark(String bookmarkId) async {
+    await _ensureBoxOpen();
+    await _box!.delete(bookmarkId);
+    debugPrint('BookmarksService: Removed bookmark with ID: $bookmarkId');
   }
 
-  // Close the box
-  Future<void> close() async {
-    if (_box?.isOpen == true) {
-      await _box!.close();
-    }
-  }
-}
-
-// Service class to handle bookmark operations
-class BookmarksService {
-  static final BookmarksService _instance = BookmarksService._internal();
-  factory BookmarksService() => _instance;
-  BookmarksService._internal();
-
-  final LocalBookmarksSource _localSource = LocalBookmarksSource();
-
-  Future<void> init() async {
-    await _localSource.init();
+  // Clear all bookmarks
+  Future<void> clearAllBookmarks() async {
+    await _ensureBoxOpen();
+    await _box!.clear();
+    debugPrint('BookmarksService: Cleared all bookmarks');
   }
 
-  // Bookmark an Ayah
+  // AYAH BOOKMARK METHODS
+  Future<bool> isAyahBookmarked(int surahNumber, int ayahNumber) async {
+    await _ensureBoxOpen();
+    final bookmarkId = 'ayah_${surahNumber}_$ayahNumber';
+    return _box!.containsKey(bookmarkId);
+  }
+
   Future<void> bookmarkAyah({
     required int surahNumber,
     required int ayahNumber,
@@ -119,6 +113,8 @@ class BookmarksService {
     required String ayahText,
     required String translation,
   }) async {
+    await _ensureBoxOpen();
+    
     final bookmark = BookmarkModel.fromAyah(
       surahNumber: surahNumber,
       ayahNumber: ayahNumber,
@@ -126,10 +122,27 @@ class BookmarksService {
       ayahText: ayahText,
       translation: translation,
     );
-    await _localSource.addBookmark(bookmark);
+    
+    await _box!.put(bookmark.id, bookmark);
+    debugPrint('BookmarksService: Saved Ayah bookmark - ${bookmark.title}');
   }
 
-  // NEW: Bookmark entire Surah
+  Future<void> removeAyahBookmark(int surahNumber, int ayahNumber) async {
+    await _ensureBoxOpen();
+    final bookmarkId = 'ayah_${surahNumber}_$ayahNumber';
+    await _box!.delete(bookmarkId);
+    debugPrint('BookmarksService: Removed Ayah bookmark - $bookmarkId');
+  }
+
+  // SURAH BOOKMARK METHODS
+  Future<bool> isSurahBookmarked(int surahNumber) async {
+    await _ensureBoxOpen();
+    final bookmarkId = 'surah_$surahNumber';
+    final isBookmarked = _box!.containsKey(bookmarkId);
+    debugPrint('BookmarksService: Checking Surah $surahNumber bookmark status: $isBookmarked');
+    return isBookmarked;
+  }
+
   Future<void> bookmarkSurah({
     required int surahNumber,
     required String surahName,
@@ -137,23 +150,82 @@ class BookmarksService {
     required String revelationType,
     required int numberOfAyahs,
     required String englishNameTranslation,
-    List<dynamic>? ayahs, // Complete ayah data
-    Map<String, String>? translations, // Ayah translations by verse number
+    List<dynamic>? ayahs,
+    Map<String, String>? translations,
   }) async {
-    final bookmark = BookmarkModel.fromSurah(
-      surahNumber: surahNumber,
-      surahName: surahName,
-      englishName: englishName,
-      revelationType: revelationType,
-      numberOfAyahs: numberOfAyahs,
-      englishNameTranslation: englishNameTranslation,
-      ayahs: ayahs,
-      translations: translations,
-    );
-    await _localSource.addBookmark(bookmark);
+    await _ensureBoxOpen();
+    
+    debugPrint('BookmarksService: Starting to save Surah bookmark...');
+    debugPrint('BookmarksService: Surah Number: $surahNumber');
+    debugPrint('BookmarksService: Surah Name: $surahName');
+    debugPrint('BookmarksService: English Name: $englishName');
+    debugPrint('BookmarksService: Revelation Type: $revelationType');
+    debugPrint('BookmarksService: Number of Ayahs: $numberOfAyahs');
+    debugPrint('BookmarksService: English Name Translation: $englishNameTranslation');
+    debugPrint('BookmarksService: Ayahs data length: ${ayahs?.length ?? 0}');
+    
+    try {
+      final bookmark = BookmarkModel.fromSurah(
+        surahNumber: surahNumber,
+        surahName: surahName,
+        englishName: englishName,
+        revelationType: revelationType,
+        numberOfAyahs: numberOfAyahs,
+        englishNameTranslation: englishNameTranslation,
+        ayahs: ayahs,
+        translations: translations,
+      );
+      
+      debugPrint('BookmarksService: Created bookmark with ID: ${bookmark.id}');
+      debugPrint('BookmarksService: Bookmark type: ${bookmark.type}');
+      debugPrint('BookmarksService: Bookmark title: ${bookmark.title}');
+      debugPrint('BookmarksService: Bookmark content: ${bookmark.content}');
+      debugPrint('BookmarksService: Bookmark snippet: ${bookmark.snippet}');
+      
+      await _box!.put(bookmark.id, bookmark);
+      
+      debugPrint('BookmarksService: Successfully saved Surah bookmark - ${bookmark.title}');
+      
+      // Verify it was saved
+      final saved = _box!.get(bookmark.id);
+      if (saved != null) {
+        debugPrint('BookmarksService: Verification successful - bookmark exists in storage');
+        debugPrint('BookmarksService: Saved bookmark type: ${saved.type}');
+        debugPrint('BookmarksService: Saved bookmark title: ${saved.title}');
+      } else {
+        debugPrint('BookmarksService: ERROR - bookmark was not saved properly!');
+      }
+      
+      // Print total bookmarks count
+      debugPrint('BookmarksService: Total bookmarks in storage: ${_box!.length}');
+      
+    } catch (e, stackTrace) {
+      debugPrint('BookmarksService: Error creating/saving Surah bookmark: $e');
+      debugPrint('BookmarksService: Stack trace: $stackTrace');
+      rethrow;
+    }
   }
 
-  // Bookmark a Dua
+  Future<void> removeSurahBookmark(int surahNumber) async {
+    await _ensureBoxOpen();
+    final bookmarkId = 'surah_$surahNumber';
+    await _box!.delete(bookmarkId);
+    debugPrint('BookmarksService: Removed Surah bookmark - $bookmarkId');
+  }
+
+  Future<BookmarkModel?> getBookmarkedSurah(int surahNumber) async {
+    await _ensureBoxOpen();
+    final bookmarkId = 'surah_$surahNumber';
+    return _box!.get(bookmarkId);
+  }
+
+  // DUA BOOKMARK METHODS
+  Future<bool> isDuaBookmarked(String duaId) async {
+    await _ensureBoxOpen();
+    final bookmarkId = 'dua_$duaId';
+    return _box!.containsKey(bookmarkId);
+  }
+
   Future<void> bookmarkDua({
     required String duaId,
     required String title,
@@ -163,6 +235,8 @@ class BookmarksService {
     String? transliteration,
     String? reference,
   }) async {
+    await _ensureBoxOpen();
+    
     final bookmark = BookmarkModel.fromDua(
       duaId: duaId,
       title: title,
@@ -172,10 +246,25 @@ class BookmarksService {
       transliteration: transliteration,
       reference: reference,
     );
-    await _localSource.addBookmark(bookmark);
+    
+    await _box!.put(bookmark.id, bookmark);
+    debugPrint('BookmarksService: Saved Dua bookmark - ${bookmark.title}');
   }
 
-  // Bookmark a Hadith
+  Future<void> removeDuaBookmark(String duaId) async {
+    await _ensureBoxOpen();
+    final bookmarkId = 'dua_$duaId';
+    await _box!.delete(bookmarkId);
+    debugPrint('BookmarksService: Removed Dua bookmark - $bookmarkId');
+  }
+
+  // HADITH BOOKMARK METHODS
+  Future<bool> isHadithBookmarked(String hadithId) async {
+    await _ensureBoxOpen();
+    final bookmarkId = 'hadith_$hadithId';
+    return _box!.containsKey(bookmarkId);
+  }
+
   Future<void> bookmarkHadith({
     required String hadithId,
     required String title,
@@ -184,6 +273,8 @@ class BookmarksService {
     required String reference,
     String? category,
   }) async {
+    await _ensureBoxOpen();
+    
     final bookmark = BookmarkModel.fromHadith(
       hadithId: hadithId,
       title: title,
@@ -192,105 +283,22 @@ class BookmarksService {
       reference: reference,
       category: category,
     );
-    await _localSource.addBookmark(bookmark);
+    
+    await _box!.put(bookmark.id, bookmark);
+    debugPrint('BookmarksService: Saved Hadith bookmark - ${bookmark.title}');
   }
 
-  // Check if Ayah is bookmarked
-  Future<bool> isAyahBookmarked(int surahNumber, int ayahNumber) async {
-    final id = 'ayah_${surahNumber}_$ayahNumber';
-    return await _localSource.isBookmarked(id);
-  }
-
-  // NEW: Check if Surah is bookmarked
-  Future<bool> isSurahBookmarked(int surahNumber) async {
-    final id = 'surah_$surahNumber';
-    return await _localSource.isBookmarked(id);
-  }
-
-  // Check if Dua is bookmarked
-  Future<bool> isDuaBookmarked(String duaId) async {
-    final id = 'dua_$duaId';
-    return await _localSource.isBookmarked(id);
-  }
-
-  // Check if Hadith is bookmarked
-  Future<bool> isHadithBookmarked(String hadithId) async {
-    final id = 'hadith_$hadithId';
-    return await _localSource.isBookmarked(id);
-  }
-
-  // Remove Ayah bookmark
-  Future<void> removeAyahBookmark(int surahNumber, int ayahNumber) async {
-    final id = 'ayah_${surahNumber}_$ayahNumber';
-    await _localSource.removeBookmark(id);
-  }
-
-  // NEW: Remove Surah bookmark
-  Future<void> removeSurahBookmark(int surahNumber) async {
-    final id = 'surah_$surahNumber';
-    await _localSource.removeBookmark(id);
-  }
-
-  // Remove Dua bookmark
-  Future<void> removeDuaBookmark(String duaId) async {
-    final id = 'dua_$duaId';
-    await _localSource.removeBookmark(id);
-  }
-
-  // Remove Hadith bookmark
   Future<void> removeHadithBookmark(String hadithId) async {
-    final id = 'hadith_$hadithId';
-    await _localSource.removeBookmark(id);
+    await _ensureBoxOpen();
+    final bookmarkId = 'hadith_$hadithId';
+    await _box!.delete(bookmarkId);
+    debugPrint('BookmarksService: Removed Hadith bookmark - $bookmarkId');
   }
 
-  // Remove any bookmark by ID
-  Future<void> removeBookmark(String bookmarkId) async {
-    await _localSource.removeBookmark(bookmarkId);
-  }
-
-  // Get all bookmarks
-  Future<List<BookmarkModel>> getAllBookmarks() async {
-    return await _localSource.getAllBookmarks();
-  }
-
-  // Get bookmarks by type
-  Future<List<BookmarkModel>> getBookmarksByType(BookmarkType type) async {
-    return await _localSource.getBookmarksByType(type);
-  }
-
-  // NEW: Get all Surah bookmarks
-  Future<List<BookmarkModel>> getSurahBookmarks() async {
-    return await _localSource.getBookmarksByType(BookmarkType.surah);
-  }
-
-  // NEW: Get specific bookmarked Surah by number
-  Future<BookmarkModel?> getBookmarkedSurah(int surahNumber) async {
-    final id = 'surah_$surahNumber';
-    return await _localSource.getBookmark(id);
-  }
-
-  // Get all Hadith bookmarks
-  Future<List<BookmarkModel>> getHadithBookmarks() async {
-    return await _localSource.getBookmarksByType(BookmarkType.hadith);
-  }
-
-  // Search bookmarks
-  Future<List<BookmarkModel>> searchBookmarks(String query) async {
-    return await _localSource.searchBookmarks(query);
-  }
-
-  // Clear all bookmarks
-  Future<void> clearAllBookmarks() async {
-    await _localSource.clearAllBookmarks();
-  }
-
-  // Get bookmarks count
-  Future<int> getBookmarksCount() async {
-    return await _localSource.getBookmarksCount();
-  }
-
-  // Get recent bookmarks
-  Future<List<BookmarkModel>> getRecentBookmarks({int limit = 10}) async {
-    return await _localSource.getRecentBookmarks(limit: limit);
+  // Close the box when not needed
+  Future<void> close() async {
+    if (_box?.isOpen == true) {
+      await _box!.close();
+    }
   }
 }

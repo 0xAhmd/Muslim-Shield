@@ -102,9 +102,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
     );
   }
 
-  // Add this method to the BookmarksPageContent class in bookmarks_page.dart
-  // Also add import for the offline viewer:
-  // import 'offline_surah_viewer.dart';
+
 
   Widget _buildSurahContent(BookmarkModel bookmark) {
     final ayahs = bookmark.ayahs ?? [];
@@ -300,7 +298,7 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                 ],
               ),
             );
-          }).toList(),
+          }),
 
           if (ayahs.length > 3) ...[
             Container(
@@ -594,196 +592,193 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
     );
   }
 
-  void _showBookmarkDetails(BuildContext context, BookmarkModel bookmark) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        maxChildSize: 0.95,
-        minChildSize: 0.5,
-        builder: (context, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: grey,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: textColor.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
+void _showBookmarkDetails(BuildContext context, BookmarkModel bookmark) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) => DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      maxChildSize: 0.95,
+      minChildSize: 0.5,
+      builder: (context, scrollController) => Container(
+        decoration: const BoxDecoration(
+          color: grey,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            // Handle bar
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: textColor.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2),
               ),
+            ),
 
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header with type and category
-                      Row(
-                        children: [
+            Expanded(
+              child: SingleChildScrollView(
+                controller: scrollController,
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header with type and category
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getTypeColor(
+                              bookmark.type,
+                            ).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                bookmark.type.icon,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                bookmark.type.displayName,
+                                style: GoogleFonts.poppins(
+                                  color: _getTypeColor(bookmark.type),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (bookmark.category != null) ...[
+                          const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: _getTypeColor(
-                                bookmark.type,
-                              ).withOpacity(0.2),
+                              color: primary.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  bookmark.type.icon,
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  bookmark.type.displayName,
-                                  style: GoogleFonts.poppins(
-                                    color: _getTypeColor(bookmark.type),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              bookmark.category!,
+                              style: GoogleFonts.poppins(
+                                color: primary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                          if (bookmark.category != null) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: primary.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                bookmark.category!,
-                                style: GoogleFonts.poppins(
-                                  color: primary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ] else if (bookmark.type == BookmarkType.surah) ...[
-                            _buildSurahContent(bookmark),
-                          ],
                         ],
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Title
-                      Text(
-                        bookmark.title,
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Content based on type
-                      if (bookmark.type == BookmarkType.hadith) ...[
-                        _buildHadithContent(bookmark),
-                      ] else if (bookmark.type == BookmarkType.ayah ||
-                          bookmark.type == BookmarkType.dua) ...[
-                        _buildAyahOrDuaContent(bookmark),
-                      ] else ...[
-                        _buildOtherContent(bookmark),
                       ],
+                    ),
 
-                      // Reference (if exists)
-                      if (bookmark.reference != null) ...[
-                        const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: background,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(Icons.book, color: orange, size: 16),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'Reference: ${bookmark.reference}',
-                                  style: GoogleFonts.poppins(
-                                    color: textColor,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  softWrap: true,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 16),
 
-                      // Date added
-                      const SizedBox(height: 16),
+                    // Title
+                    Text(
+                      bookmark.title,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Content based on type
+                    if (bookmark.type == BookmarkType.surah) ...[
+                      _buildSurahContent(bookmark),
+                    ] else if (bookmark.type == BookmarkType.hadith) ...[
+                      _buildHadithContent(bookmark),
+                    ] else if (bookmark.type == BookmarkType.ayah ||
+                        bookmark.type == BookmarkType.dua) ...[
+                      _buildAyahOrDuaContent(bookmark),
+                    ] else ...[
+                      _buildOtherContent(bookmark),
+                    ],
+
+                    // Reference (if exists)
+                    if (bookmark.reference != null) ...[
+                      const SizedBox(height: 20),
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: scaffoldBackgroundColor.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(6),
+                          color: background,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.access_time,
-                              color: textColor.withOpacity(0.7),
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Bookmarked ${_formatDate(bookmark.createdAt)}',
-                              style: GoogleFonts.poppins(
-                                color: textColor.withOpacity(0.7),
-                                fontSize: 12,
+                            const Icon(Icons.book, color: orange, size: 16),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Reference: ${bookmark.reference}',
+                                style: GoogleFonts.poppins(
+                                  color: textColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
                               ),
                             ),
                           ],
                         ),
                       ),
-
-                      const SizedBox(height: 24),
                     ],
-                  ),
+
+                    // Date added
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: scaffoldBackgroundColor.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.access_time,
+                            color: textColor.withOpacity(0.7),
+                            size: 14,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Bookmarked ${_formatDate(bookmark.createdAt)}',
+                            style: GoogleFonts.poppins(
+                              color: textColor.withOpacity(0.7),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
-  // Update the _buildHadithContent method in BookmarksPage
-  // Replace the existing method in lib/bookmarks/presentation/pages/bookmarks_page.dart
-
+    ),
+  );
+}
   Widget _buildHadithContent(BookmarkModel bookmark) {
     // Get Arabic and English text from the bookmark
     final arabicText = bookmark.arabicText ?? bookmark.metadata?['arabicText'];

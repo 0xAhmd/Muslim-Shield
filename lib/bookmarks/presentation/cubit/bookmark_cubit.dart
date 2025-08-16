@@ -1,5 +1,7 @@
 // Updated lib/bookmarks/presentation/cubit/bookmark_cubit.dart
 
+import 'package:flutter/material.dart';
+
 import '../../model/bookmark.dart';
 import 'bookmark_state.dart';
 import '../../service/bookmark_service.dart';
@@ -10,45 +12,31 @@ class BookmarksCubit extends Cubit<BookmarksState> {
 
   BookmarksCubit(this._bookmarksService) : super(BookmarksInitial());
 
-  Future<void> loadBookmarks() async {
-    try {
-      emit(BookmarksLoading());
-      
-      final bookmarks = await _bookmarksService.getAllBookmarks();
-      // Sort by creation date (newest first)
-      bookmarks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      
-      final count = await _bookmarksService.getBookmarksCount();
-      
-      emit(BookmarksLoaded(
-        bookmarks: bookmarks,
-        filteredBookmarks: bookmarks,
-        totalCount: count,
-      ));
-    } catch (e) {
-      emit(BookmarksError('Failed to load bookmarks: ${e.toString()}'));
-    }
-  }
-
   Future<void> searchBookmarks(String query) async {
     final currentState = state;
     if (currentState is BookmarksLoaded) {
       try {
         if (query.isEmpty) {
-          emit(currentState.copyWith(
-            filteredBookmarks: currentState.bookmarks,
-            searchQuery: '',
-            clearSelectedType: true,
-          ));
+          emit(
+            currentState.copyWith(
+              filteredBookmarks: currentState.bookmarks,
+              searchQuery: '',
+              clearSelectedType: true,
+            ),
+          );
         } else {
-          final filteredBookmarks = await _bookmarksService.searchBookmarks(query);
+          final filteredBookmarks = await _bookmarksService.searchBookmarks(
+            query,
+          );
           filteredBookmarks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          
-          emit(currentState.copyWith(
-            filteredBookmarks: filteredBookmarks,
-            searchQuery: query,
-            clearSelectedType: true,
-          ));
+
+          emit(
+            currentState.copyWith(
+              filteredBookmarks: filteredBookmarks,
+              searchQuery: query,
+              clearSelectedType: true,
+            ),
+          );
         }
       } catch (e) {
         emit(BookmarksError('Search failed: ${e.toString()}'));
@@ -61,19 +49,21 @@ class BookmarksCubit extends Cubit<BookmarksState> {
     if (currentState is BookmarksLoaded) {
       try {
         List<BookmarkModel> filteredBookmarks;
-        
+
         if (type == null) {
           filteredBookmarks = currentState.bookmarks;
         } else {
           filteredBookmarks = await _bookmarksService.getBookmarksByType(type);
           filteredBookmarks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         }
-        
-        emit(currentState.copyWith(
-          filteredBookmarks: filteredBookmarks,
-          selectedType: type,
-          searchQuery: '', // Clear search when filtering
-        ));
+
+        emit(
+          currentState.copyWith(
+            filteredBookmarks: filteredBookmarks,
+            selectedType: type,
+            searchQuery: '', // Clear search when filtering
+          ),
+        );
       } catch (e) {
         emit(BookmarksError('Filter failed: ${e.toString()}'));
       }
@@ -83,11 +73,11 @@ class BookmarksCubit extends Cubit<BookmarksState> {
   Future<void> removeBookmark(String bookmarkId) async {
     try {
       emit(BookmarkActionLoading());
-      
+
       await _bookmarksService.removeBookmark(bookmarkId);
-      
+
       emit(BookmarkActionSuccess('Bookmark removed successfully'));
-      
+
       // Reload bookmarks
       await loadBookmarks();
     } catch (e) {
@@ -98,11 +88,11 @@ class BookmarksCubit extends Cubit<BookmarksState> {
   Future<void> clearAllBookmarks() async {
     try {
       emit(BookmarkActionLoading());
-      
+
       await _bookmarksService.clearAllBookmarks();
-      
+
       emit(BookmarkActionSuccess('All bookmarks cleared'));
-      
+
       // Reload bookmarks
       await loadBookmarks();
     } catch (e) {
@@ -113,11 +103,13 @@ class BookmarksCubit extends Cubit<BookmarksState> {
   void clearFilters() {
     final currentState = state;
     if (currentState is BookmarksLoaded) {
-      emit(currentState.copyWith(
-        filteredBookmarks: currentState.bookmarks,
-        searchQuery: '',
-        clearSelectedType: true,
-      ));
+      emit(
+        currentState.copyWith(
+          filteredBookmarks: currentState.bookmarks,
+          searchQuery: '',
+          clearSelectedType: true,
+        ),
+      );
     }
   }
 
@@ -151,7 +143,7 @@ class BookmarksCubit extends Cubit<BookmarksState> {
         ayahText: ayahText,
         translation: translation,
       );
-      
+
       emit(BookmarkActionSuccess('Ayah bookmarked successfully'));
     } catch (e) {
       emit(BookmarksError('Failed to bookmark ayah: ${e.toString()}'));
@@ -159,6 +151,8 @@ class BookmarksCubit extends Cubit<BookmarksState> {
   }
 
   // NEW: Bookmark entire Surah
+  // Replace your bookmarkSurah method in BookmarksCubit with this debug version
+
   Future<void> bookmarkSurah({
     required int surahNumber,
     required String surahName,
@@ -170,6 +164,17 @@ class BookmarksCubit extends Cubit<BookmarksState> {
     Map<String, String>? translations,
   }) async {
     try {
+      debugPrint('BookmarksCubit: bookmarkSurah called');
+      debugPrint('BookmarksCubit: surahNumber: $surahNumber');
+      debugPrint('BookmarksCubit: surahName: $surahName');
+      debugPrint('BookmarksCubit: englishName: $englishName');
+      debugPrint('BookmarksCubit: revelationType: $revelationType');
+      debugPrint('BookmarksCubit: numberOfAyahs: $numberOfAyahs');
+      debugPrint('BookmarksCubit: englishNameTranslation: $englishNameTranslation');
+      debugPrint('BookmarksCubit: ayahs length: ${ayahs?.length ?? 0}');
+
+      debugPrint('BookmarksCubit: Calling _bookmarksService.bookmarkSurah...');
+
       await _bookmarksService.bookmarkSurah(
         surahNumber: surahNumber,
         surahName: surahName,
@@ -180,10 +185,62 @@ class BookmarksCubit extends Cubit<BookmarksState> {
         ayahs: ayahs,
         translations: translations,
       );
-      
+
+      debugPrint(
+        'BookmarksCubit: _bookmarksService.bookmarkSurah completed successfully',
+      );
+
       emit(BookmarkActionSuccess('Surah bookmarked for offline access'));
-    } catch (e) {
+
+      debugPrint('BookmarksCubit: Emitted BookmarkActionSuccess');
+    } catch (e, stackTrace) {
+      debugPrint('BookmarksCubit: Error in bookmarkSurah: $e');
+      debugPrint('BookmarksCubit: Stack trace: $stackTrace');
       emit(BookmarksError('Failed to bookmark surah: ${e.toString()}'));
+    }
+  }
+
+  // Also add debug logging to loadBookmarks method
+  Future<void> loadBookmarks() async {
+    try {
+      debugPrint('BookmarksCubit: loadBookmarks called');
+      emit(BookmarksLoading());
+
+      debugPrint('BookmarksCubit: Calling _bookmarksService.getAllBookmarks()...');
+      final bookmarks = await _bookmarksService.getAllBookmarks();
+
+      debugPrint(
+        'BookmarksCubit: Received ${bookmarks.length} bookmarks from service',
+      );
+
+      // Sort by creation date (newest first)
+      bookmarks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      final count = await _bookmarksService.getBookmarksCount();
+      debugPrint('BookmarksCubit: Bookmarks count: $count');
+
+      // Debug: Print all bookmarks with their types
+      for (var bookmark in bookmarks) {
+        debugPrint(
+          'BookmarksCubit: Bookmark - Type: ${bookmark.type.displayName}, Title: ${bookmark.title}, ID: ${bookmark.id}',
+        );
+      }
+
+      emit(
+        BookmarksLoaded(
+          bookmarks: bookmarks,
+          filteredBookmarks: bookmarks,
+          totalCount: count,
+        ),
+      );
+
+      debugPrint(
+        'BookmarksCubit: Emitted BookmarksLoaded with ${bookmarks.length} bookmarks',
+      );
+    } catch (e, stackTrace) {
+      debugPrint('BookmarksCubit: Error in loadBookmarks: $e');
+      debugPrint('BookmarksCubit: Stack trace: $stackTrace');
+      emit(BookmarksError('Failed to load bookmarks: ${e.toString()}'));
     }
   }
 
@@ -206,7 +263,7 @@ class BookmarksCubit extends Cubit<BookmarksState> {
         transliteration: transliteration,
         reference: reference,
       );
-      
+
       emit(BookmarkActionSuccess('Dua bookmarked successfully'));
     } catch (e) {
       emit(BookmarksError('Failed to bookmark dua: ${e.toString()}'));

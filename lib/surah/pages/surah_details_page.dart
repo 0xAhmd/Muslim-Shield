@@ -312,12 +312,20 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
   }
 
   // NEW: Toggle Surah bookmark method
+  // Replace your _toggleSurahBookmark method in SurahDetailScreen with this debug version
+
   void _toggleSurahBookmark(
     bool isCurrentlyBookmarked,
     BookmarksCubit bookmarksCubit,
   ) async {
     try {
+      debugPrint('DEBUG: _toggleSurahBookmark called');
+      debugPrint('DEBUG: isCurrentlyBookmarked: $isCurrentlyBookmarked');
+      debugPrint('DEBUG: Surah number: ${widget.surah.number}');
+      debugPrint('DEBUG: Surah name: ${widget.surah.name}');
+
       if (isCurrentlyBookmarked) {
+        debugPrint('DEBUG: Removing Surah bookmark...');
         await bookmarksCubit.removeSurahBookmark(widget.surah.number);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -339,6 +347,8 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           );
         }
       } else {
+        debugPrint('DEBUG: Adding Surah bookmark...');
+
         // Show loading dialog while downloading
         if (mounted) {
           showDialog(
@@ -372,7 +382,12 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
         // Prepare Ayahs data for offline storage
         List<dynamic>? ayahsData;
+        debugPrint('DEBUG: surahDetail is null: ${surahDetail == null}');
+
         if (surahDetail != null) {
+          debugPrint(
+            'DEBUG: surahDetail.ayahs.length: ${surahDetail!.ayahs.length}',
+          );
           ayahsData = surahDetail!.ayahs
               .map(
                 (ayah) => {
@@ -384,7 +399,13 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                 },
               )
               .toList();
+          debugPrint('DEBUG: Prepared ${ayahsData.length} ayahs for storage');
+        } else {
+          debugPrint('DEBUG: surahDetail is null, using empty ayahs list');
+          ayahsData = [];
         }
+
+        debugPrint('DEBUG: Calling bookmarksCubit.bookmarkSurah...');
 
         await bookmarksCubit.bookmarkSurah(
           surahNumber: widget.surah.number,
@@ -396,6 +417,8 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           ayahs: ayahsData,
           translations: {}, // Add translations if available
         );
+
+        debugPrint('DEBUG: Surah bookmark operation completed');
 
         // Close loading dialog
         if (mounted) {
@@ -428,9 +451,14 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
           );
         }
       }
+
+      debugPrint('DEBUG: Calling setState to rebuild UI...');
       // Force rebuild
       if (mounted) setState(() {});
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('DEBUG: Error in _toggleSurahBookmark: $e');
+      debugPrint('DEBUG: Stack trace: $stackTrace');
+
       // Close loading dialog if it's open
       if (mounted && Navigator.canPop(context)) {
         Navigator.of(context).pop();
