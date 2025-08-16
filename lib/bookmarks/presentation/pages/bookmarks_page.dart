@@ -1,3 +1,4 @@
+import 'package:azkar/bookmarks/presentation/pages/offline_surah_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,6 +99,230 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
           ],
         ),
       ),
+    );
+  }
+
+  // Add this method to the BookmarksPageContent class in bookmarks_page.dart
+  // Also add import for the offline viewer:
+  // import 'offline_surah_viewer.dart';
+
+  Widget _buildSurahContent(BookmarkModel bookmark) {
+    final ayahs = bookmark.ayahs ?? [];
+    final totalAyahs = bookmark.numberOfAyahs ?? ayahs.length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Offline indicator
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: primary.withOpacity(0.3), width: 1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.download_done, color: primary, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Downloaded for Offline Reading',
+                    style: GoogleFonts.poppins(
+                      color: primary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Complete Surah with all $totalAyahs verses available offline',
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Surah info
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: primary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '$totalAyahs verses',
+                      style: GoogleFonts.poppins(
+                        color: primary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: orange.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      bookmark.revelationType?.toUpperCase() ?? 'MECCAN',
+                      style: GoogleFonts.poppins(
+                        color: orange,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Read offline button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            OfflineSurahViewer(surahBookmark: bookmark),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  icon: const Icon(Icons.menu_book),
+                  label: Text(
+                    'Read Offline',
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 20),
+
+        // Preview of first few ayahs
+        if (ayahs.isNotEmpty) ...[
+          Text(
+            'Preview (First 3 verses):',
+            style: GoogleFonts.poppins(
+              color: primary,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          ...ayahs.take(3).map((ayah) {
+            final ayahText = ayah['text'] ?? '';
+            final ayahNumber = ayah['numberInSurah'] ?? 1;
+
+            return Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: background,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: primary.withOpacity(0.2), width: 1),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
+                    children: [
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: primary.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '$ayahNumber',
+                          style: GoogleFonts.poppins(
+                            color: primary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    ayahText.length > 100
+                        ? '${ayahText.substring(0, 100)}...'
+                        : ayahText,
+                    style: GoogleFonts.amiri(
+                      color: Colors.white,
+                      fontSize: 18,
+                      height: 1.8,
+                    ),
+                    textAlign: TextAlign.right,
+                    textDirection: TextDirection.rtl,
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+
+          if (ayahs.length > 3) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: background.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '... and ${ayahs.length - 3} more verses',
+                style: GoogleFonts.poppins(
+                  color: textColor.withOpacity(0.8),
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ],
+      ],
     );
   }
 
@@ -217,11 +442,15 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
     );
   }
 
+  // Update the _buildTypeFilters method in BookmarksPageContent
+  // In lib/bookmarks/presentation/pages/bookmarks_page.dart
+
   Widget _buildTypeFilters(BookmarksLoaded state) {
     final types = [
       BookmarkType.ayah,
       BookmarkType.dua,
       BookmarkType.hadith,
+      BookmarkType.surah, // NEW: Add surah type
       BookmarkType.other,
     ];
 
@@ -452,6 +681,8 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
                                 ),
                               ),
                             ),
+                          ] else if (bookmark.type == BookmarkType.surah) ...[
+                            _buildSurahContent(bookmark),
                           ],
                         ],
                       ),
@@ -770,6 +1001,8 @@ class _BookmarksPageContentState extends State<BookmarksPageContent> {
 
   Color _getTypeColor(BookmarkType type) {
     switch (type) {
+      case BookmarkType.surah:
+        return const Color.fromARGB(255, 155, 82, 228);
       case BookmarkType.ayah:
         return primary;
       case BookmarkType.dua:

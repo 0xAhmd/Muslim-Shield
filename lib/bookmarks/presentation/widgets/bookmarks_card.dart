@@ -183,6 +183,92 @@ class BookmarkCard extends StatelessWidget {
 
   Widget _buildContentPreview() {
     switch (bookmark.type) {
+      case BookmarkType.surah:
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: background,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: primary.withOpacity(0.3), width: 1),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.download_done, color: primary, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Downloaded for Offline',
+                        style: GoogleFonts.poppins(
+                          color: primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    bookmark.englishNameTranslation ?? bookmark.content,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 14,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '${bookmark.numberOfAyahs} verses',
+                          style: GoogleFonts.poppins(
+                            color: primary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: orange.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          bookmark.revelationType?.toUpperCase() ?? 'MECCAN',
+                          style: GoogleFonts.poppins(
+                            color: orange,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+
       case BookmarkType.ayah:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,73 +307,83 @@ class BookmarkCard extends StatelessWidget {
               ),
           ],
         );
-// Update the _buildContentPreview method in BookmarkCard
-// In lib/bookmarks/presentation/widgets/bookmarks_card.dart
-// Add this case to the switch statement:
+      // Update the _buildContentPreview method in BookmarkCard
+      // In lib/bookmarks/presentation/widgets/bookmarks_card.dart
+      // Add this case to the switch statement:
 
-case BookmarkType.hadith:
-  // Get Arabic and English text
-  final arabicText = bookmark.arabicText ?? bookmark.metadata?['arabicText'];
-  final englishText = bookmark.englishText ?? bookmark.metadata?['text'] ?? bookmark.content;
-  
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Show Arabic text if available
-      if (arabicText != null && arabicText.isNotEmpty) ...[
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.green.withOpacity(0.2), width: 1),
-          ),
-          child: Text(
-            _truncateText(arabicText, 80),
-            style: GoogleFonts.amiri(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              height: 1.8,
-            ),
-            textAlign: TextAlign.right,
-            textDirection: TextDirection.rtl,
-          ),
-        ),
-        const SizedBox(height: 8),
-        // English translation below
-        Text(
-          _truncateText(englishText, 100),
-          style: GoogleFonts.poppins(
-            color: textColor.withOpacity(0.8),
-            fontSize: 13,
-            height: 1.4,
-          ),
-        ),
-      ] else ...[
-        // Fallback to English only
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.green.withOpacity(0.2), width: 1),
-          ),
-          child: Text(
-            _truncateText(englishText, 120),
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 14,
-              height: 1.5,
-            ),
-            textAlign: TextAlign.justify,
-          ),
-        ),
-      ],
-    ],
-  );
+      case BookmarkType.hadith:
+        // Get Arabic and English text
+        final arabicText =
+            bookmark.arabicText ?? bookmark.metadata?['arabicText'];
+        final englishText =
+            bookmark.englishText ??
+            bookmark.metadata?['text'] ??
+            bookmark.content;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Show Arabic text if available
+            if (arabicText != null && arabicText.isNotEmpty) ...[
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: background,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.green.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  _truncateText(arabicText, 80),
+                  style: GoogleFonts.amiri(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.right,
+                  textDirection: TextDirection.rtl,
+                ),
+              ),
+              const SizedBox(height: 8),
+              // English translation below
+              Text(
+                _truncateText(englishText, 100),
+                style: GoogleFonts.poppins(
+                  color: textColor.withOpacity(0.8),
+                  fontSize: 13,
+                  height: 1.4,
+                ),
+              ),
+            ] else ...[
+              // Fallback to English only
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: background,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.green.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  _truncateText(englishText, 120),
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 14,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.justify,
+                ),
+              ),
+            ],
+          ],
+        );
       case BookmarkType.dua:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,6 +439,8 @@ case BookmarkType.hadith:
 
   Color _getTypeColor() {
     switch (bookmark.type) {
+      case BookmarkType.surah:
+        return const Color.fromARGB(255, 158, 79, 236);
       case BookmarkType.ayah:
         return primary;
       case BookmarkType.dua:

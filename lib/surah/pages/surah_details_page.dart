@@ -72,7 +72,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
   void _setupAudioPlayer() {
     _audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
       if (mounted) {
-        // Check if widget is still mounted
         setState(() {
           isPlaying = state == PlayerState.playing;
           isPaused = state == PlayerState.paused;
@@ -82,7 +81,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
     _audioPlayer.onPositionChanged.listen((Duration position) {
       if (mounted) {
-        // Check if widget is still mounted
         setState(() {
           currentPosition = position;
         });
@@ -91,7 +89,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
     _audioPlayer.onDurationChanged.listen((Duration duration) {
       if (mounted) {
-        // Check if widget is still mounted
         setState(() {
           totalDuration = duration;
         });
@@ -100,7 +97,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
     _audioPlayer.onPlayerComplete.listen((_) {
       if (mounted) {
-        // Check if widget is still mounted
         _onAyahComplete();
       }
     });
@@ -150,7 +146,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
       setState(() {
         reciters = fetchedReciters;
-        // Set default reciter with better null safety
         if (reciters.isNotEmpty) {
           selectedReciter = reciters.firstWhere(
             (r) => r.id == defaultReciterId,
@@ -215,12 +210,10 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
       } else if (isPaused) {
         await _audioPlayer.resume();
       } else {
-        // Play current ayah
         if (currentAyah < audioResponse!.data.verses.length) {
           final audioAyah = audioResponse!.data.verses[currentAyah];
           await _audioPlayer.play(UrlSource(audioAyah.url));
 
-          // Save progress when starting to play
           await LastReadService.saveLastReadFromSurah(
             surah: widget.surah,
             ayahNumber: currentAyah + 1,
@@ -250,7 +243,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
       final audioAyah = audioResponse!.data.verses[ayahIndex];
       await _audioPlayer.play(UrlSource(audioAyah.url));
 
-      // Save progress
       await LastReadService.saveLastReadFromSurah(
         surah: widget.surah,
         ayahNumber: ayahIndex + 1,
@@ -265,14 +257,12 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
   }
 
   void _onAyahComplete() {
-    // Auto-play next ayah if available
     if (currentAyah < (audioResponse?.data.verses.length ?? 0) - 1) {
       setState(() {
         currentAyah++;
       });
       _playAyah(currentAyah);
     } else {
-      // End of surah
       setState(() {
         isPlaying = false;
         isPaused = false;
@@ -305,9 +295,8 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         onReciterSelected: (Reciter reciter) {
           setState(() {
             selectedReciter = reciter;
-            audioResponse = null; // Clear current audio
+            audioResponse = null;
           });
-          // Load new audio with selected reciter
           if (_tabController.index == 1) {
             _loadSurahAudio();
           }
@@ -320,6 +309,142 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
     final minutes = duration.inMinutes;
     final seconds = duration.inSeconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  // NEW: Toggle Surah bookmark method
+  void _toggleSurahBookmark(
+    bool isCurrentlyBookmarked,
+    BookmarksCubit bookmarksCubit,
+  ) async {
+    try {
+      if (isCurrentlyBookmarked) {
+        await bookmarksCubit.removeSurahBookmark(widget.surah.number);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.download_done, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text('Offline access removed'),
+                ],
+              ),
+              duration: const Duration(seconds: 2),
+              backgroundColor: Colors.red.withOpacity(0.8),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
+      } else {
+        // Show loading dialog while downloading
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CupertinoActivityIndicator(color: primary),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Downloading Surah for offline access...',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+
+        // Prepare Ayahs data for offline storage
+        List<dynamic>? ayahsData;
+        if (surahDetail != null) {
+          ayahsData = surahDetail!.ayahs
+              .map(
+                (ayah) => {
+                  'numberInSurah': ayah.numberInSurah,
+                  'text': ayah.text,
+                  'number': ayah.number,
+                  'translation': '', // Add translation if available
+                  'transliteration': '',
+                },
+              )
+              .toList();
+        }
+
+        await bookmarksCubit.bookmarkSurah(
+          surahNumber: widget.surah.number,
+          surahName: widget.surah.name,
+          englishName: widget.surah.englishName,
+          revelationType: widget.surah.revelationType,
+          numberOfAyahs: widget.surah.numberOfAyahs,
+          englishNameTranslation: widget.surah.englishNameTranslation,
+          ayahs: ayahsData,
+          translations: {}, // Add translations if available
+        );
+
+        // Close loading dialog
+        if (mounted) {
+          Navigator.of(context).pop();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(
+                    Icons.download_done,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Surah downloaded for offline access (${widget.surah.numberOfAyahs} verses)',
+                    ),
+                  ),
+                ],
+              ),
+              duration: const Duration(seconds: 3),
+              backgroundColor: primary,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
+      }
+      // Force rebuild
+      if (mounted) setState(() {});
+    } catch (e) {
+      // Close loading dialog if it's open
+      if (mounted && Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -342,6 +467,46 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
         ),
         centerTitle: true,
         actions: [
+          // NEW: Surah bookmark button for offline access
+          BlocProvider(
+            create: (context) => BookmarksCubit(BookmarksService()),
+            child: BlocBuilder<BookmarksCubit, BookmarksState>(
+              builder: (context, bookmarkState) {
+                return FutureBuilder<bool>(
+                  future: context.read<BookmarksCubit>().isSurahBookmarked(
+                    widget.surah.number,
+                  ),
+                  builder: (context, snapshot) {
+                    final isBookmarked = snapshot.data ?? false;
+
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: isBookmarked
+                            ? primary.withOpacity(0.2)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: IconButton(
+                        onPressed: () => _toggleSurahBookmark(
+                          isBookmarked,
+                          context.read<BookmarksCubit>(),
+                        ),
+                        icon: Icon(
+                          isBookmarked ? Icons.download_done : Icons.download,
+                          color: isBookmarked ? primary : Colors.white,
+                          size: 24,
+                        ),
+                        tooltip: isBookmarked
+                            ? 'Remove offline access'
+                            : 'Download for offline',
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+
           // Reciter selection button (only show in listen mode)
           if (_tabController.index == 1 && reciters.isNotEmpty)
             IconButton(
@@ -644,25 +809,81 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
 
     return Column(
       children: [
-        // Save Progress Button
+        // Action buttons row
         Container(
           width: double.infinity,
           margin: const EdgeInsets.all(24),
-          child: ElevatedButton.icon(
-            onPressed: () => _showSaveProgressDialog(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primary,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+          child: Row(
+            children: [
+              // Save Progress Button
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _showSaveProgressDialog(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  icon: const Icon(Icons.bookmark_add),
+                  label: Text(
+                    'Save Progress',
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  ),
+                ),
               ),
-            ),
-            icon: const Icon(Icons.bookmark_add),
-            label: Text(
-              'Save Reading Progress',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-            ),
+
+              const SizedBox(width: 12),
+
+              // Download for Offline Button
+              BlocProvider(
+                create: (context) => BookmarksCubit(BookmarksService()),
+                child: BlocBuilder<BookmarksCubit, BookmarksState>(
+                  builder: (context, bookmarkState) {
+                    return FutureBuilder<bool>(
+                      future: context.read<BookmarksCubit>().isSurahBookmarked(
+                        widget.surah.number,
+                      ),
+                      builder: (context, snapshot) {
+                        final isBookmarked = snapshot.data ?? false;
+
+                        return Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () => _toggleSurahBookmark(
+                              isBookmarked,
+                              context.read<BookmarksCubit>(),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isBookmarked
+                                  ? Colors.red.withOpacity(0.8)
+                                  : orange,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            icon: Icon(
+                              isBookmarked
+                                  ? Icons.download_done
+                                  : Icons.download,
+                            ),
+                            label: Text(
+                              isBookmarked ? 'Downloaded' : 'Download',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
 
@@ -782,7 +1003,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
     );
   }
 
-  // Add this method to SurahDetailScreen class
+  // Toggle individual Ayah bookmark method
   void _toggleAyahBookmark(
     dynamic ayah,
     bool isCurrentlyBookmarked,
@@ -954,6 +1175,13 @@ class _SurahDetailScreenState extends State<SurahDetailScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Text(
+                            _formatDuration(currentPosition),
+                            style: GoogleFonts.poppins(
+                              color: textColor,
+                              fontSize: 12,
+                            ),
+                          ),
                           Text(
                             _formatDuration(totalDuration),
                             style: GoogleFonts.poppins(

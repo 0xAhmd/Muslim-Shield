@@ -1,4 +1,4 @@
-
+// Updated lib/bookmarks/presentation/cubit/bookmark_cubit.dart
 
 import '../../model/bookmark.dart';
 import 'bookmark_state.dart';
@@ -126,6 +126,11 @@ class BookmarksCubit extends Cubit<BookmarksState> {
     return await _bookmarksService.isAyahBookmarked(surahNumber, ayahNumber);
   }
 
+  // NEW: Check if Surah is bookmarked
+  Future<bool> isSurahBookmarked(int surahNumber) async {
+    return await _bookmarksService.isSurahBookmarked(surahNumber);
+  }
+
   Future<bool> isDuaBookmarked(String duaId) async {
     return await _bookmarksService.isDuaBookmarked(duaId);
   }
@@ -150,6 +155,35 @@ class BookmarksCubit extends Cubit<BookmarksState> {
       emit(BookmarkActionSuccess('Ayah bookmarked successfully'));
     } catch (e) {
       emit(BookmarksError('Failed to bookmark ayah: ${e.toString()}'));
+    }
+  }
+
+  // NEW: Bookmark entire Surah
+  Future<void> bookmarkSurah({
+    required int surahNumber,
+    required String surahName,
+    required String englishName,
+    required String revelationType,
+    required int numberOfAyahs,
+    required String englishNameTranslation,
+    List<dynamic>? ayahs,
+    Map<String, String>? translations,
+  }) async {
+    try {
+      await _bookmarksService.bookmarkSurah(
+        surahNumber: surahNumber,
+        surahName: surahName,
+        englishName: englishName,
+        revelationType: revelationType,
+        numberOfAyahs: numberOfAyahs,
+        englishNameTranslation: englishNameTranslation,
+        ayahs: ayahs,
+        translations: translations,
+      );
+      
+      emit(BookmarkActionSuccess('Surah bookmarked for offline access'));
+    } catch (e) {
+      emit(BookmarksError('Failed to bookmark surah: ${e.toString()}'));
     }
   }
 
@@ -188,6 +222,16 @@ class BookmarksCubit extends Cubit<BookmarksState> {
     }
   }
 
+  // NEW: Remove Surah bookmark
+  Future<void> removeSurahBookmark(int surahNumber) async {
+    try {
+      await _bookmarksService.removeSurahBookmark(surahNumber);
+      emit(BookmarkActionSuccess('Surah bookmark removed'));
+    } catch (e) {
+      emit(BookmarksError('Failed to remove surah bookmark: ${e.toString()}'));
+    }
+  }
+
   Future<void> removeDuaBookmark(String duaId) async {
     try {
       await _bookmarksService.removeDuaBookmark(duaId);
@@ -200,5 +244,10 @@ class BookmarksCubit extends Cubit<BookmarksState> {
   // Get bookmarks count for display
   Future<int> getBookmarksCount() async {
     return await _bookmarksService.getBookmarksCount();
+  }
+
+  // NEW: Get specific bookmarked Surah
+  Future<BookmarkModel?> getBookmarkedSurah(int surahNumber) async {
+    return await _bookmarksService.getBookmarkedSurah(surahNumber);
   }
 }

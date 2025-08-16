@@ -1,3 +1,4 @@
+// Updated lib/bookmarks/service/bookmark_service.dart
 import '../model/bookmark.dart';
 import 'package:hive/hive.dart';
 
@@ -128,6 +129,30 @@ class BookmarksService {
     await _localSource.addBookmark(bookmark);
   }
 
+  // NEW: Bookmark entire Surah
+  Future<void> bookmarkSurah({
+    required int surahNumber,
+    required String surahName,
+    required String englishName,
+    required String revelationType,
+    required int numberOfAyahs,
+    required String englishNameTranslation,
+    List<dynamic>? ayahs, // Complete ayah data
+    Map<String, String>? translations, // Ayah translations by verse number
+  }) async {
+    final bookmark = BookmarkModel.fromSurah(
+      surahNumber: surahNumber,
+      surahName: surahName,
+      englishName: englishName,
+      revelationType: revelationType,
+      numberOfAyahs: numberOfAyahs,
+      englishNameTranslation: englishNameTranslation,
+      ayahs: ayahs,
+      translations: translations,
+    );
+    await _localSource.addBookmark(bookmark);
+  }
+
   // Bookmark a Dua
   Future<void> bookmarkDua({
     required String duaId,
@@ -151,15 +176,11 @@ class BookmarksService {
   }
 
   // Bookmark a Hadith
-  // Update the bookmarkHadith method in BookmarksService
-  // In lib/bookmarks/service/bookmark_service.dart
-
-  // Bookmark a Hadith
   Future<void> bookmarkHadith({
     required String hadithId,
     required String title,
     required String text,
-    String? arabicText, // Add Arabic text parameter
+    String? arabicText,
     required String reference,
     String? category,
   }) async {
@@ -167,7 +188,7 @@ class BookmarksService {
       hadithId: hadithId,
       title: title,
       text: text,
-      arabicText: arabicText, // Pass Arabic text
+      arabicText: arabicText,
       reference: reference,
       category: category,
     );
@@ -177,6 +198,12 @@ class BookmarksService {
   // Check if Ayah is bookmarked
   Future<bool> isAyahBookmarked(int surahNumber, int ayahNumber) async {
     final id = 'ayah_${surahNumber}_$ayahNumber';
+    return await _localSource.isBookmarked(id);
+  }
+
+  // NEW: Check if Surah is bookmarked
+  Future<bool> isSurahBookmarked(int surahNumber) async {
+    final id = 'surah_$surahNumber';
     return await _localSource.isBookmarked(id);
   }
 
@@ -195,6 +222,12 @@ class BookmarksService {
   // Remove Ayah bookmark
   Future<void> removeAyahBookmark(int surahNumber, int ayahNumber) async {
     final id = 'ayah_${surahNumber}_$ayahNumber';
+    await _localSource.removeBookmark(id);
+  }
+
+  // NEW: Remove Surah bookmark
+  Future<void> removeSurahBookmark(int surahNumber) async {
+    final id = 'surah_$surahNumber';
     await _localSource.removeBookmark(id);
   }
 
@@ -223,6 +256,17 @@ class BookmarksService {
   // Get bookmarks by type
   Future<List<BookmarkModel>> getBookmarksByType(BookmarkType type) async {
     return await _localSource.getBookmarksByType(type);
+  }
+
+  // NEW: Get all Surah bookmarks
+  Future<List<BookmarkModel>> getSurahBookmarks() async {
+    return await _localSource.getBookmarksByType(BookmarkType.surah);
+  }
+
+  // NEW: Get specific bookmarked Surah by number
+  Future<BookmarkModel?> getBookmarkedSurah(int surahNumber) async {
+    final id = 'surah_$surahNumber';
+    return await _localSource.getBookmark(id);
   }
 
   // Get all Hadith bookmarks
