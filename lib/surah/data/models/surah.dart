@@ -51,6 +51,7 @@ class Ayah {
   final int page;
   final int ruku;
   final int hizbQuarter;
+  @JsonKey(fromJson: _sajdaFromJson)
   final bool sajda;
 
   Ayah({
@@ -64,6 +65,21 @@ class Ayah {
     required this.hizbQuarter,
     required this.sajda,
   });
+
+  // Custom method to handle sajda field which can be bool, Map, or other types
+  static bool _sajdaFromJson(dynamic value) {
+    if (value is bool) {
+      return value;
+    } else if (value is Map<String, dynamic>) {
+      // Sometimes sajda comes as an object with obligatory/recommended fields
+      return value['obligatory'] == true || value['recommended'] == true;
+    } else if (value is String) {
+      return value.toLowerCase() == 'true';
+    } else if (value is int) {
+      return value == 1;
+    }
+    return false; // Default to false if we can't determine
+  }
 
   factory Ayah.fromJson(Map<String, dynamic> json) => _$AyahFromJson(json);
   Map<String, dynamic> toJson() => _$AyahToJson(this);
