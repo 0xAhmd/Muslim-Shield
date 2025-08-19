@@ -1,6 +1,5 @@
 import 'package:azkar/Reminders/presentation/pages/reminders_page.dart';
 import 'package:azkar/calc/presentation/pages/zakaat_calc_page.dart';
-import 'package:azkar/core/widgets/widget_control_page.dart';
 import 'package:azkar/hadith/presentation/pages/books_page.dart';
 import 'package:azkar/names/presentation/pages/adhkar_page.dart';
 import 'package:azkar/names/presentation/pages/allah_names_page.dart';
@@ -217,21 +216,21 @@ class CustomDrawer extends StatelessWidget {
                     },
                   ),
 
-                  _buildDrawerItem(
-                    context,
-                    icon: Icons.widgets_outlined,
+                  // _buildDrawerItem(
+                  //   context,
+                  //   icon: Icons.widgets_outlined,
 
-                    title: 'Widget Settings',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const WidgetControlPage(),
-                        ),
-                      );
-                    },
-                  ),
+                  //   title: 'Widget Settings',
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const WidgetControlPage(),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),

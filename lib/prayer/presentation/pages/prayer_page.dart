@@ -47,7 +47,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _initializeConnectivity();
   }
 
@@ -317,7 +317,7 @@ class _PrayerPageViewState extends State<PrayerPageView>
               Tab(text: 'Prayer Times'),
               Tab(text: 'Qiblah'),
               Tab(text: 'Sunnah'),
-              Tab(text: 'Adhan'),
+              // Tab(text: 'Adhan'),
             ],
           ),
         ),
@@ -419,23 +419,23 @@ class _PrayerPageViewState extends State<PrayerPageView>
                 ),
               ),
 
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    BlocListener<PrayerTimesCubit, PrayerTimesState>(
-                      listener: (context, cubitState) {
-                        if (cubitState is PrayerTimesLoaded) {
-                          context
-                              .read<PrayerTimesCubit>()
-                              .updateAdhanSettings();
-                        }
-                      },
-                      child: const AdhanSettingsWidget(),
-                    ),
-                    SizedBox(height: 24.h),
-                  ],
-                ),
-              ),
+              // SingleChildScrollView(
+              //   child: Column(
+              //     children: [
+              //       BlocListener<PrayerTimesCubit, PrayerTimesState>(
+              //         listener: (context, cubitState) {
+              //           if (cubitState is PrayerTimesLoaded) {
+              //             context
+              //                 .read<PrayerTimesCubit>()
+              //                 .updateAdhanSettings();
+              //           }
+              //         },
+              //         child: const AdhanSettingsWidget(),
+              //       ),
+              //       SizedBox(height: 24.h),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),
