@@ -126,10 +126,10 @@ class _RadioPageState extends State<RadioPage> {
               SizedBox(height: 32.h),
               const RadioControls(),
 
-              SizedBox(height: 40.h),
+              SizedBox(height: 35.h),
 
               _buildStatusInfo(state),
-              SizedBox(height: 30.h),
+              SizedBox(height: 32.h),
             ],
           ),
         );
