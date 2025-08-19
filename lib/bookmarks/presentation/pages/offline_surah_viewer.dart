@@ -154,7 +154,7 @@ class OfflineSurahViewer extends StatelessWidget {
     );
   }
 
-  Widget _buildAyahCard(Map<String, dynamic> ayah, int displayNumber) {
+  Widget _buildAyahCard(Map<dynamic, dynamic> ayah, int displayNumber) {
     final arabicText = ayah['text'] ?? '';
     final translation = ayah['translation'] ?? '';
     final transliteration = ayah['transliteration'] ?? '';

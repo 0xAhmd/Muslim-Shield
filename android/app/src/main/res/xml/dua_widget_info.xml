@@ -7,6 +7,5 @@
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="600000"
     android:widgetCategory="home_screen"
-    android:description="@string/widget_description"
-    android:configure="com.example.azkar.DuaWidgetConfigureActivity">
+    android:description="@string/widget_description">
 </appwidget-provider>
