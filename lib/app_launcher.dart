@@ -5,6 +5,8 @@ import 'package:home_widget/home_widget.dart';
 
 import '../constants.dart';
 import '../home/presentation/pages/home_screen.dart';
+import 'onboarding/onboarding_screen.dart';
+import 'onboarding/onboarding_service.dart';
 
 /// Handles app launch detection and navigation without interfering with splash screen
 class AppLauncher extends StatefulWidget {
@@ -33,7 +35,7 @@ class _AppLauncherState extends State<AppLauncher> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    
+
     if (state == AppLifecycleState.resumed && _isInitialized) {
       // App came to foreground - update widgets with fresh content
       _updateWidgetsOnResume();
@@ -54,15 +56,28 @@ class _AppLauncherState extends State<AppLauncher> with WidgetsBindingObserver {
     try {
       // Small delay to ensure splash screen is fully displayed
       await Future.delayed(const Duration(milliseconds: 100));
-      
+
       // Check if app was launched from widget
       final Uri? uri = await HomeWidget.initiallyLaunchedFromHomeWidget();
-      
+
       // Remove splash screen
       FlutterNativeSplash.remove();
-      
+
       if (!mounted) return;
-      
+
+      // Check onboarding status first (only if not launched from widget)
+      if (uri == null) {
+        final isOnboardingComplete =
+            await OnboardingService.isOnboardingComplete();
+
+        if (!isOnboardingComplete) {
+          // Show onboarding screen for first-time users
+          _navigateToOnboarding();
+          return;
+        }
+      }
+
+      // Handle widget launch or normal app launch
       if (uri != null) {
         debugPrint('App launched from widget with URI: $uri');
         await _handleWidgetLaunch(uri);
@@ -75,14 +90,37 @@ class _AppLauncherState extends State<AppLauncher> with WidgetsBindingObserver {
       // Remove splash screen even if there's an error
       FlutterNativeSplash.remove();
       if (mounted) {
-        _navigateToHome();
+        // If there's an error, check onboarding status as fallback
+        _handleErrorNavigation();
       }
     } finally {
       _isInitialized = true;
     }
   }
 
+  Future<void> _handleErrorNavigation() async {
+    try {
+      final isOnboardingComplete =
+          await OnboardingService.isOnboardingComplete();
+      if (isOnboardingComplete) {
+        _navigateToHome();
+      } else {
+        _navigateToOnboarding();
+      }
+    } catch (e) {
+      debugPrint('Error in fallback navigation: $e');
+      // Last resort - go to home screen
+      _navigateToHome();
+    }
+  }
+
   Future<void> _handleWidgetLaunch(Uri uri) async {
+    // Mark onboarding as complete if user accessed app via widget
+    // (implies they've used the app before)
+    if (!await OnboardingService.isOnboardingComplete()) {
+      await OnboardingService.setOnboardingComplete();
+    }
+
     if (uri.host == 'dua') {
       // Navigate to Dua page
       Navigator.pushReplacement(
@@ -94,7 +132,8 @@ class _AppLauncherState extends State<AppLauncher> with WidgetsBindingObserver {
           ),
         ),
       );
-    } else if (uri.host == 'prayer' || uri.queryParameters['open_prayer_page'] == 'true') {
+    } else if (uri.host == 'prayer' ||
+        uri.queryParameters['open_prayer_page'] == 'true') {
       // Navigate to Prayer page
       Navigator.pushReplacement(
         context,
@@ -109,6 +148,13 @@ class _AppLauncherState extends State<AppLauncher> with WidgetsBindingObserver {
       // Unknown widget type, go to home
       _navigateToHome();
     }
+  }
+
+  void _navigateToOnboarding() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+    );
   }
 
   void _navigateToHome() {
@@ -135,7 +181,7 @@ class WidgetLaunchedHomeScreen extends StatefulWidget {
   final String widgetType;
 
   const WidgetLaunchedHomeScreen({
-    super.key, 
+    super.key,
     required this.targetPage,
     required this.widgetType,
   });
@@ -173,7 +219,7 @@ class _WidgetLaunchedHomeScreenState extends State<WidgetLaunchedHomeScreen> {
   void _showWidgetTappedNotification() {
     String message;
     IconData icon;
-    
+
     switch (widget.widgetType) {
       case 'dua':
         message = 'Dua widget tapped! Opening fresh Dua content';

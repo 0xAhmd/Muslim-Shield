@@ -1,5 +1,4 @@
 import '../../../core/connectivity_service.dart';
-import '../../../core/widgets/azan_settings.dart';
 import '../../../core/widgets/offline_message.dart';
 import '../widgets/shimmers.dart';
 
