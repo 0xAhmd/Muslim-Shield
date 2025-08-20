@@ -20,11 +20,3 @@ class PrayerTimesResponse {
 
   Map<String, dynamic> toJson() => _$PrayerTimesResponseToJson(this);
 }
-
-
-
-
-
-
-
-

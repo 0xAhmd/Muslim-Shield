@@ -43,7 +43,10 @@ class CustomBottomNav extends StatelessWidget {
               _buildBounceIcon(icon: "assets/svgs/pray-icon.svg", index: 1),
               _buildBounceIcon(icon: "assets/svgs/doa-icon.svg", index: 2),
               _buildBounceIcon(icon: "assets/images/radio.png", index: 3),
-              _buildBounceIcon(icon: 'assets/images/moslem-mosque.png', index: 4),
+              _buildBounceIcon(
+                icon: 'assets/images/moslem-mosque.png',
+                index: 4,
+              ),
               _buildBounceIcon(icon: "assets/svgs/bookmark-icon.svg", index: 5),
             ],
           ),

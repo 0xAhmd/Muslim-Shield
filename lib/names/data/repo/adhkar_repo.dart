@@ -13,12 +13,11 @@ class AdhkarRepository {
 
   List<Adhkar> searchAdhkar(List<Adhkar> adhkar, String query) {
     if (query.isEmpty) return adhkar;
-    
+
     return adhkar.where((item) {
       return item.transliteration.toLowerCase().contains(query.toLowerCase()) ||
-             item.translation.toLowerCase().contains(query.toLowerCase()) ||
-             item.arabic.contains(query);
+          item.translation.toLowerCase().contains(query.toLowerCase()) ||
+          item.arabic.contains(query);
     }).toList();
   }
 }
-

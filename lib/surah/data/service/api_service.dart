@@ -18,7 +18,7 @@ abstract class ApiService {
 
   @GET('/surah/{number}/ar.alafasy')
   Future<SurahDetailResponse> getSurahWithAudio(@Path('number') int number);
-  
+
   @GET('/juz/{number}')
   Future<JuzzResponse> getJuzz(@Path('number') int number);
 }

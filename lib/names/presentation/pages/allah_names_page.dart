@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../constants.dart';
 import '../cubit/allah_names_cubit.dart';
 
-
 class AllahNamesPage extends StatelessWidget {
   const AllahNamesPage({super.key});
 
@@ -85,17 +84,23 @@ class _AllahNamesViewState extends State<AllahNamesView> {
                 },
               ),
             ),
-          
+
           // Header with count
           BlocBuilder<AllahNamesCubit, AllahNamesState>(
             builder: (context, state) {
               if (state is AllahNamesLoaded) {
                 return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 16.h,
+                  ),
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 6.h,
+                        ),
                         decoration: BoxDecoration(
                           color: primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(20.r),
@@ -136,13 +141,17 @@ class _AllahNamesViewState extends State<AllahNamesView> {
                     child: CircularProgressIndicator(color: primary),
                   );
                 }
-                
+
                 if (state is AllahNamesError) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.error_outline, size: 48.sp, color: textColor),
+                        Icon(
+                          Icons.error_outline,
+                          size: 48.sp,
+                          color: textColor,
+                        ),
                         SizedBox(height: 16.h),
                         Text(
                           state.message,
@@ -156,7 +165,7 @@ class _AllahNamesViewState extends State<AllahNamesView> {
                     ),
                   );
                 }
-                
+
                 if (state is AllahNamesLoaded) {
                   if (state.filteredNames.isEmpty) {
                     return Center(
@@ -189,7 +198,7 @@ class _AllahNamesViewState extends State<AllahNamesView> {
                     },
                   );
                 }
-                
+
                 return const SizedBox.shrink();
               },
             ),
@@ -199,5 +208,3 @@ class _AllahNamesViewState extends State<AllahNamesView> {
     );
   }
 }
-
-

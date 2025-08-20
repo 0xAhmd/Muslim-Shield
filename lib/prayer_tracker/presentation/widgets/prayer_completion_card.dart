@@ -28,8 +28,8 @@ class PrayerCompletionCard extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
             decoration: BoxDecoration(
-              color: isCompleted 
-                  ? primary.withOpacity(0.15) 
+              color: isCompleted
+                  ? primary.withOpacity(0.15)
                   : grey.withOpacity(0.5),
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(
@@ -53,16 +53,12 @@ class PrayerCompletionCard extends StatelessWidget {
                     ),
                   ),
                   child: isCompleted
-                      ? Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 16.sp,
-                        )
+                      ? Icon(Icons.check, color: Colors.white, size: 16.sp)
                       : null,
                 ),
-                
+
                 SizedBox(width: 16.w),
-                
+
                 // Prayer details
                 Expanded(
                   child: Column(
@@ -80,19 +76,22 @@ class PrayerCompletionCard extends StatelessWidget {
                         prayer.arabicName,
                         style: GoogleFonts.amiri(
                           fontSize: 14.sp,
-                          color: isCompleted 
-                              ? Colors.white.withOpacity(0.8) 
+                          color: isCompleted
+                              ? Colors.white.withOpacity(0.8)
                               : textColor.withOpacity(0.7),
                         ),
                       ),
                     ],
                   ),
                 ),
-                
+
                 // Status indicator
                 if (isCompleted)
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: primary.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8.r),
@@ -114,4 +113,3 @@ class PrayerCompletionCard extends StatelessWidget {
     );
   }
 }
-

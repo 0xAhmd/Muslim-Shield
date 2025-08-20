@@ -27,11 +27,11 @@ class PrayerTrackerLoaded extends PrayerTrackerState {
 
   @override
   List<Object?> get props => [
-        todaysCompletion,
-        streak,
-        weeklyStats,
-        monthlyStats,
-      ];
+    todaysCompletion,
+    streak,
+    weeklyStats,
+    monthlyStats,
+  ];
 
   PrayerTrackerLoaded copyWith({
     PrayerCompletion? todaysCompletion,
@@ -56,4 +56,3 @@ class PrayerTrackerError extends PrayerTrackerState {
   @override
   List<Object?> get props => [message];
 }
-

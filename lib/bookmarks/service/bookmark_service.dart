@@ -18,12 +18,16 @@ class BookmarksService {
     try {
       debugPrint('BookmarksService: Initializing...');
       await _ensureBoxOpen();
-      debugPrint('BookmarksService: Initialization complete. Box has ${_box!.length} bookmarks');
-      
+      debugPrint(
+        'BookmarksService: Initialization complete. Box has ${_box!.length} bookmarks',
+      );
+
       // Debug: Print all existing bookmarks
       final bookmarks = _box!.values.toList();
       for (var bookmark in bookmarks) {
-        debugPrint('BookmarksService: Existing bookmark - ${bookmark.type.displayName}: ${bookmark.title}');
+        debugPrint(
+          'BookmarksService: Existing bookmark - ${bookmark.type.displayName}: ${bookmark.title}',
+        );
       }
     } catch (e, stackTrace) {
       debugPrint('BookmarksService: Error during initialization: $e');
@@ -49,9 +53,13 @@ class BookmarksService {
   Future<List<BookmarkModel>> getAllBookmarks() async {
     await _ensureBoxOpen();
     final bookmarks = _box!.values.toList();
-    debugPrint('BookmarksService: getAllBookmarks() - Found ${bookmarks.length} bookmarks');
+    debugPrint(
+      'BookmarksService: getAllBookmarks() - Found ${bookmarks.length} bookmarks',
+    );
     for (var bookmark in bookmarks) {
-      debugPrint('BookmarksService: ${bookmark.type.displayName} - ${bookmark.title}');
+      debugPrint(
+        'BookmarksService: ${bookmark.type.displayName} - ${bookmark.title}',
+      );
     }
     return bookmarks;
   }
@@ -66,15 +74,15 @@ class BookmarksService {
   Future<List<BookmarkModel>> searchBookmarks(String query) async {
     await _ensureBoxOpen();
     if (query.isEmpty) return getAllBookmarks();
-    
+
     final allBookmarks = _box!.values.toList();
     return allBookmarks.where((bookmark) {
       final searchText = query.toLowerCase();
       return bookmark.title.toLowerCase().contains(searchText) ||
-             bookmark.content.toLowerCase().contains(searchText) ||
-             bookmark.snippet.toLowerCase().contains(searchText) ||
-             (bookmark.reference?.toLowerCase().contains(searchText) ?? false) ||
-             (bookmark.category?.toLowerCase().contains(searchText) ?? false);
+          bookmark.content.toLowerCase().contains(searchText) ||
+          bookmark.snippet.toLowerCase().contains(searchText) ||
+          (bookmark.reference?.toLowerCase().contains(searchText) ?? false) ||
+          (bookmark.category?.toLowerCase().contains(searchText) ?? false);
     }).toList();
   }
 
@@ -114,7 +122,7 @@ class BookmarksService {
     required String translation,
   }) async {
     await _ensureBoxOpen();
-    
+
     final bookmark = BookmarkModel.fromAyah(
       surahNumber: surahNumber,
       ayahNumber: ayahNumber,
@@ -122,7 +130,7 @@ class BookmarksService {
       ayahText: ayahText,
       translation: translation,
     );
-    
+
     await _box!.put(bookmark.id, bookmark);
     debugPrint('BookmarksService: Saved Ayah bookmark - ${bookmark.title}');
   }
@@ -139,7 +147,9 @@ class BookmarksService {
     await _ensureBoxOpen();
     final bookmarkId = 'surah_$surahNumber';
     final isBookmarked = _box!.containsKey(bookmarkId);
-    debugPrint('BookmarksService: Checking Surah $surahNumber bookmark status: $isBookmarked');
+    debugPrint(
+      'BookmarksService: Checking Surah $surahNumber bookmark status: $isBookmarked',
+    );
     return isBookmarked;
   }
 
@@ -154,16 +164,18 @@ class BookmarksService {
     Map<String, String>? translations,
   }) async {
     await _ensureBoxOpen();
-    
+
     debugPrint('BookmarksService: Starting to save Surah bookmark...');
     debugPrint('BookmarksService: Surah Number: $surahNumber');
     debugPrint('BookmarksService: Surah Name: $surahName');
     debugPrint('BookmarksService: English Name: $englishName');
     debugPrint('BookmarksService: Revelation Type: $revelationType');
     debugPrint('BookmarksService: Number of Ayahs: $numberOfAyahs');
-    debugPrint('BookmarksService: English Name Translation: $englishNameTranslation');
+    debugPrint(
+      'BookmarksService: English Name Translation: $englishNameTranslation',
+    );
     debugPrint('BookmarksService: Ayahs data length: ${ayahs?.length ?? 0}');
-    
+
     try {
       final bookmark = BookmarkModel.fromSurah(
         surahNumber: surahNumber,
@@ -175,30 +187,37 @@ class BookmarksService {
         ayahs: ayahs,
         translations: translations,
       );
-      
+
       debugPrint('BookmarksService: Created bookmark with ID: ${bookmark.id}');
       debugPrint('BookmarksService: Bookmark type: ${bookmark.type}');
       debugPrint('BookmarksService: Bookmark title: ${bookmark.title}');
       debugPrint('BookmarksService: Bookmark content: ${bookmark.content}');
       debugPrint('BookmarksService: Bookmark snippet: ${bookmark.snippet}');
-      
+
       await _box!.put(bookmark.id, bookmark);
-      
-      debugPrint('BookmarksService: Successfully saved Surah bookmark - ${bookmark.title}');
-      
+
+      debugPrint(
+        'BookmarksService: Successfully saved Surah bookmark - ${bookmark.title}',
+      );
+
       // Verify it was saved
       final saved = _box!.get(bookmark.id);
       if (saved != null) {
-        debugPrint('BookmarksService: Verification successful - bookmark exists in storage');
+        debugPrint(
+          'BookmarksService: Verification successful - bookmark exists in storage',
+        );
         debugPrint('BookmarksService: Saved bookmark type: ${saved.type}');
         debugPrint('BookmarksService: Saved bookmark title: ${saved.title}');
       } else {
-        debugPrint('BookmarksService: ERROR - bookmark was not saved properly!');
+        debugPrint(
+          'BookmarksService: ERROR - bookmark was not saved properly!',
+        );
       }
-      
+
       // Print total bookmarks count
-      debugPrint('BookmarksService: Total bookmarks in storage: ${_box!.length}');
-      
+      debugPrint(
+        'BookmarksService: Total bookmarks in storage: ${_box!.length}',
+      );
     } catch (e, stackTrace) {
       debugPrint('BookmarksService: Error creating/saving Surah bookmark: $e');
       debugPrint('BookmarksService: Stack trace: $stackTrace');
@@ -236,7 +255,7 @@ class BookmarksService {
     String? reference,
   }) async {
     await _ensureBoxOpen();
-    
+
     final bookmark = BookmarkModel.fromDua(
       duaId: duaId,
       title: title,
@@ -246,7 +265,7 @@ class BookmarksService {
       transliteration: transliteration,
       reference: reference,
     );
-    
+
     await _box!.put(bookmark.id, bookmark);
     debugPrint('BookmarksService: Saved Dua bookmark - ${bookmark.title}');
   }
@@ -274,7 +293,7 @@ class BookmarksService {
     String? category,
   }) async {
     await _ensureBoxOpen();
-    
+
     final bookmark = BookmarkModel.fromHadith(
       hadithId: hadithId,
       title: title,
@@ -283,7 +302,7 @@ class BookmarksService {
       reference: reference,
       category: category,
     );
-    
+
     await _box!.put(bookmark.id, bookmark);
     debugPrint('BookmarksService: Saved Hadith bookmark - ${bookmark.title}');
   }

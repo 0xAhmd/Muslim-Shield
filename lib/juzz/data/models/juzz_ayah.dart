@@ -30,12 +30,7 @@ class JuzzAyah {
     required this.surah,
   });
 
-  factory JuzzAyah.fromJson(Map<String, dynamic> json) => _$JuzzAyahFromJson(json);
+  factory JuzzAyah.fromJson(Map<String, dynamic> json) =>
+      _$JuzzAyahFromJson(json);
   Map<String, dynamic> toJson() => _$JuzzAyahToJson(this);
 }
-
-
-
-
-
-

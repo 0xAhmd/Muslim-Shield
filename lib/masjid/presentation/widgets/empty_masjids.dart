@@ -4,10 +4,7 @@ import '../../../constants.dart';
 class EmptyMasjidsWidget extends StatelessWidget {
   final VoidCallback onRefresh;
 
-  const EmptyMasjidsWidget({
-    super.key,
-    required this.onRefresh,
-  });
+  const EmptyMasjidsWidget({super.key, required this.onRefresh});
 
   @override
   Widget build(BuildContext context) {

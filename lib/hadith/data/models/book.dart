@@ -51,7 +51,7 @@ class BooksResponse {
     required this.books,
   });
 
-  factory BooksResponse.fromJson(Map<String, dynamic> json) => 
+  factory BooksResponse.fromJson(Map<String, dynamic> json) =>
       _$BooksResponseFromJson(json);
   Map<String, dynamic> toJson() => _$BooksResponseToJson(this);
 }

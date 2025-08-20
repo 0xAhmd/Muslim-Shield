@@ -29,5 +29,13 @@ class Adhkar extends Equatable {
   Map<String, dynamic> toJson() => _$AdhkarToJson(this);
 
   @override
-  List<Object> get props => [id, arabic, transliteration, translation, reference, repetition, type];
+  List<Object> get props => [
+    id,
+    arabic,
+    transliteration,
+    translation,
+    reference,
+    repetition,
+    type,
+  ];
 }

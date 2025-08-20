@@ -85,7 +85,7 @@ class HadithBook {
     required this.bookSlug,
   });
 
-  factory HadithBook.fromJson(Map<String, dynamic> json) => 
+  factory HadithBook.fromJson(Map<String, dynamic> json) =>
       _$HadithBookFromJson(json);
   Map<String, dynamic> toJson() => _$HadithBookToJson(this);
 }
@@ -113,7 +113,7 @@ class HadithChapter {
     required this.bookSlug,
   });
 
-  factory HadithChapter.fromJson(Map<String, dynamic> json) => 
+  factory HadithChapter.fromJson(Map<String, dynamic> json) =>
       _$HadithChapterFromJson(json);
   Map<String, dynamic> toJson() => _$HadithChapterToJson(this);
 }
@@ -124,12 +124,9 @@ class HadithData {
   final int currentPage;
   final List<Hadith> data;
 
-  const HadithData({
-    required this.currentPage,
-    required this.data,
-  });
+  const HadithData({required this.currentPage, required this.data});
 
-  factory HadithData.fromJson(Map<String, dynamic> json) => 
+  factory HadithData.fromJson(Map<String, dynamic> json) =>
       _$HadithDataFromJson(json);
   Map<String, dynamic> toJson() => _$HadithDataToJson(this);
 }
@@ -148,11 +145,13 @@ class HadithsResponse {
 
   // Helper getters for compatibility with your existing code
   List<Hadith> get hadithsList => hadiths.data;
-  int get total => hadiths.data.length; // You might need to adjust this based on actual API pagination
+  int get total => hadiths
+      .data
+      .length; // You might need to adjust this based on actual API pagination
   int get limit => 10; // Default limit, adjust as needed
   int get page => hadiths.currentPage;
 
-  factory HadithsResponse.fromJson(Map<String, dynamic> json) => 
+  factory HadithsResponse.fromJson(Map<String, dynamic> json) =>
       _$HadithsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$HadithsResponseToJson(this);
 }

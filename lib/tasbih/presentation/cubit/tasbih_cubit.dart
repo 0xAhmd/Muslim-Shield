@@ -15,10 +15,12 @@ class TasbihCubit extends Cubit<TasbihState> {
       await _repository.initialize();
       final tasbihList = _repository.getAllTasbih();
       if (tasbihList.isNotEmpty) {
-        emit(TasbihLoaded(
-          tasbihList: tasbihList,
-          selectedTasbih: tasbihList.first,
-        ));
+        emit(
+          TasbihLoaded(
+            tasbihList: tasbihList,
+            selectedTasbih: tasbihList.first,
+          ),
+        );
       }
     } catch (e) {
       emit(TasbihError('Failed to initialize tasbih: ${e.toString()}'));
@@ -28,12 +30,16 @@ class TasbihCubit extends Cubit<TasbihState> {
   void selectTasbih(String id) {
     final currentState = state;
     if (currentState is TasbihLoaded) {
-      final selectedTasbih = currentState.tasbihList
-          .firstWhere((tasbih) => tasbih.id == id);
-      emit(currentState.copyWith(
-        selectedTasbih: selectedTasbih,
-        isCompleted: selectedTasbih.currentCount >= selectedTasbih.targetCount,
-      ));
+      final selectedTasbih = currentState.tasbihList.firstWhere(
+        (tasbih) => tasbih.id == id,
+      );
+      emit(
+        currentState.copyWith(
+          selectedTasbih: selectedTasbih,
+          isCompleted:
+              selectedTasbih.currentCount >= selectedTasbih.targetCount,
+        ),
+      );
     }
   }
 
@@ -43,7 +49,7 @@ class TasbihCubit extends Cubit<TasbihState> {
       try {
         // Haptic feedback
         HapticFeedback.mediumImpact();
-        
+
         await _repository.incrementCount(currentState.selectedTasbih!.id);
         await _refreshCurrentState();
       } catch (e) {
@@ -80,13 +86,17 @@ class TasbihCubit extends Cubit<TasbihState> {
       final updatedSelectedTasbih = currentState.selectedTasbih != null
           ? _repository.getTasbihById(currentState.selectedTasbih!.id)
           : null;
-      
-      emit(currentState.copyWith(
-        tasbihList: tasbihList,
-        selectedTasbih: updatedSelectedTasbih,
-        isCompleted: updatedSelectedTasbih != null && 
-                    updatedSelectedTasbih.currentCount >= updatedSelectedTasbih.targetCount,
-      ));
+
+      emit(
+        currentState.copyWith(
+          tasbihList: tasbihList,
+          selectedTasbih: updatedSelectedTasbih,
+          isCompleted:
+              updatedSelectedTasbih != null &&
+              updatedSelectedTasbih.currentCount >=
+                  updatedSelectedTasbih.targetCount,
+        ),
+      );
     }
   }
 }

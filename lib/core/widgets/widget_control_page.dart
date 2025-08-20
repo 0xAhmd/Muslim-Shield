@@ -197,7 +197,7 @@ class _WidgetControlPageState extends State<WidgetControlPage> {
     }
   }
 
-Future<void> _updateNextPrayerWidget() async {
+  Future<void> _updateNextPrayerWidget() async {
     if (_isUpdatingPrayer) return;
 
     setState(() {
@@ -224,14 +224,16 @@ Future<void> _updateNextPrayerWidget() async {
           await NextPrayerWidgetService.updateWidgetDataDirectly(
             prayerName: currentState.nextPrayer!.name,
             prayerTime: currentState.nextPrayer!.time,
-            location: '${currentState.location.cityName}, ${currentState.location.countryName}',
+            location:
+                '${currentState.location.cityName}, ${currentState.location.countryName}',
           );
         } else {
           // No next prayer found, use default
           await NextPrayerWidgetService.updateWidgetDataDirectly(
             prayerName: 'Fajr',
             prayerTime: '05:00',
-            location: '${currentState.location.cityName}, ${currentState.location.countryName}',
+            location:
+                '${currentState.location.cityName}, ${currentState.location.countryName}',
           );
         }
 
@@ -278,6 +280,7 @@ Future<void> _updateNextPrayerWidget() async {
       }
     }
   }
+
   Future<void> _refreshPrayerData() async {
     if (_isRefreshingPrayer) return;
 

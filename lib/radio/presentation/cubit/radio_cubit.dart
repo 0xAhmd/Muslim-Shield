@@ -51,7 +51,12 @@ class RadioCubit extends Cubit<RadioState> {
             break;
           case AudioProcessingState.ready:
             if (playbackState.playing) {
-              emit(RadioPlaying(station: _currentStation!, position: Duration.zero));
+              emit(
+                RadioPlaying(
+                  station: _currentStation!,
+                  position: Duration.zero,
+                ),
+              );
             } else {
               emit(RadioPaused(station: _currentStation!));
             }
@@ -81,7 +86,12 @@ class RadioCubit extends Cubit<RadioState> {
               break;
             case ProcessingState.ready:
               if (playerState.playing) {
-                emit(RadioPlaying(station: _currentStation!, position: _audioPlayer.position));
+                emit(
+                  RadioPlaying(
+                    station: _currentStation!,
+                    position: _audioPlayer.position,
+                  ),
+                );
               } else {
                 emit(RadioPaused(station: _currentStation!));
               }
@@ -112,13 +122,13 @@ class RadioCubit extends Cubit<RadioState> {
 
   Future<void> _handlePlaybackError() async {
     if (_isRetrying) return; // Prevent infinite retry loop
-    
+
     _isRetrying = true;
     emit(RadioError('Station unavailable, trying next station...'));
-    
+
     // Wait a moment before retrying
     await Future.delayed(const Duration(seconds: 2));
-    
+
     // Try next station
     await nextStation();
     _isRetrying = false;
@@ -148,7 +158,7 @@ class RadioCubit extends Cubit<RadioState> {
       }
     } catch (e) {
       debugPrint('Failed to play station ${station.name}: $e');
-      
+
       // If current station fails and we're not already retrying, try next station
       if (!_isRetrying && RadioData.stations.length > 1) {
         _isRetrying = true;
@@ -157,7 +167,9 @@ class RadioCubit extends Cubit<RadioState> {
         await nextStation();
         _isRetrying = false;
       } else {
-        emit(RadioError('All stations unavailable. Please check your connection.'));
+        emit(
+          RadioError('All stations unavailable. Please check your connection.'),
+        );
         _currentStation = null;
       }
     }
@@ -175,7 +187,8 @@ class RadioCubit extends Cubit<RadioState> {
     const stations = RadioData.stations;
     if (stations.isEmpty) return;
 
-    final prevIndex = (_currentStationIndex - 1 + stations.length) % stations.length;
+    final prevIndex =
+        (_currentStationIndex - 1 + stations.length) % stations.length;
     await switchToStation(prevIndex);
   }
 
@@ -185,15 +198,15 @@ class RadioCubit extends Cubit<RadioState> {
 
     _currentStationIndex = index;
     final station = stations[index];
-    
+
     // Stop current playback first
     if (_currentStation != null) {
       await stop();
     }
-    
+
     // Small delay to ensure clean stop
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     // Play new station
     await playStation(station);
   }
@@ -223,7 +236,12 @@ class RadioCubit extends Cubit<RadioState> {
       }
 
       if (_currentStation != null) {
-        emit(RadioPlaying(station: _currentStation!, position: _audioPlayer.position));
+        emit(
+          RadioPlaying(
+            station: _currentStation!,
+            position: _audioPlayer.position,
+          ),
+        );
       }
     } catch (e) {
       emit(RadioError('Failed to resume: ${e.toString()}'));

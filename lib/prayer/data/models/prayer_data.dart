@@ -3,6 +3,7 @@ import 'prayer_meta.dart';
 import 'prayer_timings.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_data.g.dart';
+
 @JsonSerializable()
 class PrayerData {
   final PrayerTimings timings;

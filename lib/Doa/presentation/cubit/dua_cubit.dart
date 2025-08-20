@@ -1,6 +1,5 @@
 import '../../data/dua_model.dart';
 
-
 // States
 abstract class DuaState {}
 
@@ -40,4 +39,3 @@ class DuaError extends DuaState {
   final String message;
   DuaError(this.message);
 }
-

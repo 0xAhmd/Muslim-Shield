@@ -1,7 +1,6 @@
 import '../../data/models/muslim_event.dart';
 import '../../data/models/reminder_card.dart';
 
-
 abstract class RemindersState {}
 
 class RemindersInitial extends RemindersState {}

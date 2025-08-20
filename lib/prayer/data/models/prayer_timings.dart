@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 part 'prayer_timings.g.dart';
+
 @JsonSerializable()
 class PrayerTimings {
   @JsonKey(name: 'Fajr')

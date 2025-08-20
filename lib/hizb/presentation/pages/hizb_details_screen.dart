@@ -1,4 +1,3 @@
-
 import '../../../constants.dart';
 import '../cubit/hizb_cubit.dart';
 import '../cubit/hizb_state.dart';
@@ -86,10 +85,7 @@ class _HizbDetailScreenState extends State<HizbDetailScreen> {
 
   Widget _buildInitialState() {
     return Center(
-      child: Text(
-        'Initializing',
-        style: GoogleFonts.poppins(color: textColor),
-      ),
+      child: Text('Initializing', style: GoogleFonts.poppins(color: textColor)),
     );
   }
 }

@@ -66,15 +66,15 @@ class TasbihModelAdapter extends TypeAdapter<TasbihModel> {
 // **************************************************************************
 
 TasbihModel _$TasbihModelFromJson(Map<String, dynamic> json) => TasbihModel(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      arabicText: json['arabicText'] as String,
-      transliteration: json['transliteration'] as String,
-      translation: json['translation'] as String,
-      targetCount: (json['targetCount'] as num).toInt(),
-      currentCount: (json['currentCount'] as num?)?.toInt() ?? 0,
-      lastUpdated: DateTime.parse(json['lastUpdated'] as String),
-    );
+  id: json['id'] as String,
+  title: json['title'] as String,
+  arabicText: json['arabicText'] as String,
+  transliteration: json['transliteration'] as String,
+  translation: json['translation'] as String,
+  targetCount: (json['targetCount'] as num).toInt(),
+  currentCount: (json['currentCount'] as num?)?.toInt() ?? 0,
+  lastUpdated: DateTime.parse(json['lastUpdated'] as String),
+);
 
 Map<String, dynamic> _$TasbihModelToJson(TasbihModel instance) =>
     <String, dynamic>{

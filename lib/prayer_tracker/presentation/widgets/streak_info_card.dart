@@ -7,10 +7,7 @@ import '../../data/models/prayer_completion.dart';
 class StreakInfoCard extends StatelessWidget {
   final PrayerStreak streak;
 
-  const StreakInfoCard({
-    super.key,
-    required this.streak,
-  });
+  const StreakInfoCard({super.key, required this.streak});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +15,7 @@ class StreakInfoCard extends StatelessWidget {
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            primary.withOpacity(0.2),
-            primary.withOpacity(0.1),
-          ],
+          colors: [primary.withOpacity(0.2), primary.withOpacity(0.1)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -56,9 +50,9 @@ class StreakInfoCard extends StatelessWidget {
               ),
             ],
           ),
-          
+
           SizedBox(height: 16.h),
-          
+
           Row(
             children: [
               // Current streak
@@ -70,9 +64,9 @@ class StreakInfoCard extends StatelessWidget {
                   primary,
                 ),
               ),
-              
+
               SizedBox(width: 16.w),
-              
+
               // Longest streak
               Expanded(
                 child: _buildStatItem(
@@ -84,9 +78,9 @@ class StreakInfoCard extends StatelessWidget {
               ),
             ],
           ),
-          
+
           SizedBox(height: 12.h),
-          
+
           // Total complete days
           _buildStatItem(
             'Total Complete Days',
@@ -113,10 +107,7 @@ class StreakInfoCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: GoogleFonts.poppins(
-              fontSize: 12.sp,
-              color: textColor,
-            ),
+            style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
           ),
           RichText(
             text: TextSpan(
@@ -131,10 +122,7 @@ class StreakInfoCard extends StatelessWidget {
                 ),
                 TextSpan(
                   text: ' $unit',
-                  style: GoogleFonts.poppins(
-                    fontSize: 12.sp,
-                    color: textColor,
-                  ),
+                  style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
                 ),
               ],
             ),
@@ -148,10 +136,7 @@ class StreakInfoCard extends StatelessWidget {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
-            fontSize: 12.sp,
-            color: textColor,
-          ),
+          style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
         ),
         SizedBox(height: 4.h),
         RichText(
@@ -167,10 +152,7 @@ class StreakInfoCard extends StatelessWidget {
               ),
               TextSpan(
                 text: ' $unit',
-                style: GoogleFonts.poppins(
-                  fontSize: 12.sp,
-                  color: textColor,
-                ),
+                style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
               ),
             ],
           ),
@@ -179,6 +161,3 @@ class StreakInfoCard extends StatelessWidget {
     );
   }
 }
-
-
-

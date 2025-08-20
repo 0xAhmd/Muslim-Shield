@@ -1,5 +1,3 @@
-
-
 part of 'adhkar_cubit.dart';
 
 abstract class AdhkarState extends Equatable {
@@ -38,19 +36,21 @@ class AdhkarLoaded extends AdhkarState {
     return AdhkarLoaded(
       morningAdhkar: morningAdhkar ?? this.morningAdhkar,
       eveningAdhkar: eveningAdhkar ?? this.eveningAdhkar,
-      filteredMorningAdhkar: filteredMorningAdhkar ?? this.filteredMorningAdhkar,
-      filteredEveningAdhkar: filteredEveningAdhkar ?? this.filteredEveningAdhkar,
+      filteredMorningAdhkar:
+          filteredMorningAdhkar ?? this.filteredMorningAdhkar,
+      filteredEveningAdhkar:
+          filteredEveningAdhkar ?? this.filteredEveningAdhkar,
       searchQuery: searchQuery,
     );
   }
 
   @override
   List<Object?> get props => [
-    morningAdhkar, 
-    eveningAdhkar, 
-    filteredMorningAdhkar, 
-    filteredEveningAdhkar, 
-    searchQuery
+    morningAdhkar,
+    eveningAdhkar,
+    filteredMorningAdhkar,
+    filteredEveningAdhkar,
+    searchQuery,
   ];
 }
 

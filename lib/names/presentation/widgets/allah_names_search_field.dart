@@ -26,10 +26,7 @@ class SearchField extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 14.sp,
-        ),
+        style: GoogleFonts.poppins(color: Colors.white, fontSize: 14.sp),
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: GoogleFonts.poppins(

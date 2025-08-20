@@ -25,14 +25,8 @@ class RadioAudioHandler extends BaseAudioHandler with SeekHandler {
     // Set initial playbook state
     playbackState.add(
       PlaybackState(
-        controls: [
-          MediaControl.play,
-          MediaControl.pause,
-          MediaControl.stop,
-        ],
-        systemActions: const {
-          MediaAction.seek,
-        },
+        controls: [MediaControl.play, MediaControl.pause, MediaControl.stop],
+        systemActions: const {MediaAction.seek},
         processingState: AudioProcessingState.idle,
         playing: false,
       ),
@@ -74,9 +68,7 @@ class RadioAudioHandler extends BaseAudioHandler with SeekHandler {
     );
 
     try {
-      await _audioPlayer.setAudioSource(
-        AudioSource.uri(Uri.parse(url)),
-      );
+      await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(url)));
       await play();
     } catch (e) {
       // Handle error

@@ -7,15 +7,12 @@ import '../../../constants.dart';
 class OfflineSurahViewer extends StatelessWidget {
   final BookmarkModel surahBookmark;
 
-  const OfflineSurahViewer({
-    super.key,
-    required this.surahBookmark,
-  });
+  const OfflineSurahViewer({super.key, required this.surahBookmark});
 
   @override
   Widget build(BuildContext context) {
     final ayahs = surahBookmark.ayahs ?? [];
-    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: background,
@@ -61,22 +58,15 @@ class OfflineSurahViewer extends StatelessWidget {
       ),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-            child: _buildHeader(),
-          ),
+          SliverToBoxAdapter(child: _buildHeader()),
           SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final ayah = ayahs[index];
-                return _buildAyahCard(ayah, index + 1);
-              },
-              childCount: ayahs.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final ayah = ayahs[index];
+              return _buildAyahCard(ayah, index + 1);
+            }, childCount: ayahs.length),
           ),
           // Add some bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 24),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
     );

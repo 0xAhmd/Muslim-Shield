@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-
-
 class BlockedDeviceApp extends StatelessWidget {
   const BlockedDeviceApp({super.key});
 

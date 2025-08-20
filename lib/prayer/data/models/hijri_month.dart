@@ -10,8 +10,8 @@ class HijriMonth {
   final int? days;
 
   HijriMonth({
-    required this.number, 
-    required this.en, 
+    required this.number,
+    required this.en,
     required this.ar,
     this.days,
   });

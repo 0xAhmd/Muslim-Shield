@@ -1,4 +1,3 @@
-
 class SunnahPrayer {
   final String name;
   final int rakaat;

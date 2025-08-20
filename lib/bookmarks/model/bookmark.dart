@@ -107,7 +107,9 @@ class BookmarkModel extends HiveObject {
     // Process ayahs to include all necessary data for offline reading
     List<Map<String, dynamic>>? processedAyahs;
     if (ayahs != null) {
-      debugPrint('BookmarkModel.fromSurah: Processing ${ayahs.length} ayahs...');
+      debugPrint(
+        'BookmarkModel.fromSurah: Processing ${ayahs.length} ayahs...',
+      );
       try {
         processedAyahs = ayahs.map((ayah) {
           // Handle different ayah object types
@@ -176,8 +178,12 @@ class BookmarkModel extends HiveObject {
 
       debugPrint('BookmarkModel.fromSurah: Successfully created bookmark');
       debugPrint('BookmarkModel.fromSurah: Final bookmark ID: ${bookmark.id}');
-      debugPrint('BookmarkModel.fromSurah: Final bookmark type: ${bookmark.type}');
-      debugPrint('BookmarkModel.fromSurah: Final bookmark title: ${bookmark.title}');
+      debugPrint(
+        'BookmarkModel.fromSurah: Final bookmark type: ${bookmark.type}',
+      );
+      debugPrint(
+        'BookmarkModel.fromSurah: Final bookmark title: ${bookmark.title}',
+      );
 
       return bookmark;
     } catch (e, stackTrace) {

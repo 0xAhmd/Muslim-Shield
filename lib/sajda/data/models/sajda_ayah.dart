@@ -41,8 +41,7 @@ class SajdaAyah {
 
   String get sajdaType => sajda.obligatory ? 'Obligatory' : 'Recommended';
 
-  String get reference =>
-      '${surah.englishName} $numberInSurah:${surah.number}';
+  String get reference => '${surah.englishName} $numberInSurah:${surah.number}';
 }
 
 @JsonSerializable()

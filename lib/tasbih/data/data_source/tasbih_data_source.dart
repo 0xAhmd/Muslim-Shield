@@ -7,7 +7,7 @@ class TasbihLocalDatasource {
 
   Future<void> init() async {
     _box = await Hive.openBox<TasbihModel>(_boxName);
-    
+
     // Initialize with default dhikr if empty
     if (_box.isEmpty) {
       await _initializeDefaultTasbih();

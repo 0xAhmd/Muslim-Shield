@@ -1,8 +1,8 @@
-
 import 'prayer_gregorian.dart';
 import 'prayer_hijri.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_date.g.dart';
+
 @JsonSerializable()
 class PrayerDate {
   final String readable;

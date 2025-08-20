@@ -13,7 +13,7 @@ class SajdaRepository {
   List<SajdaSummary>? _sajdaSummariesCache;
 
   SajdaRepository({SajdaService? sajdaService})
-      : _sajdaService = sajdaService ?? SajdaService(_createDio());
+    : _sajdaService = sajdaService ?? SajdaService(_createDio());
 
   static Dio _createDio() {
     final dio = Dio();
@@ -96,7 +96,7 @@ class SajdaRepository {
 
   // Get sajda summaries for list view
   Future<List<SajdaSummary>> getSajdaSummaries({
-    String edition = 'en.asad'
+    String edition = 'en.asad',
   }) async {
     // Check cache first
     if (_sajdaSummariesCache != null) {
@@ -106,7 +106,7 @@ class SajdaRepository {
 
     try {
       final sajdaData = await getAllSajdas(edition: edition);
-      
+
       final summaries = sajdaData.ayahs
           .map((ayah) => SajdaSummary.fromSajdaAyah(ayah))
           .toList();
@@ -126,9 +126,7 @@ class SajdaRepository {
   Future<SajdaAyah?> getSajdaById(int sajdaId) async {
     try {
       final sajdaData = await getAllSajdas();
-      return sajdaData.ayahs.firstWhere(
-        (ayah) => ayah.sajda.id == sajdaId,
-      );
+      return sajdaData.ayahs.firstWhere((ayah) => ayah.sajda.id == sajdaId);
     } catch (e) {
       debugPrint('Sajda with ID $sajdaId not found: $e');
       return null;
@@ -137,7 +135,7 @@ class SajdaRepository {
 
   // Get obligatory sajdas only
   Future<List<SajdaAyah>> getObligatorySajdas({
-    String edition = 'en.asad'
+    String edition = 'en.asad',
   }) async {
     final sajdaData = await getAllSajdas(edition: edition);
     return sajdaData.obligatorySajdas;
@@ -145,7 +143,7 @@ class SajdaRepository {
 
   // Get recommended sajdas only
   Future<List<SajdaAyah>> getRecommendedSajdas({
-    String edition = 'en.asad'
+    String edition = 'en.asad',
   }) async {
     final sajdaData = await getAllSajdas(edition: edition);
     return sajdaData.recommendedSajdas;
@@ -154,7 +152,7 @@ class SajdaRepository {
   // Get sajdas by surah number
   Future<List<SajdaAyah>> getSajdasBySurah(
     int surahNumber, {
-    String edition = 'en.asad'
+    String edition = 'en.asad',
   }) async {
     final sajdaData = await getAllSajdas(edition: edition);
     return sajdaData.ayahs
@@ -165,12 +163,10 @@ class SajdaRepository {
   // Get sajdas by Juz number
   Future<List<SajdaAyah>> getSajdasByJuz(
     int juzNumber, {
-    String edition = 'en.asad'
+    String edition = 'en.asad',
   }) async {
     final sajdaData = await getAllSajdas(edition: edition);
-    return sajdaData.ayahs
-        .where((ayah) => ayah.juz == juzNumber)
-        .toList();
+    return sajdaData.ayahs.where((ayah) => ayah.juz == juzNumber).toList();
   }
 
   // Clear cache

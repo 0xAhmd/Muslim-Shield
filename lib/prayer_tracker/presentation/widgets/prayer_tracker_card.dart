@@ -15,9 +15,9 @@ class PrayerTrackerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PrayerTrackerCubit(
-        prayerTrackerService: PrayerTrackerService(),
-      )..initialize(),
+      create: (context) =>
+          PrayerTrackerCubit(prayerTrackerService: PrayerTrackerService())
+            ..initialize(),
       child: const PrayerTrackerCardView(),
     );
   }
@@ -104,17 +104,13 @@ class PrayerTrackerCardView extends StatelessWidget {
                             color: primary.withOpacity(0.2),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
-                            Icons.check,
-                            color: primary,
-                            size: 16.sp,
-                          ),
+                          child: Icon(Icons.check, color: primary, size: 16.sp),
                         ),
                     ],
                   ),
-                  
+
                   SizedBox(height: 12.h),
-                  
+
                   // Progress bar
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4.r),
@@ -127,9 +123,9 @@ class PrayerTrackerCardView extends StatelessWidget {
                       minHeight: 4.h,
                     ),
                   ),
-                  
+
                   SizedBox(height: 8.h),
-                  
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -175,10 +171,7 @@ class PrayerTrackerCardView extends StatelessWidget {
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: const Center(
-              child: CircularProgressIndicator(
-                color: primary,
-                strokeWidth: 2,
-              ),
+              child: CircularProgressIndicator(color: primary, strokeWidth: 2),
             ),
           );
         }

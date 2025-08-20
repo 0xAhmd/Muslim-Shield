@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
 part 'gregorian_month.g.dart';
-@JsonSerializable()
 
+@JsonSerializable()
 class GregorianMonth {
   final int number;
   final String en;

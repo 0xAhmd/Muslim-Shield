@@ -1,4 +1,3 @@
-
 import '../../../constants.dart';
 import '../cubit/hizb_state.dart';
 import 'package:flutter/material.dart';

@@ -170,7 +170,9 @@ class BookmarksCubit extends Cubit<BookmarksState> {
       debugPrint('BookmarksCubit: englishName: $englishName');
       debugPrint('BookmarksCubit: revelationType: $revelationType');
       debugPrint('BookmarksCubit: numberOfAyahs: $numberOfAyahs');
-      debugPrint('BookmarksCubit: englishNameTranslation: $englishNameTranslation');
+      debugPrint(
+        'BookmarksCubit: englishNameTranslation: $englishNameTranslation',
+      );
       debugPrint('BookmarksCubit: ayahs length: ${ayahs?.length ?? 0}');
 
       debugPrint('BookmarksCubit: Calling _bookmarksService.bookmarkSurah...');
@@ -206,7 +208,9 @@ class BookmarksCubit extends Cubit<BookmarksState> {
       debugPrint('BookmarksCubit: loadBookmarks called');
       emit(BookmarksLoading());
 
-      debugPrint('BookmarksCubit: Calling _bookmarksService.getAllBookmarks()...');
+      debugPrint(
+        'BookmarksCubit: Calling _bookmarksService.getAllBookmarks()...',
+      );
       final bookmarks = await _bookmarksService.getAllBookmarks();
 
       debugPrint(

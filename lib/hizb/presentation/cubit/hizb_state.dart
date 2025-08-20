@@ -53,4 +53,3 @@ class HizbDetailError extends HizbState {
 
   HizbDetailError({required this.message, required this.hizbSummaries});
 }
-

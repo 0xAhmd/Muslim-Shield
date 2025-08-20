@@ -9,11 +9,7 @@ class SnackbarHelper {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              Icons.check_circle,
-              color: Colors.white,
-              size: 20.sp,
-            ),
+            Icon(Icons.check_circle, color: Colors.white, size: 20.sp),
             SizedBox(width: 12.w),
             Expanded(
               child: Text(
@@ -43,11 +39,7 @@ class SnackbarHelper {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              Icons.error_outline,
-              color: Colors.white,
-              size: 20.sp,
-            ),
+            Icon(Icons.error_outline, color: Colors.white, size: 20.sp),
             SizedBox(width: 12.w),
             Expanded(
               child: Text(
@@ -77,11 +69,7 @@ class SnackbarHelper {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              Icons.info_outline,
-              color: Colors.white,
-              size: 20.sp,
-            ),
+            Icon(Icons.info_outline, color: Colors.white, size: 20.sp),
             SizedBox(width: 12.w),
             Expanded(
               child: Text(

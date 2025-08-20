@@ -22,10 +22,7 @@ class AdhkarTabView extends StatelessWidget {
             SizedBox(height: 16.h),
             Text(
               'No adhkar found',
-              style: GoogleFonts.poppins(
-                fontSize: 16.sp,
-                color: textColor,
-              ),
+              style: GoogleFonts.poppins(fontSize: 16.sp, color: textColor),
             ),
           ],
         ),

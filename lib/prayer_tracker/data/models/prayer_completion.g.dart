@@ -171,8 +171,9 @@ PrayerCompletion _$PrayerCompletionFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$PrayerCompletionToJson(PrayerCompletion instance) =>
     <String, dynamic>{
       'date': instance.date,
-      'completions': instance.completions
-          .map((k, e) => MapEntry(_$PrayerTypeEnumMap[k]!, e)),
+      'completions': instance.completions.map(
+        (k, e) => MapEntry(_$PrayerTypeEnumMap[k]!, e),
+      ),
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
     };
@@ -186,13 +187,13 @@ const _$PrayerTypeEnumMap = {
 };
 
 PrayerStreak _$PrayerStreakFromJson(Map<String, dynamic> json) => PrayerStreak(
-      currentStreak: (json['currentStreak'] as num).toInt(),
-      longestStreak: (json['longestStreak'] as num).toInt(),
-      lastCompletionDate: json['lastCompletionDate'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      totalCompleteDays: (json['totalCompleteDays'] as num).toInt(),
-    );
+  currentStreak: (json['currentStreak'] as num).toInt(),
+  longestStreak: (json['longestStreak'] as num).toInt(),
+  lastCompletionDate: json['lastCompletionDate'] as String?,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: DateTime.parse(json['updatedAt'] as String),
+  totalCompleteDays: (json['totalCompleteDays'] as num).toInt(),
+);
 
 Map<String, dynamic> _$PrayerStreakToJson(PrayerStreak instance) =>
     <String, dynamic>{

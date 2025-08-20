@@ -1,7 +1,6 @@
 import '../../data/models/prayer_location.dart';
 import '../../data/models/prayer_time.dart';
 
-
 // States
 abstract class PrayerTimesState {}
 
@@ -47,4 +46,3 @@ class LocationError extends LocationState {
 
   LocationError(this.message);
 }
-

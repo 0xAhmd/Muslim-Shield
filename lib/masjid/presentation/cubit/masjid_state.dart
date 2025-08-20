@@ -1,6 +1,5 @@
 import '../../data/models/masjid.dart';
 
-
 // States
 abstract class MasjidState {}
 

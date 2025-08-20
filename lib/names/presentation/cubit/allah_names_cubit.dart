@@ -3,7 +3,6 @@ import '../../data/repo/allah_names_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-
 part 'allah_names_state.dart';
 
 class AllahNamesCubit extends Cubit<AllahNamesState> {
@@ -29,10 +28,12 @@ class AllahNamesCubit extends Cubit<AllahNamesState> {
       emit(AllahNamesLoading());
       try {
         final filteredNames = _repository.searchNames(query);
-        emit(currentState.copyWith(
-          filteredNames: filteredNames,
-          searchQuery: query,
-        ));
+        emit(
+          currentState.copyWith(
+            filteredNames: filteredNames,
+            searchQuery: query,
+          ),
+        );
       } catch (e) {
         emit(AllahNamesError(message: 'Search failed: ${e.toString()}'));
       }
@@ -42,10 +43,12 @@ class AllahNamesCubit extends Cubit<AllahNamesState> {
   void clearSearch() {
     final currentState = state;
     if (currentState is AllahNamesLoaded) {
-      emit(currentState.copyWith(
-        filteredNames: currentState.names,
-        searchQuery: '',
-      ));
+      emit(
+        currentState.copyWith(
+          filteredNames: currentState.names,
+          searchQuery: '',
+        ),
+      );
     }
   }
 }

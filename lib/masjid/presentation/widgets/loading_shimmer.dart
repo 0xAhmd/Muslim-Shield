@@ -42,7 +42,7 @@ class _MasjidLoadingShimmerState extends State<MasjidLoadingShimmer>
           // Header shimmer
           _buildHeaderShimmer(),
           SizedBox(height: 24.h),
-          
+
           // Cards shimmer
           ...List.generate(
             3, // Show 3 shimmer cards
@@ -83,46 +83,78 @@ class _MasjidLoadingShimmerState extends State<MasjidLoadingShimmer>
               // Header row
               Row(
                 children: [
-                  _buildShimmerBox(width: 36.w, height: 36.w, borderRadius: 8.r),
+                  _buildShimmerBox(
+                    width: 36.w,
+                    height: 36.w,
+                    borderRadius: 8.r,
+                  ),
                   SizedBox(width: 12.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildShimmerBox(width: double.infinity, height: 18.h, borderRadius: 4.r),
+                        _buildShimmerBox(
+                          width: double.infinity,
+                          height: 18.h,
+                          borderRadius: 4.r,
+                        ),
                         SizedBox(height: 8.h),
-                        _buildShimmerBox(width: 120.w, height: 14.h, borderRadius: 4.r),
+                        _buildShimmerBox(
+                          width: 120.w,
+                          height: 14.h,
+                          borderRadius: 4.r,
+                        ),
                       ],
                     ),
                   ),
-                  _buildShimmerBox(width: 60.w, height: 20.h, borderRadius: 6.r),
+                  _buildShimmerBox(
+                    width: 60.w,
+                    height: 20.h,
+                    borderRadius: 6.r,
+                  ),
                 ],
               ),
-              
+
               SizedBox(height: 16.h),
-              
+
               // Address row
               Row(
                 children: [
-                  _buildShimmerBox(width: 16.w, height: 16.w, borderRadius: 8.r),
+                  _buildShimmerBox(
+                    width: 16.w,
+                    height: 16.w,
+                    borderRadius: 8.r,
+                  ),
                   SizedBox(width: 8.w),
-                  _buildShimmerBox(width: 180.w, height: 14.h, borderRadius: 4.r),
+                  _buildShimmerBox(
+                    width: 180.w,
+                    height: 14.h,
+                    borderRadius: 4.r,
+                  ),
                 ],
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               // Coordinates row
               Row(
                 children: [
-                  _buildShimmerBox(width: 14.w, height: 14.w, borderRadius: 7.r),
+                  _buildShimmerBox(
+                    width: 14.w,
+                    height: 14.w,
+                    borderRadius: 7.r,
+                  ),
                   SizedBox(width: 6.w),
-                  _buildShimmerBox(width: 140.w, height: 12.h, borderRadius: 4.r),
+                  _buildShimmerBox(
+                    width: 140.w,
+                    height: 12.h,
+                    borderRadius: 4.r,
+                  ),
                 ],
               ),
-              
+
               SizedBox(height: 16.h),
-              
+
               // Action buttons
               Row(
                 children: [
@@ -163,11 +195,7 @@ class _MasjidLoadingShimmerState extends State<MasjidLoadingShimmer>
                 textColor.withOpacity(0.2),
                 textColor.withOpacity(0.1),
               ],
-              stops: [
-                0.0,
-                _animation.value,
-                1.0,
-              ],
+              stops: [0.0, _animation.value, 1.0],
             ),
           ),
         );

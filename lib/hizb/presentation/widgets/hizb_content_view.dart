@@ -481,7 +481,7 @@ class _HizbContentViewState extends State<HizbContentView> {
               ),
             ),
             const SizedBox(height: 20),
-          Text(
+            Text(
               'Ayah ${ayah.numberInSurah} Options',
               style: GoogleFonts.poppins(
                 color: textColor,

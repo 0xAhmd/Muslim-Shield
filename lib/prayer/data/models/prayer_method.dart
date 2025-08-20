@@ -1,6 +1,7 @@
 import 'prayer_location.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_method.g.dart';
+
 @JsonSerializable()
 class PrayerMethod {
   final int id;

@@ -88,7 +88,8 @@ class HizbItemCard extends StatelessWidget {
             const SizedBox(width: 12),
             _buildInfoChip(
               icon: Icons.book_outlined,
-              text: '${hizb.containedSurahs.length} ${hizb.containedSurahs.length == 1 ? 'Surah' : 'Surahs'}',
+              text:
+                  '${hizb.containedSurahs.length} ${hizb.containedSurahs.length == 1 ? 'Surah' : 'Surahs'}',
             ),
           ],
         ),

@@ -20,6 +20,7 @@ class JuzzSurah {
     required this.numberOfAyahs,
   });
 
-  factory JuzzSurah.fromJson(Map<String, dynamic> json) => _$JuzzSurahFromJson(json);
+  factory JuzzSurah.fromJson(Map<String, dynamic> json) =>
+      _$JuzzSurahFromJson(json);
   Map<String, dynamic> toJson() => _$JuzzSurahToJson(this);
 }

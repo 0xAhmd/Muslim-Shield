@@ -19,10 +19,10 @@ class AllahName extends Equatable {
     required this.description,
   });
 
-  factory AllahName.fromJson(Map<String, dynamic> json) => _$AllahNameFromJson(json);
+  factory AllahName.fromJson(Map<String, dynamic> json) =>
+      _$AllahNameFromJson(json);
   Map<String, dynamic> toJson() => _$AllahNameToJson(this);
 
   @override
   List<Object> get props => [id, arabic, transliteration, meaning, description];
 }
-

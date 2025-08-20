@@ -138,14 +138,8 @@ class AyahTile extends StatelessWidget {
       spacing: 8,
       runSpacing: 4,
       children: [
-        MetadataChip(
-          label: 'Page ${ayah.page}',
-          icon: Icons.book,
-        ),
-        MetadataChip(
-          label: 'Ruku ${ayah.ruku}',
-          icon: Icons.bookmark_outlined,
-        ),
+        MetadataChip(label: 'Page ${ayah.page}', icon: Icons.book),
+        MetadataChip(label: 'Ruku ${ayah.ruku}', icon: Icons.bookmark_outlined),
         if (ayah.sajda)
           const MetadataChip(
             label: 'Sajda',

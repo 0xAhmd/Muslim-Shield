@@ -1,7 +1,6 @@
 import '../../data/models/juzz.dart';
 import '../../data/models/juzz_summary.dart';
 
-
 // States
 abstract class JuzzState {}
 

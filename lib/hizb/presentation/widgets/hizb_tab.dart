@@ -36,7 +36,7 @@ class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
   Future<void> _initializeConnectivity() async {
     // Check initial connectivity
     _isConnected = _connectivityService.isConnected;
-    
+
     // Listen to connectivity changes
     _connectivityService.connectionStream.listen((connected) {
       if (mounted) {
@@ -64,7 +64,7 @@ class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _hizbCubit.preloadPopularHizb();
       });
-      
+
       _isInitialized = true;
     }
   }
@@ -101,7 +101,8 @@ class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
   // Method to get current search state for HomeScreen
   bool get isSearching => _isInitialized ? _hizbCubit.isSearching : false;
 
-  String get currentSearchQuery => _isInitialized ? _hizbCubit.getCurrentSearchQuery() : '';
+  String get currentSearchQuery =>
+      _isInitialized ? _hizbCubit.getCurrentSearchQuery() : '';
 
   int get filteredCount => _isInitialized ? _hizbCubit.getFilteredCount() : 0;
 
@@ -121,7 +122,8 @@ class HizbTabState extends State<HizbTab> with AutomaticKeepAliveClientMixin {
     // Show offline message if not connected
     if (!_isConnected) {
       return OfflineMessageWidget(
-        customMessage: 'Hizb content needs internet connectivity.\nPlease make sure you have an internet connection.',
+        customMessage:
+            'Hizb content needs internet connectivity.\nPlease make sure you have an internet connection.',
         onRetry: () => _initializeConnectivity(),
       );
     }

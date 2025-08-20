@@ -46,9 +46,10 @@ class PrayerCompletion extends HiveObject {
 
   // Helper methods
   bool get isComplete => completions.values.every((completed) => completed);
-  
-  int get completedCount => completions.values.where((completed) => completed).length;
-  
+
+  int get completedCount =>
+      completions.values.where((completed) => completed).length;
+
   double get completionPercentage => completedCount / completions.length;
 
   @override
@@ -67,16 +68,16 @@ class PrayerCompletion extends HiveObject {
 enum PrayerType {
   @HiveField(0)
   fajr,
-  
+
   @HiveField(1)
   dhuhr,
-  
+
   @HiveField(2)
   asr,
-  
+
   @HiveField(3)
   maghrib,
-  
+
   @HiveField(4)
   isha;
 

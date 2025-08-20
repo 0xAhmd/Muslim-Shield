@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'prayer_location.g.dart';
+
 @JsonSerializable()
 class PrayerLocation {
   final double latitude;

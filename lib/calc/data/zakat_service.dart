@@ -7,7 +7,7 @@ class ZakatService {
   // Nisab thresholds (in grams)
   static const double goldNisab = 87.48; // grams
   static const double silverNisab = 612.36; // grams
-  
+
   // Current prices (these could be fetched from an API in future)
   static const double goldPricePerGram = 60.0; // USD per gram
   static const double silverPricePerGram = 0.8; // USD per gram
@@ -25,20 +25,21 @@ class ZakatService {
     // Convert precious metals to monetary value
     final double goldValue = goldGrams * goldPricePerGram;
     final double silverValue = silverGrams * silverPricePerGram;
-    
+
     // Calculate total wealth
-    final double totalAssets = cash + savings + goldValue + silverValue + investments;
+    final double totalAssets =
+        cash + savings + goldValue + silverValue + investments;
     final double netWealth = math.max(0, totalAssets - debts);
-    
+
     // Calculate nisab threshold (use the lower of gold or silver nisab)
     const double goldNisabValue = goldNisab * goldPricePerGram;
     const double silverNisabValue = silverNisab * silverPricePerGram;
     final double nisabThreshold = math.min(goldNisabValue, silverNisabValue);
-    
+
     // Determine if zakat is due
     final bool isZakatDue = netWealth >= nisabThreshold;
     final double zakatAmount = isZakatDue ? netWealth * zakatRate : 0.0;
-    
+
     return ZakatResult(
       totalAssets: totalAssets,
       totalDebts: debts,

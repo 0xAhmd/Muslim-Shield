@@ -7,10 +7,7 @@ import '../../data/models/prayer_completion.dart';
 class DailyProgressCard extends StatelessWidget {
   final PrayerCompletion completion;
 
-  const DailyProgressCard({
-    super.key,
-    required this.completion,
-  });
+  const DailyProgressCard({super.key, required this.completion});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +21,9 @@ class DailyProgressCard extends StatelessWidget {
         color: grey.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: completion.isComplete ? primary.withOpacity(0.5) : Colors.transparent,
+          color: completion.isComplete
+              ? primary.withOpacity(0.5)
+              : Colors.transparent,
         ),
       ),
       child: Column(
@@ -51,11 +50,7 @@ class DailyProgressCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: primary,
-                        size: 12.sp,
-                      ),
+                      Icon(Icons.check_circle, color: primary, size: 12.sp),
                       SizedBox(width: 4.w),
                       Text(
                         'Complete',
@@ -70,9 +65,9 @@ class DailyProgressCard extends StatelessWidget {
                 ),
             ],
           ),
-          
+
           SizedBox(height: 12.h),
-          
+
           // Progress bar
           Row(
             children: [
@@ -100,15 +95,12 @@ class DailyProgressCard extends StatelessWidget {
               ),
             ],
           ),
-          
+
           SizedBox(height: 8.h),
-          
+
           Text(
             '${(progress * 100).toInt()}% completed',
-            style: GoogleFonts.poppins(
-              fontSize: 12.sp,
-              color: textColor,
-            ),
+            style: GoogleFonts.poppins(fontSize: 12.sp, color: textColor),
           ),
         ],
       ),

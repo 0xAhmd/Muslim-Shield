@@ -32,18 +32,18 @@ class WeeklyStatsCard extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          
+
           SizedBox(height: 16.h),
-          
+
           // Weekly stats
           _buildStatsSection('This Week', weeklyStats),
-          
+
           SizedBox(height: 16.h),
-          
+
           Divider(color: textColor.withOpacity(0.2)),
-          
+
           SizedBox(height: 16.h),
-          
+
           // Monthly stats
           _buildStatsSection('This Month', monthlyStats),
         ],
@@ -68,9 +68,9 @@ class WeeklyStatsCard extends StatelessWidget {
             color: textColor,
           ),
         ),
-        
+
         SizedBox(height: 8.h),
-        
+
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -96,10 +96,7 @@ class WeeklyStatsCard extends StatelessWidget {
         ),
         Text(
           label,
-          style: GoogleFonts.poppins(
-            fontSize: 10.sp,
-            color: textColor,
-          ),
+          style: GoogleFonts.poppins(fontSize: 10.sp, color: textColor),
         ),
       ],
     );

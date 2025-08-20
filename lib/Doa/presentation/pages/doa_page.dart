@@ -272,14 +272,10 @@ class _DoaPageContentState extends State<DoaPageContent> {
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          ...state.filteredDuas
-              .map(
-                (dua) => DuaCard(
-                  dua: dua,
-                  onTap: () => _showDuaDetails(context, dua),
-                ),
-              )
-              ,
+          ...state.filteredDuas.map(
+            (dua) =>
+                DuaCard(dua: dua, onTap: () => _showDuaDetails(context, dua)),
+          ),
         ],
       ),
     );

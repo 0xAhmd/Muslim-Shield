@@ -1,7 +1,5 @@
 part of 'hadith_cubit.dart';
 
-
-
 abstract class HadithsState extends Equatable {
   const HadithsState();
 
